@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>顏面穴位 AR 辨識 — 眼部舒緩</title>
+<title>顏面穴位 AR 辨識</title>
 <style>
   html, body {
     margin: 0; padding: 0; width: 100%; height: 100%;
@@ -11,75 +11,88 @@
     font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif;
     -webkit-user-select: none; user-select: none;
   }
-  #stage { position: relative; width: 100vw; height: 100vh; }
+  #app { display: flex; flex-direction: column; width: 100vw; height: 100vh; }
+
+  #arWrap { position: relative; flex: 1 1 56%; min-height: 0; background: #000; overflow: hidden; }
   #video, #overlay {
     position: absolute; top: 0; left: 0;
     width: 100%; height: 100%;
     object-fit: cover;
   }
-  #video { transform: scaleX(-1); } /* 前鏡頭鏡像，符合使用者直覺 */
+  #video { transform: scaleX(-1); }
   #overlay { pointer-events: none; }
 
   #topbar {
     position: absolute; top: 0; left: 0; right: 0;
     display: flex; justify-content: space-between; align-items: center;
-    padding: env(safe-area-inset-top, 12px) 14px 10px;
+    padding: env(safe-area-inset-top, 10px) 12px 8px;
     background: linear-gradient(to bottom, rgba(0,0,0,.55), transparent);
     z-index: 10;
   }
-  #topbar h1 { color: #fff; font-size: 15px; font-weight: 600; margin: 0; }
-  #switchBtn, #toggleBtn {
+  #topbar h1 { color: #fff; font-size: 14px; font-weight: 600; margin: 0; }
+  #topbar .btns button {
     background: rgba(255,255,255,.18); color: #fff; border: none;
-    border-radius: 20px; padding: 8px 14px; font-size: 13px;
-    backdrop-filter: blur(6px);
+    border-radius: 20px; padding: 7px 12px; font-size: 12px; margin-left: 6px;
   }
 
   #status {
     position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
-    color: #eee; font-size: 14px; text-align: center; z-index: 10;
-    background: rgba(0,0,0,.5); padding: 14px 20px; border-radius: 12px;
+    color: #eee; font-size: 13px; text-align: center; z-index: 10;
+    background: rgba(0,0,0,.5); padding: 12px 18px; border-radius: 12px;
+    max-width: 80%;
   }
 
-  #infoCard {
-    position: absolute; left: 12px; right: 12px; bottom: env(safe-area-inset-bottom, 14px);
-    background: rgba(20,20,22,.82); backdrop-filter: blur(10px);
-    color: #fff; border-radius: 16px; padding: 14px 16px;
-    transform: translateY(120%); transition: transform .25s ease;
-    z-index: 10;
+  #panel {
+    flex: 1 1 44%; min-height: 0; overflow-y: auto;
+    background: #121214; padding: 10px 12px calc(env(safe-area-inset-bottom,10px) + 10px);
+    -webkit-overflow-scrolling: touch;
   }
-  #infoCard.show { transform: translateY(0); }
-  #infoCard h2 { margin: 0 0 4px; font-size: 17px; }
-  #infoCard .romanized { font-size: 12px; color: #9ad; margin-bottom: 8px; }
-  #infoCard p { margin: 0; font-size: 13px; line-height: 1.6; color: #ddd; }
-
-  .dot-label {
-    position: absolute; transform: translate(-50%, -140%);
-    color: #fff; font-size: 11px; white-space: nowrap;
-    text-shadow: 0 1px 3px rgba(0,0,0,.8);
-    z-index: 9; pointer-events: none;
+  #panelNote {
+    color: #999; font-size: 11px; line-height: 1.6; padding: 4px 2px 10px;
+    border-bottom: 1px solid #2a2a2e; margin-bottom: 8px;
   }
+  .mer-section { margin-bottom: 10px; }
+  .mer-header {
+    display: flex; align-items: center; justify-content: space-between;
+    border-left: 4px solid #666; padding: 4px 8px; margin-bottom: 4px;
+    background: #1b1b1e; border-radius: 6px;
+  }
+  .mer-header .mer-name { color: #fff; font-size: 14px; font-weight: 600; }
+  .mer-header .mer-all { color: #bbb; font-size: 12px; display: flex; align-items: center; gap: 4px; }
+  .mer-list { display: flex; flex-direction: column; }
+  .pt-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 8px; border-bottom: 1px solid #1e1e21;
+    color: #eee; font-size: 13px;
+  }
+  .pt-row .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .pt-row .pt-name { flex: 1; }
+  .pt-row .pt-code { color: #888; font-size: 11px; }
+  input[type="checkbox"] { width: 17px; height: 17px; flex-shrink: 0; }
 </style>
 </head>
 <body>
 
-<div id="stage">
-  <video id="video" playsinline muted autoplay></video>
-  <canvas id="overlay"></canvas>
-  <div id="labelLayer"></div>
-
-  <div id="topbar">
-    <h1>顏面穴位 AR · 眼部舒緩</h1>
-    <div>
-      <button id="toggleBtn">隱藏標籤</button>
-      <button id="switchBtn">切換鏡頭</button>
+<div id="app">
+  <div id="arWrap">
+    <video id="video" playsinline muted autoplay></video>
+    <canvas id="overlay"></canvas>
+    <div id="labelLayer"></div>
+    <div id="topbar">
+      <h1>顏面穴位 AR</h1>
+      <div class="btns">
+        <button id="toggleBtn">隱藏標籤</button>
+        <button id="switchBtn">切換鏡頭</button>
+      </div>
     </div>
+    <div id="status">正在載入辨識模型…</div>
   </div>
 
-  <div id="status">正在載入辨識模型…</div>
-  <div id="infoCard">
-    <h2 id="cardTitle"></h2>
-    <div class="romanized" id="cardCode"></div>
-    <p id="cardDesc"></p>
+  <div id="panel">
+    <div id="panelNote">
+      勾選要顯示的穴位，上方畫面即時疊加。耳周／髮際線一圈（膽經頷厭～頭竅陰、完骨、耳門等）因臉部辨識網格未涵蓋耳朵與後髮際，位置為比例外推估算，僅供教學參考。
+    </div>
+    <div id="panelList"></div>
   </div>
 </div>
 
@@ -91,11 +104,10 @@
 
 <script>
 /* ------------------------------------------------------------------
-   顏面穴位 AR 辨識
-   原理：MediaPipe FaceMesh 取得 468 個臉部關鍵點 →
-        以穩定的解剖錨點（眉頭/眉中/眉尾/眼角/鼻樑）為基準，
-        用比例換算法（骨度分寸法精神）推算穴位相對座標 →
-        Canvas 即時疊加繪製，隨臉部移動更新
+   顏面穴位 AR 辨識（分經絡上色版）
+   原理：MediaPipe FaceMesh 468 關鍵點 → 以穩定解剖錨點（眉/眼/鼻/口/
+        臉頰輪廓/顳部）為基準，用比例換算法推算各穴位相對座標 →
+        依勾選狀態即時疊加繪製，並依臉部轉向隱藏遮住那側的點
    僅供衛教參考，非臨床定位工具
 ------------------------------------------------------------------- */
 
@@ -104,102 +116,328 @@ const overlay = document.getElementById('overlay');
 const ctx = overlay.getContext('2d');
 const labelLayer = document.getElementById('labelLayer');
 const statusEl = document.getElementById('status');
-const infoCard = document.getElementById('infoCard');
 const toggleBtn = document.getElementById('toggleBtn');
 const switchBtn = document.getElementById('switchBtn');
+const panelList = document.getElementById('panelList');
 
 let detector = null;
 let currentFacing = 'user';
 let showLabels = true;
-let rafId = null;
 
-// MediaPipe FaceMesh 468點模型中，穩定可用的解剖錨點索引
 const IDX = {
-  browOuterR: 70,  browMidR: 105, browInnerR: 107,   // 右眉（畫面左側，實際為使用者右眉）
-  browOuterL: 300, browMidL: 334, browInnerL: 336,   // 左眉
-  eyeOuterR: 33,   eyeInnerR: 133,
-  eyeOuterL: 263,  eyeInnerL: 362,
-  eyeTopR: 159,    eyeBottomR: 145,
-  eyeTopL: 386,    eyeBottomL: 374,
-  noseTip: 4,
-  glabella: 168,          // 兩眉之間
-  foreheadTop: 10,
-  chin: 152,
-  cheekR: 234,            // 右臉頰輪廓（用於偵測轉向）
-  cheekL: 454             // 左臉頰輪廓
+  browOuterR: 70,  browMidR: 105, browInnerR: 107,
+  browOuterL: 300, browMidL: 334, browInnerL: 336,
+  eyeOuterR: 33,   eyeInnerR: 133, eyeTopR: 159, eyeBottomR: 145,
+  eyeOuterL: 263,  eyeInnerL: 362, eyeTopL: 386, eyeBottomL: 374,
+  noseTip: 4, noseBase: 2, noseAlaR: 129, noseAlaL: 358,
+  glabella: 168, foreheadTop: 10, chin: 152,
+  cheekR: 234, cheekL: 454,
+  jawR: 172, jawL: 397,
+  templeR: 127, templeL: 356,
+  mouthCornerR: 61, mouthCornerL: 291,
+  upperLipTop: 0, lowerLipBottom: 17,
+  foreheadCornerR: 21, foreheadCornerL: 251
 };
-
-// 穴位定義：每個穴位給一個計算函式 (kp) => {x,y}，kp = keypoints 陣列
-const ACUPOINTS = [
-  {
-    name: '攢竹穴', code: 'BL2 · 兩側', side: 'both',
-    desc: '位於眉頭內側凹陷處，眼眶上緣。按壓可緩解眼睛脹痛、頭痛與眼周疲勞。',
-    calc: (kp, s) => s === 'R'
-      ? mid(kp[IDX.browInnerR], kp[IDX.eyeInnerR], 0.35)
-      : mid(kp[IDX.browInnerL], kp[IDX.eyeInnerL], 0.35)
-  },
-  {
-    name: '魚腰穴', code: 'EX-HN4 · 兩側', side: 'both',
-    desc: '眉毛中點，瞳孔正上方。舒緩眼皮沉重、眼周痠脹。',
-    calc: (kp, s) => s === 'R' ? kp[IDX.browMidR] : kp[IDX.browMidL]
-  },
-  {
-    name: '絲竹空穴', code: 'SJ23 · 兩側', side: 'both',
-    desc: '眉梢外端凹陷處。緩解偏頭痛、眼尾疲勞與細紋。',
-    calc: (kp, s) => s === 'R' ? kp[IDX.browOuterR] : kp[IDX.browOuterL]
-  },
-  {
-    name: '太陽穴', code: 'EX-HN5 · 兩側', side: 'both',
-    desc: '眉梢與外眼角連線中點，向後約一橫指凹陷處。舒緩頭痛、提神醒腦。',
-    calc: (kp, s) => {
-      const brow = s === 'R' ? kp[IDX.browOuterR] : kp[IDX.browOuterL];
-      const eye  = s === 'R' ? kp[IDX.eyeOuterR]  : kp[IDX.eyeOuterL];
-      const dir  = s === 'R' ? -1 : 1; // 往臉部外側偏移
-      const midPt = mid(brow, eye, 0.5);
-      const faceWidth = dist(kp[IDX.eyeOuterR], kp[IDX.eyeOuterL]);
-      return { x: midPt.x + dir * faceWidth * 0.18, y: midPt.y - faceWidth * 0.02 };
-    }
-  },
-  {
-    name: '睛明穴', code: 'BL1 · 兩側', side: 'both',
-    desc: '內眼角上方 0.1 寸凹陷處。緩解眼睛乾澀、疲勞、視力模糊。',
-    calc: (kp, s) => {
-      const p = s === 'R' ? kp[IDX.eyeInnerR] : kp[IDX.eyeInnerL];
-      return { x: p.x, y: p.y - dist(kp[IDX.eyeOuterR], kp[IDX.eyeInnerR]) * 0.15 };
-    }
-  },
-  {
-    name: '四白穴', code: 'ST2 · 兩側', side: 'both',
-    desc: '瞳孔直下，眼眶下緣凹陷處。緩解眼周浮腫、黑眼圈與眼睛疲勞。',
-    calc: (kp, s) => {
-      const top = s === 'R' ? kp[IDX.eyeTopR] : kp[IDX.eyeTopL];
-      const bot = s === 'R' ? kp[IDX.eyeBottomR] : kp[IDX.eyeBottomL];
-      const eyeH = dist(top, bot);
-      return { x: bot.x, y: bot.y + eyeH * 1.0 };
-    }
-  }
-];
 
 function dist(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
 function mid(a, b, t) { return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t }; }
+function off(p, dx, dy) { return { x: p.x + dx, y: p.y + dy }; }
+function bezier(p0, p1, p2, t) {
+  const it = 1 - t;
+  return {
+    x: it * it * p0.x + 2 * it * t * p1.x + t * t * p2.x,
+    y: it * it * p0.y + 2 * it * t * p1.y + t * t * p2.y
+  };
+}
 
-// 用左右臉頰輪廓點的深度(z)差來判斷臉部轉向：
-// 轉向越大，被轉離鏡頭那一側的 z 會明顯變大（變遠），此時該側五官已被遮住，不該顯示穴位點
+const MERIDIANS = {
+  EX:  { name: '經外奇穴', color: '#95a5a6' },
+  LI:  { name: '大腸經',   color: '#f5a623' },
+  ST:  { name: '胃經',     color: '#e74c3c' },
+  SI:  { name: '小腸經',   color: '#9b59b6' },
+  BL:  { name: '膀胱經',   color: '#3498db' },
+  SJ:  { name: '三焦經',   color: '#1abc9c' },
+  GB:  { name: '膽經',     color: '#2ecc71' },
+  DU:  { name: '督脈',     color: '#f1c40f' },
+  REN: { name: '任脈',     color: '#e91e63' }
+};
+const MERIDIAN_ORDER = ['EX','LI','ST','SI','BL','SJ','GB','DU','REN'];
+
+// side: 'LR' = 左右兩側各一點（calc 收 kp, 'R'|'L', scale）
+//       'M'  = 單一中線點（calc 收 kp, null, scale）
+const ACUPOINTS = [
+  // ---- 經外奇穴 ----
+  { id:'ex_yuyao', name:'魚腰', code:'EX-HN4', meridian:'EX', side:'LR',
+    calc:(kp,s)=> s==='R' ? kp[IDX.browMidR] : kp[IDX.browMidL] },
+  { id:'ex_taiyang', name:'太陽穴', code:'EX-HN5', meridian:'EX', side:'LR',
+    calc:(kp,s,sc)=>{
+      const brow = s==='R'?kp[IDX.browOuterR]:kp[IDX.browOuterL];
+      const eye  = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
+      const dir  = s==='R'?-1:1;
+      const m = mid(brow, eye, 0.5);
+      return { x: m.x + dir*sc*0.18, y: m.y - sc*0.02 };
+    }},
+
+  // ---- 大腸經 ----
+  { id:'li_yingxiang', name:'迎香', code:'LI20', meridian:'LI', side:'LR',
+    calc:(kp,s)=> s==='R' ? kp[IDX.noseAlaR] : kp[IDX.noseAlaL] },
+  { id:'li_hejiao', name:'口禾髎', code:'LI19', meridian:'LI', side:'LR',
+    calc:(kp,s)=> s==='R' ? mid(kp[IDX.noseAlaR], kp[IDX.mouthCornerR], 0.3)
+                          : mid(kp[IDX.noseAlaL], kp[IDX.mouthCornerL], 0.3) },
+
+  // ---- 胃經 ----
+  { id:'st_chengqi', name:'承泣', code:'ST1', meridian:'ST', side:'LR',
+    calc:(kp,s)=>{
+      const b = s==='R'?kp[IDX.eyeBottomR]:kp[IDX.eyeBottomL];
+      const t = s==='R'?kp[IDX.eyeTopR]:kp[IDX.eyeTopL];
+      return off(b, 0, dist(t,b)*0.25);
+    }},
+  { id:'st_sibai', name:'四白', code:'ST2', meridian:'ST', side:'LR',
+    calc:(kp,s)=>{
+      const top = s==='R'?kp[IDX.eyeTopR]:kp[IDX.eyeTopL];
+      const bot = s==='R'?kp[IDX.eyeBottomR]:kp[IDX.eyeBottomL];
+      const eyeH = dist(top,bot);
+      return { x: bot.x, y: bot.y + eyeH*1.0 };
+    }},
+  { id:'st_juliao', name:'巨髎', code:'ST3', meridian:'ST', side:'LR',
+    calc:(kp,s)=>{
+      const b = s==='R'?kp[IDX.eyeBottomR]:kp[IDX.eyeBottomL];
+      const a = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
+      return { x:b.x, y:a.y };
+    }},
+  { id:'st_ditsang', name:'地倉', code:'ST4', meridian:'ST', side:'LR',
+    calc:(kp,s,sc)=>{
+      const m = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
+      const dir = s==='R'?-1:1;
+      return off(m, dir*sc*0.03, 0);
+    }},
+  { id:'st_daying', name:'大迎', code:'ST5', meridian:'ST', side:'LR',
+    calc:(kp,s)=> s==='R' ? mid(kp[IDX.mouthCornerR], kp[IDX.jawR], 0.6)
+                          : mid(kp[IDX.mouthCornerL], kp[IDX.jawL], 0.6) },
+  { id:'st_jiache', name:'頰車', code:'ST6', meridian:'ST', side:'LR',
+    calc:(kp,s,sc)=>{
+      const j = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
+      return off(j, 0, -sc*0.05);
+    }},
+  { id:'st_xiaguan', name:'下關', code:'ST7', meridian:'ST', side:'LR',
+    calc:(kp,s)=> s==='R' ? mid(kp[IDX.templeR], kp[IDX.jawR], 0.35)
+                          : mid(kp[IDX.templeL], kp[IDX.jawL], 0.35) },
+  { id:'st_touwei', name:'頭維', code:'ST8', meridian:'ST', side:'LR',
+    calc:(kp,s,sc)=>{
+      const f = s==='R'?kp[IDX.foreheadCornerR]:kp[IDX.foreheadCornerL];
+      const dir = s==='R'?-1:1;
+      return off(f, dir*sc*0.12, -sc*0.15);
+    }},
+
+  // ---- 小腸經 ----
+  { id:'si_tianrong', name:'天容', code:'SI17', meridian:'SI', side:'LR',
+    calc:(kp,s,sc)=>{
+      const j = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
+      const dir = s==='R'?-1:1;
+      return off(j, dir*sc*0.08, sc*0.18);
+    }},
+  { id:'si_quanliao', name:'顴髎', code:'SI18', meridian:'SI', side:'LR',
+    calc:(kp,s,sc)=>{
+      const e = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
+      return off(e, 0, sc*0.22);
+    }},
+  { id:'si_tinggong', name:'聽宮', code:'SI19', meridian:'SI', side:'LR',
+    calc:(kp,s)=> s==='R' ? mid(kp[IDX.templeR], kp[IDX.jawR], 0.45)
+                          : mid(kp[IDX.templeL], kp[IDX.jawL], 0.45) },
+
+  // ---- 膀胱經 ----
+  { id:'bl_jingming', name:'睛明', code:'BL1', meridian:'BL', side:'LR',
+    calc:(kp,s)=>{
+      const p = s==='R'?kp[IDX.eyeInnerR]:kp[IDX.eyeInnerL];
+      const w = s==='R'?dist(kp[IDX.eyeOuterR],kp[IDX.eyeInnerR]):dist(kp[IDX.eyeOuterL],kp[IDX.eyeInnerL]);
+      return { x:p.x, y:p.y - w*0.15 };
+    }},
+  { id:'bl_zanzhu', name:'攢竹', code:'BL2', meridian:'BL', side:'LR',
+    calc:(kp,s)=> s==='R' ? mid(kp[IDX.browInnerR], kp[IDX.eyeInnerR], 0.35)
+                          : mid(kp[IDX.browInnerL], kp[IDX.eyeInnerL], 0.35) },
+
+  // ---- 三焦經 ----
+  { id:'sj_sizhukong', name:'絲竹空', code:'SJ23', meridian:'SJ', side:'LR',
+    calc:(kp,s)=> s==='R' ? kp[IDX.browOuterR] : kp[IDX.browOuterL] },
+  { id:'sj_ermen', name:'耳門', code:'SJ21', meridian:'SJ', side:'LR',
+    calc:(kp,s)=> s==='R' ? mid(kp[IDX.templeR], kp[IDX.jawR], 0.15)
+                          : mid(kp[IDX.templeL], kp[IDX.jawL], 0.15) },
+  { id:'sj_erheliao', name:'耳和髎', code:'SJ22', meridian:'SJ', side:'LR',
+    calc:(kp,s)=>{
+      const t = s==='R'?kp[IDX.templeR]:kp[IDX.templeL];
+      const b = s==='R'?kp[IDX.browOuterR]:kp[IDX.browOuterL];
+      return { x:t.x, y:b.y };
+    }},
+  { id:'sj_jiaosun', name:'角孫', code:'SJ20', meridian:'SJ', side:'LR',
+    calc:(kp,s,sc)=>{
+      const t = s==='R'?kp[IDX.templeR]:kp[IDX.templeL];
+      return off(t, 0, -sc*0.32);
+    }},
+
+  // ---- 膽經 ----
+  { id:'gb_tongziliao', name:'瞳子髎', code:'GB1', meridian:'GB', side:'LR',
+    calc:(kp,s,sc)=>{
+      const e = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
+      const dir = s==='R'?-1:1;
+      return off(e, dir*sc*0.05, 0);
+    }},
+  { id:'gb_tinghui', name:'聽會', code:'GB2', meridian:'GB', side:'LR',
+    calc:(kp,s)=> s==='R' ? mid(kp[IDX.templeR], kp[IDX.jawR], 0.55)
+                          : mid(kp[IDX.templeL], kp[IDX.jawL], 0.55) },
+  { id:'gb_shangguan', name:'上關', code:'GB3', meridian:'GB', side:'LR',
+    calc:(kp,s,sc)=>{
+      const m = s==='R'?mid(kp[IDX.templeR],kp[IDX.jawR],0.3):mid(kp[IDX.templeL],kp[IDX.jawL],0.3);
+      return off(m, 0, -sc*0.1);
+    }},
+  { id:'gb_wangu', name:'完骨', code:'GB12', meridian:'GB', side:'LR',
+    calc:(kp,s,sc)=>{
+      const j = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
+      const dir = s==='R'?-1:1;
+      return off(j, dir*sc*0.22, -sc*0.05);
+    }},
+  { id:'gb_benshen', name:'本神', code:'GB13', meridian:'GB', side:'LR',
+    calc:(kp,s,sc)=>{
+      const b = s==='R'?kp[IDX.browOuterR]:kp[IDX.browOuterL];
+      const dir = s==='R'?-1:1;
+      return off(b, dir*sc*0.02, -sc*0.28);
+    }},
+  { id:'gb_yangbai', name:'陽白', code:'GB14', meridian:'GB', side:'LR',
+    calc:(kp,s,sc)=>{
+      const b = s==='R'?kp[IDX.browMidR]:kp[IDX.browMidL];
+      return off(b, 0, -sc*0.35);
+    }},
+  { id:'gb_toulinqi', name:'頭臨泣', code:'GB15', meridian:'GB', side:'LR',
+    calc:(kp,s,sc)=>{
+      const b = s==='R'?kp[IDX.browMidR]:kp[IDX.browMidL];
+      return off(b, 0, -sc*0.55);
+    }},
+  // GB4-GB11 顳部髮際弧線（8點，比例外推）
+  ...['hanyan','xuanlu','xuanli','qubin','shuaigu','tianchong','fubai','touqiaoyin']
+    .map((key, i) => {
+      const names = ['頷厭','懸顱','懸釐','曲鬢','率谷','天衝','浮白','頭竅陰'];
+      const codes = ['GB4','GB5','GB6','GB7','GB8','GB9','GB10','GB11'];
+      const ts = [0.08,0.22,0.36,0.5,0.64,0.78,0.9,0.99];
+      return {
+        id: 'gb_'+key, name: names[i], code: codes[i], meridian:'GB', side:'LR',
+        calc:(kp,s,sc)=>{
+          const dir = s==='R'?-1:1;
+          const fc = s==='R'?kp[IDX.foreheadCornerR]:kp[IDX.foreheadCornerL];
+          const tp = s==='R'?kp[IDX.templeR]:kp[IDX.templeL];
+          const p0 = off(fc, dir*sc*0.05, sc*0.05);
+          const p2 = off(tp, dir*sc*0.05, -sc*0.5);
+          const pc = off(tp, dir*sc*0.35, -sc*0.15);
+          return bezier(p0, pc, p2, ts[i]);
+        }
+      };
+    }),
+
+  // ---- 督脈（中線） ----
+  { id:'du_suliao', name:'素髎', code:'DU25', meridian:'DU', side:'M',
+    calc:(kp)=> kp[IDX.noseTip] },
+  { id:'du_shuigou', name:'水溝', code:'DU26', meridian:'DU', side:'M',
+    calc:(kp)=> mid(kp[IDX.noseBase], kp[IDX.upperLipTop], 0.4) },
+  { id:'du_duiduan', name:'兌端', code:'DU27', meridian:'DU', side:'M',
+    calc:(kp,_,sc)=> off(kp[IDX.upperLipTop], 0, sc*0.02) },
+  { id:'du_yinjiao', name:'齦交', code:'DU28', meridian:'DU', side:'M',
+    calc:(kp,_,sc)=> off(kp[IDX.upperLipTop], 0, sc*0.08) },
+  { id:'du_shenting', name:'神庭', code:'DU24', meridian:'DU', side:'M',
+    calc:(kp,_,sc)=> off(kp[IDX.glabella], 0, -sc*0.4) },
+  { id:'du_shangxing', name:'上星', code:'DU23', meridian:'DU', side:'M',
+    calc:(kp,_,sc)=> off(kp[IDX.glabella], 0, -sc*0.6) },
+
+  // ---- 任脈（中線） ----
+  { id:'ren_chengjiang', name:'承漿', code:'REN24', meridian:'REN', side:'M',
+    calc:(kp,_,sc)=> off(kp[IDX.lowerLipBottom], 0, sc*0.15) },
+  { id:'ren_lianquan', name:'廉泉', code:'REN23', meridian:'REN', side:'M',
+    calc:(kp,_,sc)=> off(kp[IDX.chin], 0, sc*0.55) }
+];
+
+// 預設勾選：延續先前眼部舒緩六穴
+const selected = new Set(['ex_yuyao','ex_taiyang','sj_sizhukong','bl_zanzhu','bl_jingming','st_sibai']);
+
+function buildPanel() {
+  MERIDIAN_ORDER.forEach(mkey => {
+    const info = MERIDIANS[mkey];
+    const items = ACUPOINTS.filter(a => a.meridian === mkey);
+    if (!items.length) return;
+
+    const section = document.createElement('div');
+    section.className = 'mer-section';
+
+    const header = document.createElement('div');
+    header.className = 'mer-header';
+    header.style.borderLeftColor = info.color;
+    header.innerHTML =
+      '<span class="mer-name">' + info.name + '</span>' +
+      '<label class="mer-all"><input type="checkbox" class="mer-all-cb" data-mer="' + mkey + '"> 全選</label>';
+    section.appendChild(header);
+
+    const list = document.createElement('div');
+    list.className = 'mer-list';
+    items.forEach(pt => {
+      const row = document.createElement('label');
+      row.className = 'pt-row';
+      row.innerHTML =
+        '<input type="checkbox" class="pt-cb" data-id="' + pt.id + '"' + (selected.has(pt.id) ? ' checked' : '') + '>' +
+        '<span class="dot" style="background:' + info.color + '"></span>' +
+        '<span class="pt-name">' + pt.name + '</span>' +
+        '<span class="pt-code">' + pt.code + '</span>';
+      list.appendChild(row);
+    });
+    section.appendChild(list);
+    panelList.appendChild(section);
+  });
+
+  panelList.querySelectorAll('.pt-cb').forEach(cb => {
+    cb.addEventListener('change', e => {
+      const id = e.target.dataset.id;
+      if (e.target.checked) selected.add(id); else selected.delete(id);
+    });
+  });
+  panelList.querySelectorAll('.mer-all-cb').forEach(cb => {
+    cb.addEventListener('change', e => {
+      const mkey = e.target.dataset.mer;
+      const checked = e.target.checked;
+      ACUPOINTS.filter(a => a.meridian === mkey).forEach(a => {
+        if (checked) selected.add(a.id); else selected.delete(a.id);
+      });
+      panelList.querySelectorAll('.pt-cb').forEach(ccb => {
+        const pt = ACUPOINTS.find(a => a.id === ccb.dataset.id);
+        if (pt.meridian === mkey) ccb.checked = checked;
+      });
+    });
+  });
+}
+
 function getVisibleSides(kp) {
   const cheekR = kp[IDX.cheekR], cheekL = kp[IDX.cheekL];
   const faceScale = dist(kp[IDX.eyeOuterR], kp[IDX.eyeOuterL]) || 1;
   const zDiff = (cheekR.z ?? 0) - (cheekL.z ?? 0);
   const threshold = faceScale * 0.35;
+  if (zDiff > threshold) return { R: false, L: true };
+  if (zDiff < -threshold) return { R: true, L: false };
+  return { R: true, L: true };
+}
 
-  if (zDiff > threshold) return { R: false, L: true };   // 右側轉離鏡頭，隱藏右側點
-  if (zDiff < -threshold) return { R: true, L: false };  // 左側轉離鏡頭，隱藏左側點
-  return { R: true, L: true };                            // 接近正臉，兩側都顯示
+function computePoints(kp) {
+  const scale = dist(kp[IDX.eyeOuterR], kp[IDX.eyeOuterL]) || 1;
+  const visible = getVisibleSides(kp);
+  const pts = [];
+  ACUPOINTS.forEach(ap => {
+    if (!selected.has(ap.id)) return;
+    const color = MERIDIANS[ap.meridian].color;
+    if (ap.side === 'M') {
+      pts.push({ name: ap.name, color, pos: ap.calc(kp, null, scale) });
+    } else {
+      if (visible.R) pts.push({ name: ap.name, color, pos: ap.calc(kp, 'R', scale) });
+      if (visible.L) pts.push({ name: ap.name, color, pos: ap.calc(kp, 'L', scale) });
+    }
+  });
+  return pts;
 }
 
 async function setupCamera(facing) {
-  if (video.srcObject) {
-    video.srcObject.getTracks().forEach(t => t.stop());
-  }
+  if (video.srcObject) video.srcObject.getTracks().forEach(t => t.stop());
   const stream = await navigator.mediaDevices.getUserMedia({
     video: { facingMode: facing, width: { ideal: 720 }, height: { ideal: 960 } },
     audio: false
@@ -223,19 +461,12 @@ function resizeCanvas() {
   overlay.height = overlay.clientHeight;
 }
 
-// video 用 object-fit:cover 顯示（等比例縮放＋裁切置中），
-// 所以座標換算不能單純用 width/height 各自的比例去算，
-// 要先算出「等比例縮放係數」與「裁切造成的位移」，才能對齊實際畫面
 function getCoverMapping() {
   const vw = video.videoWidth, vh = video.videoHeight;
   const cw = overlay.width, ch = overlay.height;
   const scale = Math.max(cw / vw, ch / vh);
   const renderedW = vw * scale, renderedH = vh * scale;
-  return {
-    scale,
-    offsetX: (cw - renderedW) / 2,
-    offsetY: (ch - renderedH) / 2
-  };
+  return { scale, offsetX: (cw - renderedW) / 2, offsetY: (ch - renderedH) / 2 };
 }
 
 function drawPoints(points) {
@@ -246,23 +477,21 @@ function drawPoints(points) {
   points.forEach(p => {
     const rawX = p.pos.x * scale + offsetX;
     const rawY = p.pos.y * scale + offsetY;
-    // 前鏡頭已用 CSS 鏡像 video，這裡座標也要對應翻轉
     const x = overlay.width - rawX;
     const y = rawY;
 
     ctx.beginPath();
-    ctx.arc(x, y, 7, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(255,90,90,0.85)';
+    ctx.arc(x, y, 6, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
     ctx.fill();
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 1.5;
     ctx.strokeStyle = '#fff';
     ctx.stroke();
 
     if (showLabels) {
       const lbl = document.createElement('div');
       lbl.className = 'dot-label';
-      lbl.style.left = x + 'px';
-      lbl.style.top = y + 'px';
+      lbl.style.cssText = 'position:absolute;transform:translate(-50%,-140%);color:#fff;font-size:10px;white-space:nowrap;text-shadow:0 1px 3px rgba(0,0,0,.8);z-index:9;left:' + x + 'px;top:' + y + 'px;';
       lbl.textContent = p.name;
       labelLayer.appendChild(lbl);
     }
@@ -274,13 +503,7 @@ async function detectLoop() {
     const faces = await detector.estimateFaces(video);
     if (faces.length > 0) {
       const kp = faces[0].keypoints;
-      const visible = getVisibleSides(kp);
-      const points = [];
-      ACUPOINTS.forEach(ap => {
-        if (visible.R) points.push({ name: ap.name.replace('穴',''), pos: ap.calc(kp, 'R') });
-        if (visible.L) points.push({ name: ap.name.replace('穴',''), pos: ap.calc(kp, 'L') });
-      });
-      drawPoints(points);
+      drawPoints(computePoints(kp));
       statusEl.style.display = 'none';
     } else {
       ctx.clearRect(0, 0, overlay.width, overlay.height);
@@ -289,7 +512,7 @@ async function detectLoop() {
       statusEl.textContent = '請將臉部正對鏡頭';
     }
   }
-  rafId = requestAnimationFrame(detectLoop);
+  requestAnimationFrame(detectLoop);
 }
 
 toggleBtn.addEventListener('click', () => {
@@ -307,6 +530,7 @@ switchBtn.addEventListener('click', async () => {
 window.addEventListener('resize', resizeCanvas);
 
 (async function init() {
+  buildPanel();
   try {
     statusEl.textContent = '正在啟動相機…';
     await setupCamera(currentFacing);
