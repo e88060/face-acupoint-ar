@@ -124,7 +124,9 @@ const IDX = {
   noseTip: 4,
   glabella: 168,          // 兩眉之間
   foreheadTop: 10,
-  chin: 152
+  chin: 152,
+  cheekR: 234,            // 右臉頰輪廓（用於偵測轉向）
+  cheekL: 454             // 左臉頰輪廓
 };
 
 // 穴位定義：每個穴位給一個計算函式 (kp) => {x,y}，kp = keypoints 陣列
@@ -180,6 +182,19 @@ const ACUPOINTS = [
 
 function dist(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
 function mid(a, b, t) { return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t }; }
+
+// 用左右臉頰輪廓點的深度(z)差來判斷臉部轉向：
+// 轉向越大，被轉離鏡頭那一側的 z 會明顯變大（變遠），此時該側五官已被遮住，不該顯示穴位點
+function getVisibleSides(kp) {
+  const cheekR = kp[IDX.cheekR], cheekL = kp[IDX.cheekL];
+  const faceScale = dist(kp[IDX.eyeOuterR], kp[IDX.eyeOuterL]) || 1;
+  const zDiff = (cheekR.z ?? 0) - (cheekL.z ?? 0);
+  const threshold = faceScale * 0.35;
+
+  if (zDiff > threshold) return { R: false, L: true };   // 右側轉離鏡頭，隱藏右側點
+  if (zDiff < -threshold) return { R: true, L: false };  // 左側轉離鏡頭，隱藏左側點
+  return { R: true, L: true };                            // 接近正臉，兩側都顯示
+}
 
 async function setupCamera(facing) {
   if (video.srcObject) {
@@ -259,10 +274,11 @@ async function detectLoop() {
     const faces = await detector.estimateFaces(video);
     if (faces.length > 0) {
       const kp = faces[0].keypoints;
+      const visible = getVisibleSides(kp);
       const points = [];
       ACUPOINTS.forEach(ap => {
-        points.push({ name: ap.name.replace('穴',''), pos: ap.calc(kp, 'R') });
-        points.push({ name: ap.name.replace('穴',''), pos: ap.calc(kp, 'L') });
+        if (visible.R) points.push({ name: ap.name.replace('穴',''), pos: ap.calc(kp, 'R') });
+        if (visible.L) points.push({ name: ap.name.replace('穴',''), pos: ap.calc(kp, 'L') });
       });
       drawPoints(points);
       statusEl.style.display = 'none';
