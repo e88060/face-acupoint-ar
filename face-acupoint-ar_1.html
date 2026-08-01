@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>顏面穴位 AR 辨識 — 眼部舒緩</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; width: 100%; height: 100%;
+    background: #000; overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif;
+    -webkit-user-select: none; user-select: none;
+  }
+  #stage { position: relative; width: 100vw; height: 100vh; }
+  #video, #overlay {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  #video { transform: scaleX(-1); } /* 前鏡頭鏡像，符合使用者直覺 */
+  #overlay { pointer-events: none; }
+
+  #topbar {
+    position: absolute; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: env(safe-area-inset-top, 12px) 14px 10px;
+    background: linear-gradient(to bottom, rgba(0,0,0,.55), transparent);
+    z-index: 10;
+  }
+  #topbar h1 { color: #fff; font-size: 15px; font-weight: 600; margin: 0; }
+  #switchBtn, #toggleBtn {
+    background: rgba(255,255,255,.18); color: #fff; border: none;
+    border-radius: 20px; padding: 8px 14px; font-size: 13px;
+    backdrop-filter: blur(6px);
+  }
+
+  #status {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    color: #eee; font-size: 14px; text-align: center; z-index: 10;
+    background: rgba(0,0,0,.5); padding: 14px 20px; border-radius: 12px;
+  }
+
+  #infoCard {
+    position: absolute; left: 12px; right: 12px; bottom: env(safe-area-inset-bottom, 14px);
+    background: rgba(20,20,22,.82); backdrop-filter: blur(10px);
+    color: #fff; border-radius: 16px; padding: 14px 16px;
+    transform: translateY(120%); transition: transform .25s ease;
+    z-index: 10;
+  }
+  #infoCard.show { transform: translateY(0); }
+  #infoCard h2 { margin: 0 0 4px; font-size: 17px; }
+  #infoCard .romanized { font-size: 12px; color: #9ad; margin-bottom: 8px; }
+  #infoCard p { margin: 0; font-size: 13px; line-height: 1.6; color: #ddd; }
+
+  .dot-label {
+    position: absolute; transform: translate(-50%, -140%);
+    color: #fff; font-size: 11px; white-space: nowrap;
+    text-shadow: 0 1px 3px rgba(0,0,0,.8);
+    z-index: 9; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <video id="video" playsinline muted autoplay></video>
+  <canvas id="overlay"></canvas>
+  <div id="labelLayer"></div>
+
+  <div id="topbar">
+    <h1>顏面穴位 AR · 眼部舒緩</h1>
+    <div>
+      <button id="toggleBtn">隱藏標籤</button>
+      <button id="switchBtn">切換鏡頭</button>
+    </div>
+  </div>
+
+  <div id="status">正在載入辨識模型…</div>
+  <div id="infoCard">
+    <h2 id="cardTitle"></h2>
+    <div class="romanized" id="cardCode"></div>
+    <p id="cardDesc"></p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core@4.20.0/dist/tf-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter@4.20.0/dist/tf-converter.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl@4.20.0/dist/tf-backend-webgl.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1633559619/face_mesh.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection@1.0.5/dist/face-landmarks-detection.min.js"></script>
+
+<script>
+/* ------------------------------------------------------------------
+   顏面穴位 AR 辨識
+   原理：MediaPipe FaceMesh 取得 468 個臉部關鍵點 →
+        以穩定的解剖錨點（眉頭/眉中/眉尾/眼角/鼻樑）為基準，
+        用比例換算法（骨度分寸法精神）推算穴位相對座標 →
+        Canvas 即時疊加繪製，隨臉部移動更新
+   僅供衛教參考，非臨床定位工具
+------------------------------------------------------------------- */
+
+const video = document.getElementById('video');
+const overlay = document.getElementById('overlay');
+const ctx = overlay.getContext('2d');
+const labelLayer = document.getElementById('labelLayer');
+const statusEl = document.getElementById('status');
+const infoCard = document.getElementById('infoCard');
+const toggleBtn = document.getElementById('toggleBtn');
+const switchBtn = document.getElementById('switchBtn');
+
+let detector = null;
+let currentFacing = 'user';
+let showLabels = true;
+let rafId = null;
+
+// MediaPipe FaceMesh 468點模型中，穩定可用的解剖錨點索引
+const IDX = {
+  browOuterR: 70,  browMidR: 105, browInnerR: 107,   // 右眉（畫面左側，實際為使用者右眉）
+  browOuterL: 300, browMidL: 334, browInnerL: 336,   // 左眉
+  eyeOuterR: 33,   eyeInnerR: 133,
+  eyeOuterL: 263,  eyeInnerL: 362,
+  eyeTopR: 159,    eyeBottomR: 145,
+  eyeTopL: 386,    eyeBottomL: 374,
+  noseTip: 4,
+  glabella: 168,          // 兩眉之間
+  foreheadTop: 10,
+  chin: 152
+};
+
+// 穴位定義：每個穴位給一個計算函式 (kp) => {x,y}，kp = keypoints 陣列
+const ACUPOINTS = [
+  {
+    name: '攢竹穴', code: 'BL2 · 兩側', side: 'both',
+    desc: '位於眉頭內側凹陷處，眼眶上緣。按壓可緩解眼睛脹痛、頭痛與眼周疲勞。',
+    calc: (kp, s) => s === 'R'
+      ? mid(kp[IDX.browInnerR], kp[IDX.eyeInnerR], 0.35)
+      : mid(kp[IDX.browInnerL], kp[IDX.eyeInnerL], 0.35)
+  },
+  {
+    name: '魚腰穴', code: 'EX-HN4 · 兩側', side: 'both',
+    desc: '眉毛中點，瞳孔正上方。舒緩眼皮沉重、眼周痠脹。',
+    calc: (kp, s) => s === 'R' ? kp[IDX.browMidR] : kp[IDX.browMidL]
+  },
+  {
+    name: '絲竹空穴', code: 'SJ23 · 兩側', side: 'both',
+    desc: '眉梢外端凹陷處。緩解偏頭痛、眼尾疲勞與細紋。',
+    calc: (kp, s) => s === 'R' ? kp[IDX.browOuterR] : kp[IDX.browOuterL]
+  },
+  {
+    name: '太陽穴', code: 'EX-HN5 · 兩側', side: 'both',
+    desc: '眉梢與外眼角連線中點，向後約一橫指凹陷處。舒緩頭痛、提神醒腦。',
+    calc: (kp, s) => {
+      const brow = s === 'R' ? kp[IDX.browOuterR] : kp[IDX.browOuterL];
+      const eye  = s === 'R' ? kp[IDX.eyeOuterR]  : kp[IDX.eyeOuterL];
+      const dir  = s === 'R' ? -1 : 1; // 往臉部外側偏移
+      const midPt = mid(brow, eye, 0.5);
+      const faceWidth = dist(kp[IDX.eyeOuterR], kp[IDX.eyeOuterL]);
+      return { x: midPt.x + dir * faceWidth * 0.18, y: midPt.y - faceWidth * 0.02 };
+    }
+  },
+  {
+    name: '睛明穴', code: 'BL1 · 兩側', side: 'both',
+    desc: '內眼角上方 0.1 寸凹陷處。緩解眼睛乾澀、疲勞、視力模糊。',
+    calc: (kp, s) => {
+      const p = s === 'R' ? kp[IDX.eyeInnerR] : kp[IDX.eyeInnerL];
+      return { x: p.x, y: p.y - dist(kp[IDX.eyeOuterR], kp[IDX.eyeInnerR]) * 0.15 };
+    }
+  },
+  {
+    name: '四白穴', code: 'ST2 · 兩側', side: 'both',
+    desc: '瞳孔直下，眼眶下緣凹陷處。緩解眼周浮腫、黑眼圈與眼睛疲勞。',
+    calc: (kp, s) => {
+      const top = s === 'R' ? kp[IDX.eyeTopR] : kp[IDX.eyeTopL];
+      const bot = s === 'R' ? kp[IDX.eyeBottomR] : kp[IDX.eyeBottomL];
+      const eyeH = dist(top, bot);
+      return { x: bot.x, y: bot.y + eyeH * 1.0 };
+    }
+  }
+];
+
+function dist(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
+function mid(a, b, t) { return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t }; }
+
+async function setupCamera(facing) {
+  if (video.srcObject) {
+    video.srcObject.getTracks().forEach(t => t.stop());
+  }
+  const stream = await navigator.mediaDevices.getUserMedia({
+    video: { facingMode: facing, width: { ideal: 720 }, height: { ideal: 960 } },
+    audio: false
+  });
+  video.srcObject = stream;
+  return new Promise(resolve => { video.onloadedmetadata = () => resolve(video); });
+}
+
+async function loadModel() {
+  const model = faceLandmarksDetection.SupportedModels.MediaPipeFaceMesh;
+  detector = await faceLandmarksDetection.createDetector(model, {
+    runtime: 'mediapipe',
+    solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1633559619',
+    refineLandmarks: false,
+    maxFaces: 1
+  });
+}
+
+function resizeCanvas() {
+  overlay.width = overlay.clientWidth;
+  overlay.height = overlay.clientHeight;
+}
+
+// video 用 object-fit:cover 顯示（等比例縮放＋裁切置中），
+// 所以座標換算不能單純用 width/height 各自的比例去算，
+// 要先算出「等比例縮放係數」與「裁切造成的位移」，才能對齊實際畫面
+function getCoverMapping() {
+  const vw = video.videoWidth, vh = video.videoHeight;
+  const cw = overlay.width, ch = overlay.height;
+  const scale = Math.max(cw / vw, ch / vh);
+  const renderedW = vw * scale, renderedH = vh * scale;
+  return {
+    scale,
+    offsetX: (cw - renderedW) / 2,
+    offsetY: (ch - renderedH) / 2
+  };
+}
+
+function drawPoints(points) {
+  ctx.clearRect(0, 0, overlay.width, overlay.height);
+  labelLayer.innerHTML = '';
+  const { scale, offsetX, offsetY } = getCoverMapping();
+
+  points.forEach(p => {
+    const rawX = p.pos.x * scale + offsetX;
+    const rawY = p.pos.y * scale + offsetY;
+    // 前鏡頭已用 CSS 鏡像 video，這裡座標也要對應翻轉
+    const x = overlay.width - rawX;
+    const y = rawY;
+
+    ctx.beginPath();
+    ctx.arc(x, y, 7, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,90,90,0.85)';
+    ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#fff';
+    ctx.stroke();
+
+    if (showLabels) {
+      const lbl = document.createElement('div');
+      lbl.className = 'dot-label';
+      lbl.style.left = x + 'px';
+      lbl.style.top = y + 'px';
+      lbl.textContent = p.name;
+      labelLayer.appendChild(lbl);
+    }
+  });
+}
+
+async function detectLoop() {
+  if (detector && video.readyState >= 2) {
+    const faces = await detector.estimateFaces(video);
+    if (faces.length > 0) {
+      const kp = faces[0].keypoints;
+      const points = [];
+      ACUPOINTS.forEach(ap => {
+        points.push({ name: ap.name.replace('穴',''), pos: ap.calc(kp, 'R') });
+        points.push({ name: ap.name.replace('穴',''), pos: ap.calc(kp, 'L') });
+      });
+      drawPoints(points);
+      statusEl.style.display = 'none';
+    } else {
+      ctx.clearRect(0, 0, overlay.width, overlay.height);
+      labelLayer.innerHTML = '';
+      statusEl.style.display = 'block';
+      statusEl.textContent = '請將臉部正對鏡頭';
+    }
+  }
+  rafId = requestAnimationFrame(detectLoop);
+}
+
+toggleBtn.addEventListener('click', () => {
+  showLabels = !showLabels;
+  toggleBtn.textContent = showLabels ? '隱藏標籤' : '顯示標籤';
+});
+
+switchBtn.addEventListener('click', async () => {
+  currentFacing = currentFacing === 'user' ? 'environment' : 'user';
+  video.style.transform = currentFacing === 'user' ? 'scaleX(-1)' : 'scaleX(1)';
+  await setupCamera(currentFacing);
+  resizeCanvas();
+});
+
+window.addEventListener('resize', resizeCanvas);
+
+(async function init() {
+  try {
+    statusEl.textContent = '正在啟動相機…';
+    await setupCamera(currentFacing);
+    resizeCanvas();
+    statusEl.textContent = '正在載入辨識模型…';
+    await loadModel();
+    statusEl.textContent = '請將臉部正對鏡頭';
+    detectLoop();
+  } catch (err) {
+    statusEl.textContent = '啟動失敗：' + err.message + '（請確認已允許相機權限，且網頁為 HTTPS）';
+  }
+})();
+</script>
+</body>
+</html>
