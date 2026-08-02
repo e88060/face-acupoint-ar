@@ -113,7 +113,7 @@
 
   <div id="panel">
     <div id="panelNote">
-      勾選要顯示的穴位，上方畫面即時疊加。點各經絡標題可收合／展開清單。額頭上部（印堂以外的督脈、膽經前額穴位）因臉部辨識網格未涵蓋髮際線本身，位置會依髮際高低而有落差，僅供教學參考。
+      勾選要顯示的穴位，上方畫面即時疊加。點各經絡標題可收合／展開清單。臉部辨識網格未涵蓋髮際線，故頭臨泣、本神、神庭、上星等需以髮際線定位的穴位已移除，僅保留可用五官特徵穩定定位的穴位。
     </div>
     <div id="panelList"></div>
   </div>
@@ -183,7 +183,7 @@ const ACUPOINTS = [
   // ---- 經外奇穴 ----
   { id:'ex_yintang', name:'印堂', code:'EX-HN3', meridian:'EX', side:'M',
     desc:'兩眉頭連線中點',
-    calc:(kp)=> kp[IDX.glabella] },
+    calc:(kp)=> mid(kp[IDX.browInnerR], kp[IDX.browInnerL], 0.5) },
   { id:'ex_qiuhou', name:'球後', code:'EX-HN7', meridian:'EX', side:'LR',
     desc:'眶下緣，瞳孔直下與外眥垂線之間凹陷處',
     calc:(kp,s,sc)=>{
@@ -269,7 +269,7 @@ const ACUPOINTS = [
     desc:'目外眥直下，顴骨下緣凹陷處',
     calc:(kp,s,sc)=>{
       const e = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
-      return off(e, 0, sc*0.32);
+      return off(e, 0, sc*0.55);
     }},
 
   // ---- 膀胱經 ----
@@ -304,26 +304,12 @@ const ACUPOINTS = [
       const m = s==='R'?mid(kp[IDX.templeR],kp[IDX.jawR],0.3):mid(kp[IDX.templeL],kp[IDX.jawL],0.3);
       return off(m, 0, -sc*0.1);
     }},
-  { id:'gb_benshen', name:'本神', code:'GB13', meridian:'GB', side:'LR',
-    desc:'前髮際上0.5寸，神庭與頭維連線的2/3處',
-    calc:(kp,s,sc)=>{
-      const b = s==='R'?kp[IDX.browOuterR]:kp[IDX.browOuterL];
-      const dir = s==='R'?-1:1;
-      return off(b, dir*sc*0.15, -sc*0.20);
-    }},
   { id:'gb_yangbai', name:'陽白', code:'GB14', meridian:'GB', side:'LR',
     desc:'眉毛中點直上1寸',
     calc:(kp,s,sc)=>{
       const b = s==='R'?kp[IDX.browMidR]:kp[IDX.browMidL];
       return off(b, 0, -sc*0.22);
     }},
-  { id:'gb_toulinqi', name:'頭臨泣', code:'GB15', meridian:'GB', side:'LR',
-    desc:'瞳孔直上，前髮際內0.5寸',
-    calc:(kp,s,sc)=>{
-      const b = s==='R'?kp[IDX.browMidR]:kp[IDX.browMidL];
-      return off(b, 0, -sc*0.34);
-    }},
-
   // ---- 督脈（中線） ----
   { id:'du_suliao', name:'素髎', code:'DU25', meridian:'DU', side:'M',
     desc:'鼻尖正中央',
@@ -337,13 +323,6 @@ const ACUPOINTS = [
   { id:'du_yinjiao', name:'齦交', code:'DU28', meridian:'DU', side:'M',
     desc:'上唇繫帶與齒齦交接處（口腔內，體表僅概略標示）',
     calc:(kp,_,sc)=> off(kp[IDX.upperLipTop], 0, sc*0.08) },
-  { id:'du_shenting', name:'神庭', code:'DU24', meridian:'DU', side:'M',
-    desc:'前髮際正中直上0.5寸',
-    calc:(kp,_,sc)=> off(kp[IDX.glabella], 0, -sc*0.28) },
-  { id:'du_shangxing', name:'上星', code:'DU23', meridian:'DU', side:'M',
-    desc:'前髮際正中直上1寸',
-    calc:(kp,_,sc)=> off(kp[IDX.glabella], 0, -sc*0.42) },
-
   // ---- 任脈（中線） ----
   { id:'ren_chengjiang', name:'承漿', code:'REN24', meridian:'REN', side:'M',
     desc:'下唇下方，頦唇溝凹陷正中',
