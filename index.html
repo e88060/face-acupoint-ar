@@ -34,12 +34,24 @@
     background: rgba(255,255,255,.18); color: #fff; border: none;
     border-radius: 20px; padding: 7px 12px; font-size: 12px; margin-left: 6px;
   }
+  #topbar .btns button.active { background: rgba(52,152,219,.85); }
 
   #status {
     position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
     color: #eee; font-size: 13px; text-align: center; z-index: 10;
     background: rgba(0,0,0,.5); padding: 12px 18px; border-radius: 12px;
     max-width: 80%;
+  }
+
+  .dot-label {
+    position: absolute; transform: translate(-50%, -100%);
+    color: #fff; font-size: 10px; text-align: center; white-space: nowrap;
+    text-shadow: 0 1px 3px rgba(0,0,0,.9); z-index: 9; line-height: 1.3;
+  }
+  .dot-label .lbl-name { font-weight: 600; }
+  .dot-label .lbl-desc {
+    display: block; font-weight: 400; font-size: 9px; color: #ffe;
+    white-space: normal; max-width: 120px; margin-top: 1px;
   }
 
   #panel {
@@ -51,24 +63,35 @@
     color: #999; font-size: 11px; line-height: 1.6; padding: 4px 2px 10px;
     border-bottom: 1px solid #2a2a2e; margin-bottom: 8px;
   }
-  .mer-section { margin-bottom: 10px; }
+  .mer-section { margin-bottom: 8px; }
   .mer-header {
     display: flex; align-items: center; justify-content: space-between;
     border-left: 4px solid #666; padding: 4px 8px; margin-bottom: 4px;
     background: #1b1b1e; border-radius: 6px;
   }
-  .mer-header .mer-name { color: #fff; font-size: 14px; font-weight: 600; }
+  .mer-header .mer-title {
+    display: flex; align-items: center; gap: 6px; flex: 1;
+    color: #fff; font-size: 14px; font-weight: 600;
+  }
+  .mer-header .mer-title .arrow {
+    font-size: 11px; color: #999; transition: transform .15s ease;
+  }
+  .mer-header.collapsed .arrow { transform: rotate(-90deg); }
+  .mer-header .mer-count { color: #888; font-size: 11px; font-weight: 400; }
   .mer-header .mer-all { color: #bbb; font-size: 12px; display: flex; align-items: center; gap: 4px; }
   .mer-list { display: flex; flex-direction: column; }
+  .mer-list.collapsed { display: none; }
   .pt-row {
-    display: flex; align-items: center; gap: 8px;
+    display: flex; align-items: flex-start; gap: 8px;
     padding: 6px 8px; border-bottom: 1px solid #1e1e21;
     color: #eee; font-size: 13px;
   }
-  .pt-row .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-  .pt-row .pt-name { flex: 1; }
+  .pt-row .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+  .pt-row .pt-main { flex: 1; display: flex; flex-direction: column; }
+  .pt-row .pt-name-line { display: flex; align-items: baseline; gap: 6px; }
   .pt-row .pt-code { color: #888; font-size: 11px; }
-  input[type="checkbox"] { width: 17px; height: 17px; flex-shrink: 0; }
+  .pt-row .pt-desc { color: #999; font-size: 11px; line-height: 1.5; margin-top: 2px; }
+  input[type="checkbox"] { width: 17px; height: 17px; flex-shrink: 0; margin-top: 3px; }
 </style>
 </head>
 <body>
@@ -81,7 +104,7 @@
     <div id="topbar">
       <h1>顏面穴位 AR</h1>
       <div class="btns">
-        <button id="toggleBtn">隱藏標籤</button>
+        <button id="descBtn">顯示說明</button>
         <button id="switchBtn">切換鏡頭</button>
       </div>
     </div>
@@ -90,7 +113,7 @@
 
   <div id="panel">
     <div id="panelNote">
-      勾選要顯示的穴位，上方畫面即時疊加。耳周／髮際線一圈（膽經頷厭～頭竅陰、完骨、耳門等）因臉部辨識網格未涵蓋耳朵與後髮際，位置為比例外推估算，僅供教學參考。
+      勾選要顯示的穴位，上方畫面即時疊加。點各經絡標題可收合／展開清單。耳周／髮際線一圈（膽經頷厭～頭竅陰、完骨、耳門等）因臉部辨識網格未涵蓋耳朵與後髮際，位置為比例外推估算，僅供教學參考。
     </div>
     <div id="panelList"></div>
   </div>
@@ -104,7 +127,7 @@
 
 <script>
 /* ------------------------------------------------------------------
-   顏面穴位 AR 辨識（分經絡上色版）
+   顏面穴位 AR 辨識（分經絡上色版 + 定位說明）
    原理：MediaPipe FaceMesh 468 關鍵點 → 以穩定解剖錨點（眉/眼/鼻/口/
         臉頰輪廓/顳部）為基準，用比例換算法推算各穴位相對座標 →
         依勾選狀態即時疊加繪製，並依臉部轉向隱藏遮住那側的點
@@ -116,13 +139,13 @@ const overlay = document.getElementById('overlay');
 const ctx = overlay.getContext('2d');
 const labelLayer = document.getElementById('labelLayer');
 const statusEl = document.getElementById('status');
-const toggleBtn = document.getElementById('toggleBtn');
+const descBtn = document.getElementById('descBtn');
 const switchBtn = document.getElementById('switchBtn');
 const panelList = document.getElementById('panelList');
 
 let detector = null;
 let currentFacing = 'user';
-let showLabels = true;
+let showDesc = false;
 
 const IDX = {
   browOuterR: 70,  browMidR: 105, browInnerR: 107,
@@ -163,13 +186,12 @@ const MERIDIANS = {
 };
 const MERIDIAN_ORDER = ['EX','LI','ST','SI','BL','SJ','GB','DU','REN'];
 
-// side: 'LR' = 左右兩側各一點（calc 收 kp, 'R'|'L', scale）
-//       'M'  = 單一中線點（calc 收 kp, null, scale）
 const ACUPOINTS = [
-  // ---- 經外奇穴 ----
   { id:'ex_yuyao', name:'魚腰', code:'EX-HN4', meridian:'EX', side:'LR',
+    desc:'眉毛中點，瞳孔直上',
     calc:(kp,s)=> s==='R' ? kp[IDX.browMidR] : kp[IDX.browMidL] },
   { id:'ex_taiyang', name:'太陽穴', code:'EX-HN5', meridian:'EX', side:'LR',
+    desc:'眉梢與外眼角連線中點，向後約一橫指凹陷處',
     calc:(kp,s,sc)=>{
       const brow = s==='R'?kp[IDX.browOuterR]:kp[IDX.browOuterL];
       const eye  = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
@@ -178,21 +200,23 @@ const ACUPOINTS = [
       return { x: m.x + dir*sc*0.18, y: m.y - sc*0.02 };
     }},
 
-  // ---- 大腸經 ----
   { id:'li_yingxiang', name:'迎香', code:'LI20', meridian:'LI', side:'LR',
+    desc:'鼻翼外緣中點，鼻唇溝凹陷處',
     calc:(kp,s)=> s==='R' ? kp[IDX.noseAlaR] : kp[IDX.noseAlaL] },
   { id:'li_hejiao', name:'口禾髎', code:'LI19', meridian:'LI', side:'LR',
+    desc:'鼻孔外緣直下，水溝穴旁約0.5寸',
     calc:(kp,s)=> s==='R' ? mid(kp[IDX.noseAlaR], kp[IDX.mouthCornerR], 0.3)
                           : mid(kp[IDX.noseAlaL], kp[IDX.mouthCornerL], 0.3) },
 
-  // ---- 胃經 ----
   { id:'st_chengqi', name:'承泣', code:'ST1', meridian:'ST', side:'LR',
+    desc:'瞳孔直下，眼球與眶下緣之間',
     calc:(kp,s)=>{
       const b = s==='R'?kp[IDX.eyeBottomR]:kp[IDX.eyeBottomL];
       const t = s==='R'?kp[IDX.eyeTopR]:kp[IDX.eyeTopL];
       return off(b, 0, dist(t,b)*0.25);
     }},
   { id:'st_sibai', name:'四白', code:'ST2', meridian:'ST', side:'LR',
+    desc:'瞳孔直下，眶下孔凹陷處',
     calc:(kp,s)=>{
       const top = s==='R'?kp[IDX.eyeTopR]:kp[IDX.eyeTopL];
       const bot = s==='R'?kp[IDX.eyeBottomR]:kp[IDX.eyeBottomL];
@@ -200,125 +224,153 @@ const ACUPOINTS = [
       return { x: bot.x, y: bot.y + eyeH*1.0 };
     }},
   { id:'st_juliao', name:'巨髎', code:'ST3', meridian:'ST', side:'LR',
+    desc:'瞳孔直下，平鼻翼下緣',
     calc:(kp,s)=>{
       const b = s==='R'?kp[IDX.eyeBottomR]:kp[IDX.eyeBottomL];
       const a = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
       return { x:b.x, y:a.y };
     }},
   { id:'st_ditsang', name:'地倉', code:'ST4', meridian:'ST', side:'LR',
+    desc:'口角外側，瞳孔直下',
     calc:(kp,s,sc)=>{
       const m = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
       const dir = s==='R'?-1:1;
       return off(m, dir*sc*0.03, 0);
     }},
   { id:'st_daying', name:'大迎', code:'ST5', meridian:'ST', side:'LR',
+    desc:'下頜角前方，咬肌附著部前緣，動脈搏動處',
     calc:(kp,s)=> s==='R' ? mid(kp[IDX.mouthCornerR], kp[IDX.jawR], 0.6)
                           : mid(kp[IDX.mouthCornerL], kp[IDX.jawL], 0.6) },
   { id:'st_jiache', name:'頰車', code:'ST6', meridian:'ST', side:'LR',
+    desc:'下頜角前上方一橫指，咀嚼時咬肌隆起處',
     calc:(kp,s,sc)=>{
       const j = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
       return off(j, 0, -sc*0.05);
     }},
   { id:'st_xiaguan', name:'下關', code:'ST7', meridian:'ST', side:'LR',
+    desc:'顴弓下緣，下頜骨髁狀突前方凹陷處',
     calc:(kp,s)=> s==='R' ? mid(kp[IDX.templeR], kp[IDX.jawR], 0.35)
                           : mid(kp[IDX.templeL], kp[IDX.jawL], 0.35) },
   { id:'st_touwei', name:'頭維', code:'ST8', meridian:'ST', side:'LR',
+    desc:'額角髮際上0.5寸，頭正中線旁4.5寸',
     calc:(kp,s,sc)=>{
       const f = s==='R'?kp[IDX.foreheadCornerR]:kp[IDX.foreheadCornerL];
       const dir = s==='R'?-1:1;
       return off(f, dir*sc*0.12, -sc*0.15);
     }},
 
-  // ---- 小腸經 ----
   { id:'si_tianrong', name:'天容', code:'SI17', meridian:'SI', side:'LR',
+    desc:'下頜角後方，胸鎖乳突肌前緣凹陷處',
     calc:(kp,s,sc)=>{
       const j = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
       const dir = s==='R'?-1:1;
       return off(j, dir*sc*0.08, sc*0.18);
     }},
   { id:'si_quanliao', name:'顴髎', code:'SI18', meridian:'SI', side:'LR',
+    desc:'目外眥直下，顴骨下緣凹陷處',
     calc:(kp,s,sc)=>{
       const e = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
       return off(e, 0, sc*0.22);
     }},
   { id:'si_tinggong', name:'聽宮', code:'SI19', meridian:'SI', side:'LR',
+    desc:'耳屏前，張口時凹陷處',
     calc:(kp,s)=> s==='R' ? mid(kp[IDX.templeR], kp[IDX.jawR], 0.45)
                           : mid(kp[IDX.templeL], kp[IDX.jawL], 0.45) },
 
-  // ---- 膀胱經 ----
   { id:'bl_jingming', name:'睛明', code:'BL1', meridian:'BL', side:'LR',
+    desc:'目內眥角上方0.1寸凹陷處',
     calc:(kp,s)=>{
       const p = s==='R'?kp[IDX.eyeInnerR]:kp[IDX.eyeInnerL];
       const w = s==='R'?dist(kp[IDX.eyeOuterR],kp[IDX.eyeInnerR]):dist(kp[IDX.eyeOuterL],kp[IDX.eyeInnerL]);
       return { x:p.x, y:p.y - w*0.15 };
     }},
   { id:'bl_zanzhu', name:'攢竹', code:'BL2', meridian:'BL', side:'LR',
+    desc:'眉頭內側凹陷處，眶上切跡處',
     calc:(kp,s)=> s==='R' ? mid(kp[IDX.browInnerR], kp[IDX.eyeInnerR], 0.35)
                           : mid(kp[IDX.browInnerL], kp[IDX.eyeInnerL], 0.35) },
 
-  // ---- 三焦經 ----
   { id:'sj_sizhukong', name:'絲竹空', code:'SJ23', meridian:'SJ', side:'LR',
+    desc:'眉梢外端凹陷處',
     calc:(kp,s)=> s==='R' ? kp[IDX.browOuterR] : kp[IDX.browOuterL] },
   { id:'sj_ermen', name:'耳門', code:'SJ21', meridian:'SJ', side:'LR',
+    desc:'耳屏上切跡前，張口凹陷處',
     calc:(kp,s)=> s==='R' ? mid(kp[IDX.templeR], kp[IDX.jawR], 0.15)
                           : mid(kp[IDX.templeL], kp[IDX.jawL], 0.15) },
   { id:'sj_erheliao', name:'耳和髎', code:'SJ22', meridian:'SJ', side:'LR',
+    desc:'鬢髮後緣，耳廓根前方，顳淺動脈後緣',
     calc:(kp,s)=>{
       const t = s==='R'?kp[IDX.templeR]:kp[IDX.templeL];
       const b = s==='R'?kp[IDX.browOuterR]:kp[IDX.browOuterL];
       return { x:t.x, y:b.y };
     }},
   { id:'sj_jiaosun', name:'角孫', code:'SJ20', meridian:'SJ', side:'LR',
+    desc:'耳尖直上，入髮際處',
     calc:(kp,s,sc)=>{
       const t = s==='R'?kp[IDX.templeR]:kp[IDX.templeL];
       return off(t, 0, -sc*0.32);
     }},
 
-  // ---- 膽經 ----
   { id:'gb_tongziliao', name:'瞳子髎', code:'GB1', meridian:'GB', side:'LR',
+    desc:'目外眥外側0.5寸凹陷處',
     calc:(kp,s,sc)=>{
       const e = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
       const dir = s==='R'?-1:1;
       return off(e, dir*sc*0.05, 0);
     }},
   { id:'gb_tinghui', name:'聽會', code:'GB2', meridian:'GB', side:'LR',
+    desc:'耳屏間切跡前，張口凹陷處',
     calc:(kp,s)=> s==='R' ? mid(kp[IDX.templeR], kp[IDX.jawR], 0.55)
                           : mid(kp[IDX.templeL], kp[IDX.jawL], 0.55) },
   { id:'gb_shangguan', name:'上關', code:'GB3', meridian:'GB', side:'LR',
+    desc:'顴弓上緣，下關穴直上凹陷處',
     calc:(kp,s,sc)=>{
       const m = s==='R'?mid(kp[IDX.templeR],kp[IDX.jawR],0.3):mid(kp[IDX.templeL],kp[IDX.jawL],0.3);
       return off(m, 0, -sc*0.1);
     }},
   { id:'gb_wangu', name:'完骨', code:'GB12', meridian:'GB', side:'LR',
+    desc:'耳後乳突後下方凹陷處',
     calc:(kp,s,sc)=>{
       const j = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
       const dir = s==='R'?-1:1;
       return off(j, dir*sc*0.22, -sc*0.05);
     }},
   { id:'gb_benshen', name:'本神', code:'GB13', meridian:'GB', side:'LR',
+    desc:'前髮際上0.5寸，神庭與頭維連線的2/3處',
     calc:(kp,s,sc)=>{
       const b = s==='R'?kp[IDX.browOuterR]:kp[IDX.browOuterL];
       const dir = s==='R'?-1:1;
       return off(b, dir*sc*0.02, -sc*0.28);
     }},
   { id:'gb_yangbai', name:'陽白', code:'GB14', meridian:'GB', side:'LR',
+    desc:'眉毛中點直上1寸',
     calc:(kp,s,sc)=>{
       const b = s==='R'?kp[IDX.browMidR]:kp[IDX.browMidL];
       return off(b, 0, -sc*0.35);
     }},
   { id:'gb_toulinqi', name:'頭臨泣', code:'GB15', meridian:'GB', side:'LR',
+    desc:'瞳孔直上，前髮際內0.5寸',
     calc:(kp,s,sc)=>{
       const b = s==='R'?kp[IDX.browMidR]:kp[IDX.browMidL];
       return off(b, 0, -sc*0.55);
     }},
-  // GB4-GB11 顳部髮際弧線（8點，比例外推）
   ...['hanyan','xuanlu','xuanli','qubin','shuaigu','tianchong','fubai','touqiaoyin']
     .map((key, i) => {
       const names = ['頷厭','懸顱','懸釐','曲鬢','率谷','天衝','浮白','頭竅陰'];
       const codes = ['GB4','GB5','GB6','GB7','GB8','GB9','GB10','GB11'];
+      const descs = [
+        '頭維與曲鬢弧形連線上1/4處',
+        '頭維與曲鬢弧形連線中點',
+        '頭維與曲鬢弧形連線下1/4處',
+        '耳前鬢角髮際後緣，與耳尖水平線交點',
+        '耳尖直上，入髮際1.5寸',
+        '耳根後緣直上，入髮際2寸',
+        '耳後乳突後上方，天衝與完骨弧形連線中1/3處',
+        '耳後，天衝與完骨弧形連線下1/3處'
+      ];
       const ts = [0.08,0.22,0.36,0.5,0.64,0.78,0.9,0.99];
       return {
         id: 'gb_'+key, name: names[i], code: codes[i], meridian:'GB', side:'LR',
+        desc: descs[i],
         calc:(kp,s,sc)=>{
           const dir = s==='R'?-1:1;
           const fc = s==='R'?kp[IDX.foreheadCornerR]:kp[IDX.foreheadCornerL];
@@ -331,28 +383,33 @@ const ACUPOINTS = [
       };
     }),
 
-  // ---- 督脈（中線） ----
   { id:'du_suliao', name:'素髎', code:'DU25', meridian:'DU', side:'M',
+    desc:'鼻尖正中央',
     calc:(kp)=> kp[IDX.noseTip] },
   { id:'du_shuigou', name:'水溝', code:'DU26', meridian:'DU', side:'M',
+    desc:'人中溝上1/3與下2/3交界處',
     calc:(kp)=> mid(kp[IDX.noseBase], kp[IDX.upperLipTop], 0.4) },
   { id:'du_duiduan', name:'兌端', code:'DU27', meridian:'DU', side:'M',
+    desc:'上唇尖端，唇珠上緣',
     calc:(kp,_,sc)=> off(kp[IDX.upperLipTop], 0, sc*0.02) },
   { id:'du_yinjiao', name:'齦交', code:'DU28', meridian:'DU', side:'M',
+    desc:'上唇繫帶與齒齦交接處（口腔內，體表僅概略標示）',
     calc:(kp,_,sc)=> off(kp[IDX.upperLipTop], 0, sc*0.08) },
   { id:'du_shenting', name:'神庭', code:'DU24', meridian:'DU', side:'M',
+    desc:'前髮際正中直上0.5寸',
     calc:(kp,_,sc)=> off(kp[IDX.glabella], 0, -sc*0.4) },
   { id:'du_shangxing', name:'上星', code:'DU23', meridian:'DU', side:'M',
+    desc:'前髮際正中直上1寸',
     calc:(kp,_,sc)=> off(kp[IDX.glabella], 0, -sc*0.6) },
 
-  // ---- 任脈（中線） ----
   { id:'ren_chengjiang', name:'承漿', code:'REN24', meridian:'REN', side:'M',
+    desc:'下唇下方，頦唇溝凹陷正中',
     calc:(kp,_,sc)=> off(kp[IDX.lowerLipBottom], 0, sc*0.15) },
   { id:'ren_lianquan', name:'廉泉', code:'REN23', meridian:'REN', side:'M',
+    desc:'喉結上方，舌骨上緣凹陷處',
     calc:(kp,_,sc)=> off(kp[IDX.chin], 0, sc*0.55) }
 ];
 
-// 預設勾選：延續先前眼部舒緩六穴
 const selected = new Set(['ex_yuyao','ex_taiyang','sj_sizhukong','bl_zanzhu','bl_jingming','st_sibai']);
 
 function buildPanel() {
@@ -365,27 +422,35 @@ function buildPanel() {
     section.className = 'mer-section';
 
     const header = document.createElement('div');
-    header.className = 'mer-header';
+    header.className = 'mer-header collapsed';
     header.style.borderLeftColor = info.color;
     header.innerHTML =
-      '<span class="mer-name">' + info.name + '</span>' +
+      '<div class="mer-title"><span class="arrow">▾</span>' + info.name +
+      ' <span class="mer-count">(' + items.length + ')</span></div>' +
       '<label class="mer-all"><input type="checkbox" class="mer-all-cb" data-mer="' + mkey + '"> 全選</label>';
     section.appendChild(header);
 
     const list = document.createElement('div');
-    list.className = 'mer-list';
+    list.className = 'mer-list collapsed';
     items.forEach(pt => {
       const row = document.createElement('label');
       row.className = 'pt-row';
       row.innerHTML =
         '<input type="checkbox" class="pt-cb" data-id="' + pt.id + '"' + (selected.has(pt.id) ? ' checked' : '') + '>' +
         '<span class="dot" style="background:' + info.color + '"></span>' +
-        '<span class="pt-name">' + pt.name + '</span>' +
-        '<span class="pt-code">' + pt.code + '</span>';
+        '<span class="pt-main">' +
+          '<span class="pt-name-line"><b>' + pt.name + '</b><span class="pt-code">' + pt.code + '</span></span>' +
+          '<span class="pt-desc">' + pt.desc + '</span>' +
+        '</span>';
       list.appendChild(row);
     });
     section.appendChild(list);
     panelList.appendChild(section);
+
+    header.querySelector('.mer-title').addEventListener('click', () => {
+      header.classList.toggle('collapsed');
+      list.classList.toggle('collapsed');
+    });
   });
 
   panelList.querySelectorAll('.pt-cb').forEach(cb => {
@@ -395,6 +460,7 @@ function buildPanel() {
     });
   });
   panelList.querySelectorAll('.mer-all-cb').forEach(cb => {
+    cb.addEventListener('click', e => e.stopPropagation());
     cb.addEventListener('change', e => {
       const mkey = e.target.dataset.mer;
       const checked = e.target.checked;
@@ -427,10 +493,10 @@ function computePoints(kp) {
     if (!selected.has(ap.id)) return;
     const color = MERIDIANS[ap.meridian].color;
     if (ap.side === 'M') {
-      pts.push({ name: ap.name, color, pos: ap.calc(kp, null, scale) });
+      pts.push({ name: ap.name, desc: ap.desc, color, pos: ap.calc(kp, null, scale) });
     } else {
-      if (visible.R) pts.push({ name: ap.name, color, pos: ap.calc(kp, 'R', scale) });
-      if (visible.L) pts.push({ name: ap.name, color, pos: ap.calc(kp, 'L', scale) });
+      if (visible.R) pts.push({ name: ap.name, desc: ap.desc, color, pos: ap.calc(kp, 'R', scale) });
+      if (visible.L) pts.push({ name: ap.name, desc: ap.desc, color, pos: ap.calc(kp, 'L', scale) });
     }
   });
   return pts;
@@ -488,13 +554,13 @@ function drawPoints(points) {
     ctx.strokeStyle = '#fff';
     ctx.stroke();
 
-    if (showLabels) {
-      const lbl = document.createElement('div');
-      lbl.className = 'dot-label';
-      lbl.style.cssText = 'position:absolute;transform:translate(-50%,-140%);color:#fff;font-size:10px;white-space:nowrap;text-shadow:0 1px 3px rgba(0,0,0,.8);z-index:9;left:' + x + 'px;top:' + y + 'px;';
-      lbl.textContent = p.name;
-      labelLayer.appendChild(lbl);
-    }
+    const lbl = document.createElement('div');
+    lbl.className = 'dot-label';
+    lbl.style.left = x + 'px';
+    lbl.style.top = y + 'px';
+    lbl.innerHTML = '<span class="lbl-name">' + p.name + '</span>' +
+      (showDesc ? '<span class="lbl-desc">' + p.desc + '</span>' : '');
+    labelLayer.appendChild(lbl);
   });
 }
 
@@ -515,9 +581,10 @@ async function detectLoop() {
   requestAnimationFrame(detectLoop);
 }
 
-toggleBtn.addEventListener('click', () => {
-  showLabels = !showLabels;
-  toggleBtn.textContent = showLabels ? '隱藏標籤' : '顯示標籤';
+descBtn.addEventListener('click', () => {
+  showDesc = !showDesc;
+  descBtn.textContent = showDesc ? '隱藏說明' : '顯示說明';
+  descBtn.classList.toggle('active', showDesc);
 });
 
 switchBtn.addEventListener('click', async () => {
