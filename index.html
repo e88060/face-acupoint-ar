@@ -479,62 +479,110 @@ const ACUPOINTS = [
    神經解剖示意（三叉神經三孔＋顏面神經五分支）
    同樣以 FaceMesh 關鍵點比例外推估算，僅供教學示意，非個人化精確定位
 ------------------------------------------------------------------- */
-const TRIGEMINAL_POINTS = [
-  { id:'v1', label:'V1 眶上孔', desc:'眶上緣，額神經（眼神經分支）出顱處，與四白、頦孔約略同一垂直線',
-    calc:(kp,s)=>{
-      const brow = s==='R'?kp[IDX.browMidR]:kp[IDX.browMidL];
-      const eyeTop = s==='R'?kp[IDX.eyeTopR]:kp[IDX.eyeTopL];
-      return mid(brow, eyeTop, 0.3);
-    }},
-  { id:'v2', label:'V2 眶下孔', desc:'眶下緣下方，上頷神經分支出顱處（與四白穴位置重疊）',
-    calc:(kp,s)=>{
-      const top = s==='R'?kp[IDX.eyeTopR]:kp[IDX.eyeTopL];
-      const bot = s==='R'?kp[IDX.eyeBottomR]:kp[IDX.eyeBottomL];
-      const eyeH = dist(top,bot);
-      return { x: bot.x, y: bot.y + eyeH*1.0 };
-    }},
-  { id:'v3', label:'V3 頦孔', desc:'下頷骨體，下齒槽神經（下頷神經分支）出顱處，約在第二小臼齒下方',
-    calc:(kp,s)=>{
-      const mc = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
-      const ch = kp[IDX.chin];
-      return mid(mc, ch, 0.45);
-    }}
-];
-
-const FACIAL_NERVE_BRANCHES = [
-  { id:'temporal', label:'顳支',
-    target:(kp,s)=> off(s==='R'?kp[IDX.browOuterR]:kp[IDX.browOuterL], 0, -1) },
-  { id:'zygomatic', label:'顴支',
-    target:(kp,s)=> s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL] },
-  { id:'buccal', label:'頰支',
-    target:(kp,s)=> mid(s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL], s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL], 0.5) },
-  { id:'mandibular', label:'下頷緣支',
-    target:(kp,s)=> mid(s==='R'?kp[IDX.jawR]:kp[IDX.jawL], kp[IDX.chin], 0.5) },
-  { id:'cervical', label:'頸支',
-    target:(kp,s,sc)=> off(s==='R'?kp[IDX.jawR]:kp[IDX.jawL], 0, sc*0.22) }
-];
-function facialNerveOrigin(kp, s) {
+/* ------------------------------------------------------------------
+   神經解剖示意
+   三叉神經：神經節（示意投影於耳前顳骨區）→三大分支主幹→末梢出顱孔
+   顏面神經：莖乳孔→腮腺內神經叢（鵝足叢）→顳顏面/頸顏面二乾→
+             五條終末支，並於顳支、頰支加繪細支分岔
+   同樣以 FaceMesh 關鍵點比例外推估算，僅供教學示意，非個人化精確定位
+------------------------------------------------------------------- */
+function trigeminalGanglion(kp, s) {
+  // 三叉神經節深藏於顱底，此處以耳前顳骨根部（顳點與下頷角之間偏上）示意其體表投影
   const jaw = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
   const temple = s==='R'?kp[IDX.templeR]:kp[IDX.templeL];
-  return mid(jaw, temple, 0.3);
+  return mid(jaw, temple, 0.15);
+}
+function foramenPoints(kp, s) {
+  const brow = s==='R'?kp[IDX.browMidR]:kp[IDX.browMidL];
+  const eyeTop = s==='R'?kp[IDX.eyeTopR]:kp[IDX.eyeTopL];
+  const eyeBot = s==='R'?kp[IDX.eyeBottomR]:kp[IDX.eyeBottomL];
+  const eyeH = dist(eyeTop, eyeBot);
+  const mc = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
+  const ch = kp[IDX.chin];
+  return {
+    v1: mid(brow, eyeTop, 0.3),
+    v2: { x: eyeBot.x, y: eyeBot.y + eyeH*1.0 },
+    v3: mid(mc, ch, 0.45)
+  };
+}
+function trigeminalPaths(kp, s, scale) {
+  const origin = trigeminalGanglion(kp, s);
+  const f = foramenPoints(kp, s);
+  const eyeOuter = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
+  const cheek = s==='R'?kp[IDX.cheekR]:kp[IDX.cheekL];
+  const jaw = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
+  // V1 眼神經：沿眶外側緣上行至眶上孔
+  const v1Way = off(mid(origin, eyeOuter, 0.65), 0, -scale*0.06);
+  // V2 上頷神經：沿顴弓下方、頰部斜向眶下孔
+  const v2Way = mid(origin, cheek, 0.55);
+  // V3 下頷神經：沿下頷枝下緣前行至頦孔
+  const v3Way = mid(origin, jaw, 0.65);
+  return {
+    ganglion: origin,
+    branches: [
+      { id:'v1', label:'眼神經(V1)', pts:[origin, v1Way, f.v1] },
+      { id:'v2', label:'上頷神經(V2)', pts:[origin, v2Way, f.v2] },
+      { id:'v3', label:'下頷神經(V3)', pts:[origin, v3Way, f.v3] }
+    ],
+    endPoints: [
+      { label:'V1 眶上孔', desc:'額神經（眼神經分支）出顱處，與四白、頦孔約略同一垂直線', pos:f.v1 },
+      { label:'V2 眶下孔', desc:'上頷神經分支出顱處（與四白穴位置重疊）', pos:f.v2 },
+      { label:'V3 頦孔', desc:'下齒槽神經（下頷神經分支）出顱處，約在第二小臼齒下方', pos:f.v3 }
+    ]
+  };
+}
+
+function facialNervePaths(kp, s, scale) {
+  const origin = mid(s==='R'?kp[IDX.jawR]:kp[IDX.jawL], s==='R'?kp[IDX.templeR]:kp[IDX.templeL], 0.3);
+  const cheek = s==='R'?kp[IDX.cheekR]:kp[IDX.cheekL];
+  const jaw = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
+  const chin = kp[IDX.chin];
+  const browOuter = s==='R'?kp[IDX.browOuterR]:kp[IDX.browOuterL];
+  const eyeOuter = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
+  const noseAla = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
+  const mouthCorner = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
+
+  const plexus = mid(origin, cheek, 0.4);                 // 腮腺內神經叢（鵝足叢）
+  const upperDiv = mid(plexus, browOuter, 0.28);           // 顳顏面乾
+  const lowerDiv = mid(plexus, jaw, 0.45);                 // 頸顏面乾
+
+  const branches = [
+    // 顳支：上乾發出2條細支，分別走向額肌、眼輪匝肌上部
+    { id:'temporal_a', label:'顳支', pts:[origin, plexus, upperDiv, off(browOuter, 0, -scale*0.05)] },
+    { id:'temporal_b', label:'顳支細支', pts:[upperDiv, off(mid(upperDiv,browOuter,0.6), scale*0.03, -scale*0.02)] },
+    // 顴支：上乾發出，走向眼輪匝肌下部／顴肌
+    { id:'zygomatic', label:'顴支', pts:[upperDiv, mid(upperDiv, eyeOuter, 0.5), eyeOuter] },
+    // 頰支：上下乾均有貢獻，示意為上頰支＋下頰支兩條細支
+    { id:'buccal_a', label:'頰支(上)', pts:[plexus, mid(plexus, noseAla, 0.6), noseAla] },
+    { id:'buccal_b', label:'頰支(下)', pts:[lowerDiv, mid(lowerDiv, mouthCorner, 0.6), mouthCorner] },
+    // 下頷緣支：下乾沿下頷骨下緣走向頦部
+    { id:'mandibular', label:'下頷緣支', pts:[origin, plexus, lowerDiv, mid(jaw, chin, 0.5)] },
+    // 頸支：下乾向下走入頸闊肌
+    { id:'cervical', label:'頸支', pts:[lowerDiv, off(jaw, 0, scale*0.22)] }
+  ];
+  return { origin, plexus, branches };
 }
 
 function computeNerveOverlay(kp) {
   const scale = dist(kp[IDX.eyeOuterR], kp[IDX.eyeOuterL]) || 1;
   const visible = getVisibleSides(kp);
   const points = [];
-  const lines = [];
+  const paths = [];
+  const nodes = [];
   ['R','L'].forEach(s => {
     if (!visible[s]) return;
-    TRIGEMINAL_POINTS.forEach(tp => {
-      points.push({ label: tp.label, desc: tp.desc, pos: tp.calc(kp, s, scale) });
-    });
-    const origin = facialNerveOrigin(kp, s);
-    FACIAL_NERVE_BRANCHES.forEach(fb => {
-      lines.push({ label: fb.label, from: origin, to: fb.target(kp, s, scale) });
-    });
+
+    const tri = trigeminalPaths(kp, s, scale);
+    nodes.push({ pos: tri.ganglion, label:'三叉神經節(示意)', color:'#aed581' });
+    tri.branches.forEach(b => paths.push({ pts:b.pts, color:'#aed581', width:1.8 }));
+    tri.endPoints.forEach(ep => points.push(ep));
+
+    const fac = facialNervePaths(kp, s, scale);
+    nodes.push({ pos: fac.origin, label:'莖乳孔(示意)', color:'#ffe082' });
+    nodes.push({ pos: fac.plexus, label:'腮腺內神經叢', color:'#ffe082' });
+    fac.branches.forEach(b => paths.push({ pts:b.pts, color:'#ffe082', width:1.6 }));
   });
-  return { points, lines };
+  return { points, paths, nodes };
 }
 
 const selected = new Set(['ex_yuyao','ex_taiyang','sj_sizhukong','bl_zanzhu','bl_jingming','st_sibai']);
@@ -776,19 +824,37 @@ function drawNerves(overlayData) {
   const mapping = getCoverMapping();
 
   ctx.save();
-  ctx.strokeStyle = '#ffe082';
   ctx.lineWidth = 1.6;
   ctx.setLineDash([5, 4]);
-  overlayData.lines.forEach(ln => {
-    const a = toCanvasPoint(ln.from, mapping);
-    const b = toCanvasPoint(ln.to, mapping);
+  overlayData.paths.forEach(p => {
+    ctx.strokeStyle = p.color;
+    ctx.lineWidth = p.width || 1.6;
     ctx.beginPath();
-    ctx.moveTo(a.x, a.y);
-    ctx.lineTo(b.x, b.y);
+    p.pts.forEach((pt, i) => {
+      const c = toCanvasPoint(pt, mapping);
+      if (i === 0) ctx.moveTo(c.x, c.y); else ctx.lineTo(c.x, c.y);
+    });
     ctx.stroke();
   });
   ctx.setLineDash([]);
   ctx.restore();
+
+  overlayData.nodes.forEach(n => {
+    const c = toCanvasPoint(n.pos, mapping);
+    ctx.beginPath();
+    ctx.arc(c.x, c.y, 3.5, 0, Math.PI * 2);
+    ctx.fillStyle = n.color;
+    ctx.fill();
+
+    if (showDesc) {
+      const lbl = document.createElement('div');
+      lbl.className = 'dot-label';
+      lbl.style.left = c.x + 'px';
+      lbl.style.top = c.y + 'px';
+      lbl.innerHTML = '<span class="lbl-name">' + n.label + '</span>';
+      labelLayer.appendChild(lbl);
+    }
+  });
 
   overlayData.points.forEach(p => {
     const c = toCanvasPoint(p.pos, mapping);
