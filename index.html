@@ -7,7 +7,7 @@
 <style>
   html, body {
     margin: 0; padding: 0; width: 100%; height: 100%;
-    background: #000; overflow: hidden;
+    background: #e5e5e3; overflow: hidden;
     font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif;
     -webkit-user-select: none; user-select: none;
   }
@@ -15,21 +15,36 @@
 
   #titleBar {
     flex: 0 0 auto;
-    background: #0a0a0c;
-    padding: env(safe-area-inset-top, 10px) 12px 10px;
+    background: #e5e5e3;
+    padding: env(safe-area-inset-top, 10px) 12px 8px;
     text-align: center;
-    border-bottom: 1px solid #222;
+    border-bottom: 1px solid #d0d0cd;
   }
   #titleBar h1 {
     margin: 0;
-    color: #fff;
+    color: #D97757;
     font-family: "Noto Serif TC", "PMingLiU", "Songti TC", "STSong", serif;
     font-weight: 700;
     font-size: 19px;
     letter-spacing: 1px;
   }
 
+  #arControlBar {
+    flex: 0 0 auto;
+    background: #e5e5e3;
+    padding: 8px 12px;
+    display: flex; justify-content: center;
+    border-bottom: 1px solid #d0d0cd;
+  }
+  .ar-toggle {
+    padding: 8px 20px; border-radius: 20px; border: none;
+    font-size: 13px; font-weight: 600;
+  }
+  .ar-toggle.on { background: #D97757; color: #fff; }
+  .ar-toggle.off { background: #bfbfbc; color: #444; }
+
   #arWrap { position: relative; flex: 1 1 42%; min-height: 0; background: #000; overflow: hidden; }
+  #arWrap.collapsed { display: none; }
   #video, #overlay {
     position: absolute; top: 0; left: 0;
     width: 100%; height: 100%;
@@ -51,7 +66,6 @@
     border-radius: 20px; padding: 7px 12px; font-size: 12px;
   }
   #topbar button.active { background: rgba(52,152,219,.85); }
-  #topbar button.ar-off { background: rgba(231,76,60,.55); }
 
   #status {
     position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
@@ -73,9 +87,18 @@
 
   #panel {
     flex: 1 1 58%; min-height: 0; overflow-y: auto;
-    background: #121214; padding: 20px 12px calc(env(safe-area-inset-bottom,10px) + 120px);
+    background: #121214; padding: 14px 12px calc(env(safe-area-inset-bottom,10px) + 120px);
     -webkit-overflow-scrolling: touch;
   }
+  #noteToolbar {
+    display: flex; gap: 8px; padding-bottom: 14px; margin-bottom: 14px;
+    border-bottom: 1px solid #2a2a2e;
+  }
+  #noteToolbar button {
+    flex: 1; background: #2a2a2e; color: #eee; border: none;
+    border-radius: 8px; padding: 10px 8px; font-size: 12px; font-weight: 600;
+  }
+  #noteToolbar button.save { background: #D97757; color: #fff; }
   #panelNote {
     color: #999; font-size: 11px; line-height: 1.6; padding: 4px 2px 16px;
     border-bottom: 1px solid #2a2a2e; margin-bottom: 14px;
@@ -129,12 +152,15 @@
 <div id="app">
   <div id="titleBar"><h1>顏面部穴位AR學習</h1></div>
 
+  <div id="arControlBar">
+    <button id="arToggleBtn" class="ar-toggle on">AR：開啟</button>
+  </div>
+
   <div id="arWrap">
     <video id="video" playsinline muted autoplay></video>
     <canvas id="overlay"></canvas>
     <div id="labelLayer"></div>
     <div id="topbar">
-      <button id="arToggleBtn" class="active">AR：開啟</button>
       <button id="descBtn">顯示說明</button>
       <button id="switchBtn">切換鏡頭</button>
     </div>
@@ -142,11 +168,16 @@
   </div>
 
   <div id="panel">
+    <div id="noteToolbar">
+      <button id="saveNotesBtn" class="save">儲存我的備註</button>
+      <button id="loadNotesBtn">載入我的備註</button>
+      <input type="file" id="loadNotesFile" accept="application/json" style="display:none">
+    </div>
     <div id="panelNote">
       勾選要顯示的穴位，上方畫面即時疊加。點各經絡標題可收合／展開清單。同名左右對稱穴位同時顯示時，畫面左側僅顯示圓點、不重複顯示文字說明，避免畫面雜亂。臉部辨識網格未涵蓋髮際線，故部分需以髮際線定位的穴位未收錄。以下解剖與操作說明僅供學習參考，實際臨床操作請依專業判斷。
     </div>
     <div id="panelList"></div>
-    <div id="versionFooter">v1.2 · 2026年8月更新</div>
+    <div id="versionFooter">v1.3 · 2026年8月更新</div>
   </div>
 </div>
 
@@ -158,7 +189,7 @@
 
 <script>
 /* ------------------------------------------------------------------
-   顏面部穴位AR學習 v1.2
+   顏面部穴位AR學習 v1.3
    原理：MediaPipe FaceMesh 468 關鍵點 → 以穩定解剖錨點（眉/眼/鼻/口/
         臉頰輪廓/顳部）為基準，用比例換算法推算各穴位相對座標 →
         依勾選狀態即時疊加繪製，並依臉部轉向隱藏遮住那側的點
@@ -173,12 +204,17 @@ const statusEl = document.getElementById('status');
 const descBtn = document.getElementById('descBtn');
 const switchBtn = document.getElementById('switchBtn');
 const arToggleBtn = document.getElementById('arToggleBtn');
+const arWrap = document.getElementById('arWrap');
 const panelList = document.getElementById('panelList');
+const saveNotesBtn = document.getElementById('saveNotesBtn');
+const loadNotesBtn = document.getElementById('loadNotesBtn');
+const loadNotesFile = document.getElementById('loadNotesFile');
 
 let detector = null;
 let currentFacing = 'user';
 let showDesc = false;
-let arEnabled = true;
+let arEnabled = false;
+let loopRunning = false;
 
 const IDX = {
   browOuterR: 70,  browMidR: 105, browInnerR: 107,
@@ -212,7 +248,6 @@ const MERIDIANS = {
 };
 const MERIDIAN_ORDER = ['EX','LI','ST','SI','BL','SJ','GB','DU','REN'];
 
-// desc=取穴, indications=主治功效, anatomy=解剖結構, technique=針灸操作
 const ACUPOINTS = [
   { id:'ex_yintang', name:'印堂', code:'EX-HN3', meridian:'EX', side:'M',
     desc:'兩眉頭連線中點',
@@ -442,7 +477,7 @@ const selected = new Set(['ex_yuyao','ex_taiyang','sj_sizhukong','bl_zanzhu','bl
 const NOTES_KEY = 'acupoint_notes_v1';
 let notes = {};
 try { notes = JSON.parse(localStorage.getItem(NOTES_KEY) || '{}'); } catch(e) { notes = {}; }
-function saveNotes() {
+function saveNotesToStorage() {
   try { localStorage.setItem(NOTES_KEY, JSON.stringify(notes)); } catch(e) {}
 }
 
@@ -479,7 +514,7 @@ function buildPanel() {
         '<div class="pt-attr"><span class="attr-label">主治功效</span><span class="attr-val">' + pt.indications + '</span></div>' +
         '<div class="pt-attr"><span class="attr-label">解剖結構</span><span class="attr-val">' + pt.anatomy + '</span></div>' +
         '<div class="pt-attr"><span class="attr-label">針灸操作</span><span class="attr-val">' + pt.technique + '</span></div>' +
-        '<div class="pt-attr"><span class="attr-label">備註</span><input class="note-input" data-note-id="' + pt.id + '" placeholder="輸入備註…" value="' + (notes[pt.id] ? notes[pt.id].replace(/"/g,'&quot;') : '') + '"></div>';
+        '<div class="pt-attr"><span class="attr-label">我的備註</span><input class="note-input" data-note-id="' + pt.id + '" placeholder="輸入我的備註…" value="' + (notes[pt.id] ? notes[pt.id].replace(/"/g,'&quot;') : '') + '"></div>';
       list.appendChild(card);
     });
     section.appendChild(list);
@@ -516,10 +551,52 @@ function buildPanel() {
     inp.addEventListener('input', e => {
       const id = e.target.dataset.noteId;
       notes[id] = e.target.value;
-      saveNotes();
+      saveNotesToStorage();
     });
   });
 }
+
+function timestampStr() {
+  const d = new Date();
+  const p = n => String(n).padStart(2,'0');
+  return d.getFullYear() + p(d.getMonth()+1) + p(d.getDate()) + '_' + p(d.getHours()) + p(d.getMinutes());
+}
+
+saveNotesBtn.addEventListener('click', () => {
+  const data = JSON.stringify(notes, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '穴位我的備註_' + timestampStr() + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+loadNotesBtn.addEventListener('click', () => loadNotesFile.click());
+loadNotesFile.addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = evt => {
+    try {
+      const loaded = JSON.parse(evt.target.result);
+      notes = Object.assign({}, notes, loaded);
+      saveNotesToStorage();
+      panelList.querySelectorAll('.note-input').forEach(inp => {
+        const id = inp.dataset.noteId;
+        if (notes[id] !== undefined) inp.value = notes[id];
+      });
+      alert('備註已載入');
+    } catch (err) {
+      alert('載入失敗，檔案格式不正確');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
 
 function getVisibleSides(kp) {
   const cheekR = kp[IDX.cheekR], cheekL = kp[IDX.cheekL];
@@ -559,6 +636,7 @@ async function setupCamera(facing) {
 }
 
 async function loadModel() {
+  if (detector) return;
   const model = faceLandmarksDetection.SupportedModels.MediaPipeFaceMesh;
   detector = await faceLandmarksDetection.createDetector(model, {
     runtime: 'mediapipe',
@@ -592,7 +670,6 @@ function drawPoints(points) {
     return { name: p.name, desc: p.desc, color: p.color, x: overlay.width - rawX, y: rawY };
   });
 
-  // 同名成對（左右對稱）出現時，畫面左側（x較小）那個不顯示文字，只留圓點
   const byName = {};
   resolved.forEach(p => { (byName[p.name] = byName[p.name] || []).push(p); });
   const suppressed = new Set();
@@ -625,14 +702,8 @@ function drawPoints(points) {
 }
 
 async function detectLoop() {
-  if (!arEnabled) {
-    ctx.clearRect(0, 0, overlay.width, overlay.height);
-    labelLayer.innerHTML = '';
-    statusEl.style.display = 'block';
-    statusEl.textContent = 'AR辨識已關閉';
-    requestAnimationFrame(detectLoop);
-    return;
-  }
+  if (!arEnabled) { loopRunning = false; return; }
+  loopRunning = true;
   if (detector && video.readyState >= 2) {
     const faces = await detector.estimateFaces(video);
     if (faces.length > 0) {
@@ -655,13 +726,6 @@ descBtn.addEventListener('click', () => {
   descBtn.classList.toggle('active', showDesc);
 });
 
-arToggleBtn.addEventListener('click', () => {
-  arEnabled = !arEnabled;
-  arToggleBtn.textContent = arEnabled ? 'AR：開啟' : 'AR：關閉';
-  arToggleBtn.classList.toggle('active', arEnabled);
-  arToggleBtn.classList.toggle('ar-off', !arEnabled);
-});
-
 switchBtn.addEventListener('click', async () => {
   currentFacing = currentFacing === 'user' ? 'environment' : 'user';
   video.style.transform = currentFacing === 'user' ? 'scaleX(-1)' : 'scaleX(1)';
@@ -669,21 +733,47 @@ switchBtn.addEventListener('click', async () => {
   resizeCanvas();
 });
 
-window.addEventListener('resize', resizeCanvas);
-
-(async function init() {
-  buildPanel();
+async function turnArOn() {
+  arWrap.classList.remove('collapsed');
+  statusEl.style.display = 'block';
+  statusEl.textContent = '正在啟動相機…';
   try {
-    statusEl.textContent = '正在啟動相機…';
     await setupCamera(currentFacing);
     resizeCanvas();
     statusEl.textContent = '正在載入辨識模型…';
     await loadModel();
     statusEl.textContent = '請將臉部正對鏡頭';
-    detectLoop();
+    arEnabled = true;
+    arToggleBtn.textContent = 'AR：開啟';
+    arToggleBtn.classList.remove('off');
+    arToggleBtn.classList.add('on');
+    if (!loopRunning) detectLoop();
   } catch (err) {
     statusEl.textContent = '啟動失敗：' + err.message + '（請確認已允許相機權限，且網頁為 HTTPS）';
   }
+}
+
+function turnArOff() {
+  arEnabled = false;
+  arToggleBtn.textContent = 'AR：關閉';
+  arToggleBtn.classList.remove('on');
+  arToggleBtn.classList.add('off');
+  if (video.srcObject) {
+    video.srcObject.getTracks().forEach(t => t.stop());
+    video.srcObject = null;
+  }
+  arWrap.classList.add('collapsed');
+}
+
+arToggleBtn.addEventListener('click', () => {
+  if (arEnabled) turnArOff(); else turnArOn();
+});
+
+window.addEventListener('resize', resizeCanvas);
+
+(function init() {
+  buildPanel();
+  turnArOn();
 })();
 </script>
 </body>
