@@ -6,12 +6,12 @@
 <title>顏面部穴位AR學習</title>
 <style>
   html, body {
-    margin: 0; padding: 0; width: 100%; height: 100%;
-    background: #e5e5e3; overflow: hidden;
+    margin: 0; padding: 0; width: 100%;
+    background: #e5e5e3;
     font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif;
     -webkit-user-select: none; user-select: none;
   }
-  #app { display: flex; flex-direction: column; width: 100vw; height: 100vh; }
+  #app { display: flex; flex-direction: column; width: 100vw; min-height: 100vh; }
 
   #titleBar {
     flex: 0 0 auto;
@@ -43,7 +43,7 @@
   .ar-toggle.on { background: #D97757; color: #fff; }
   .ar-toggle.off { background: #bfbfbc; color: #444; }
 
-  #arWrap { position: relative; flex: 1 1 94.5%; min-height: 0; background: #000; overflow: hidden; }
+  #arWrap { position: relative; flex: 0 0 auto; height: 85vh; background: #000; overflow: hidden; }
   #arWrap.collapsed { display: none; }
   #video, #overlay {
     position: absolute; top: 0; left: 0;
@@ -86,34 +86,60 @@
   }
 
   #panel {
-    flex: 1 1 5.5%; min-height: 0; overflow-y: auto;
-    background: #e5e5e3; padding: 14px 12px calc(env(safe-area-inset-bottom,10px) + 120px);
-    -webkit-overflow-scrolling: touch;
+    flex: 0 0 auto;
+    background: #e5e5e3; padding: 14px 12px calc(env(safe-area-inset-bottom,10px) + 30px);
   }
   #noteToolbar {
-    display: flex; gap: 8px; padding-bottom: 14px; margin-bottom: 14px;
-    border-bottom: 1px solid #cfcfcc;
+    display: flex; gap: 6px; padding-top: 12px; margin-top: 14px;
+    border-top: 1px solid #cfcfcc;
   }
   #noteToolbar button {
     flex: 1; background: #d8d8d5; color: #333; border: none;
-    border-radius: 8px; padding: 10px 8px; font-size: 12px; font-weight: 600;
+    border-radius: 6px; padding: 6px 6px; font-size: 10.5px; font-weight: 600;
   }
   #noteToolbar button.save { background: #D97757; color: #fff; }
   #panelNote {
     color: #666; font-size: 11px; line-height: 1.6; padding: 4px 2px 16px;
     border-bottom: 1px solid #cfcfcc; margin-bottom: 14px;
   }
-  #panelBody { display: flex; gap: 10px; align-items: flex-start; }
-  #panelList { flex: 1 1 0; min-width: 0; }
-  #nervePanel {
-    flex: 1 1 0; min-width: 130px; display: flex; flex-direction: column; gap: 8px;
+  #panelBody { display: flex; flex-direction: column; gap: 18px; }
+
+  .group-section { }
+  .group-header {
+    display: flex; align-items: center; gap: 6px; cursor: pointer;
+    color: #D97757; font-size: 16px; font-weight: 700;
+    padding: 4px 2px 8px; border-bottom: 2px solid #D97757; margin-bottom: 10px;
   }
+  .group-header .arrow { font-size: 12px; transition: transform .15s ease; }
+  .group-header.collapsed .arrow { transform: rotate(-90deg); }
+  .group-content.collapsed { display: none; }
+
+  .subgroup-section { margin-bottom: 12px; }
+  .subgroup-header {
+    display: flex; align-items: center; gap: 6px; cursor: pointer;
+    color: #222; font-size: 14px; font-weight: 700;
+    padding: 5px 8px; background: #ded9d3; border-radius: 6px; margin-bottom: 8px;
+  }
+  .subgroup-header .arrow { font-size: 11px; color: #777; transition: transform .15s ease; }
+  .subgroup-header.collapsed .arrow { transform: rotate(-90deg); }
+  .subgroup-content.collapsed { display: none; }
+  .subgroup-content { display: flex; flex-direction: column; gap: 8px; padding-left: 2px; }
+
+  .placeholder-note { color: #999; font-size: 11.5px; margin: 2px 0 4px; }
+
   .nerve-block {
     background: #f2f2f0; border-radius: 10px; padding: 9px 10px 10px;
   }
   .nerve-block .nerve-title {
-    font-size: 13px; font-weight: 700; color: #222; margin-bottom: 3px;
+    display: flex; align-items: center; gap: 6px; cursor: pointer;
+    font-size: 13px; font-weight: 700; color: #222;
   }
+  .nerve-block .nerve-title .arrow {
+    font-size: 10px; color: #777; transition: transform .15s ease;
+  }
+  .nerve-block .nerve-title.collapsed .arrow { transform: rotate(-90deg); }
+  .nerve-body { margin-top: 6px; }
+  .nerve-body.collapsed { display: none; }
   .nerve-block .nerve-desc {
     margin: 0 0 6px; font-size: 10.5px; line-height: 1.5; color: #666;
   }
@@ -191,29 +217,58 @@
       勾選要顯示的穴位，上方畫面即時疊加。點各經絡標題可收合／展開清單。同名左右對稱穴位同時顯示時，畫面左側僅顯示圓點、不重複顯示文字說明，避免畫面雜亂。臉部辨識網格未涵蓋髮際線，故部分需以髮際線定位的穴位未收錄。以下解剖與操作說明僅供學習參考，實際臨床操作請依專業判斷。
     </div>
     <div id="panelBody">
-      <div id="panelList"></div>
-      <div id="nervePanel">
-        <div class="nerve-block">
-          <div class="nerve-title">三叉神經</div>
-          <p class="nerve-desc">感覺神經：主司臉部皮膚、口鼻黏膜的痛溫觸覺</p>
-          <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_ganglion"> 三叉神經節</label>
-          <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_v1"> 眼神經 V1（眶上孔）</label>
-          <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_v2"> 上頷神經 V2（眶下孔）</label>
-          <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_v3"> 下頷神經 V3（頦孔）</label>
-        </div>
-        <div class="nerve-block">
-          <div class="nerve-title">顏面神經</div>
-          <p class="nerve-desc">運動神經：支配臉部表情肌</p>
-          <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_stylo"> 莖乳孔（神經幹起點）</label>
-          <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_plexus"> 腮腺內神經叢</label>
-          <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_temporal"> 顳支</label>
-          <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_zygomatic"> 顴支</label>
-          <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_buccal"> 頰支</label>
-          <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_mandibular"> 下頷緣支</label>
-          <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_cervical"> 頸支</label>
+      <div class="group-section">
+        <div class="group-header"><span class="arrow">▾</span>經絡穴位</div>
+        <div class="group-content" id="panelList"></div>
+      </div>
+
+      <div class="group-section">
+        <div class="group-header"><span class="arrow">▾</span>重要解剖結構</div>
+        <div class="group-content">
+
+          <div class="subgroup-section">
+            <div class="subgroup-header"><span class="arrow">▾</span>神經</div>
+            <div class="subgroup-content">
+              <div class="nerve-block">
+                <div class="nerve-title collapsed"><span class="arrow">▾</span>三叉神經</div>
+                <div class="nerve-body collapsed">
+                  <p class="nerve-desc">感覺神經：主司臉部皮膚、口鼻黏膜的痛溫觸覺</p>
+                  <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_ganglion"> 三叉神經節</label>
+                  <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_v1"> 眼神經 V1（眶上孔）</label>
+                  <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_v2"> 上頷神經 V2（眶下孔）</label>
+                  <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_v3"> 下頷神經 V3（頦孔）</label>
+                </div>
+              </div>
+              <div class="nerve-block">
+                <div class="nerve-title collapsed"><span class="arrow">▾</span>顏面神經</div>
+                <div class="nerve-body collapsed">
+                  <p class="nerve-desc">運動神經：支配臉部表情肌</p>
+                  <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_stylo"> 莖乳孔（神經幹起點）</label>
+                  <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_plexus"> 腮腺內神經叢</label>
+                  <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_temporal"> 顳支</label>
+                  <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_zygomatic"> 顴支</label>
+                  <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_buccal"> 頰支</label>
+                  <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_mandibular"> 下頷緣支</label>
+                  <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_cervical"> 頸支</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="subgroup-section">
+            <div class="subgroup-header"><span class="arrow">▾</span>血管</div>
+            <div class="subgroup-content"><p class="placeholder-note">內容建置中，敬請期待。</p></div>
+          </div>
+
+          <div class="subgroup-section">
+            <div class="subgroup-header"><span class="arrow">▾</span>肌肉</div>
+            <div class="subgroup-content"><p class="placeholder-note">內容建置中，敬請期待。</p></div>
+          </div>
+
         </div>
       </div>
     </div>
+
     <div id="noteToolbar">
       <button id="saveNotesBtn" class="save">儲存我的備註</button>
       <button id="loadNotesBtn">載入我的備註</button>
@@ -941,6 +996,25 @@ descBtn.addEventListener('click', () => {
   showDesc = !showDesc;
   descBtn.textContent = showDesc ? '隱藏說明' : '顯示說明';
   descBtn.classList.toggle('active', showDesc);
+});
+
+document.querySelectorAll('.group-header').forEach(h => {
+  h.addEventListener('click', () => {
+    h.classList.toggle('collapsed');
+    h.nextElementSibling.classList.toggle('collapsed');
+  });
+});
+document.querySelectorAll('.subgroup-header').forEach(h => {
+  h.addEventListener('click', () => {
+    h.classList.toggle('collapsed');
+    h.nextElementSibling.classList.toggle('collapsed');
+  });
+});
+document.querySelectorAll('.nerve-block .nerve-title').forEach(h => {
+  h.addEventListener('click', () => {
+    h.classList.toggle('collapsed');
+    h.nextElementSibling.classList.toggle('collapsed');
+  });
 });
 
 document.querySelectorAll('.nv-cb').forEach(cb => {
