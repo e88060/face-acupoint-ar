@@ -43,7 +43,7 @@
   .ar-toggle.on { background: #D97757; color: #fff; }
   .ar-toggle.off { background: #bfbfbc; color: #444; }
 
-  #arWrap { position: relative; flex: 1 1 42%; min-height: 0; background: #000; overflow: hidden; }
+  #arWrap { position: relative; flex: 1 1 94.5%; min-height: 0; background: #000; overflow: hidden; }
   #arWrap.collapsed { display: none; }
   #video, #overlay {
     position: absolute; top: 0; left: 0;
@@ -86,7 +86,7 @@
   }
 
   #panel {
-    flex: 1 1 58%; min-height: 0; overflow-y: auto;
+    flex: 1 1 5.5%; min-height: 0; overflow-y: auto;
     background: #e5e5e3; padding: 14px 12px calc(env(safe-area-inset-bottom,10px) + 120px);
     -webkit-overflow-scrolling: touch;
   }
@@ -103,6 +103,25 @@
     color: #666; font-size: 11px; line-height: 1.6; padding: 4px 2px 16px;
     border-bottom: 1px solid #cfcfcc; margin-bottom: 14px;
   }
+  #panelBody { display: flex; gap: 10px; align-items: flex-start; }
+  #panelList { flex: 1 1 0; min-width: 0; }
+  #nervePanel {
+    flex: 1 1 0; min-width: 130px; display: flex; flex-direction: column; gap: 8px;
+  }
+  .nerve-block {
+    background: #f2f2f0; border-radius: 10px; padding: 9px 10px 10px;
+  }
+  .nerve-block .nerve-title {
+    font-size: 13px; font-weight: 700; color: #222; margin-bottom: 3px;
+  }
+  .nerve-block .nerve-desc {
+    margin: 0 0 6px; font-size: 10.5px; line-height: 1.5; color: #666;
+  }
+  .nerve-cb {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11.5px; color: #333; padding: 3px 0;
+  }
+
   .mer-section { margin-bottom: 14px; }
   .mer-header {
     display: flex; align-items: center; justify-content: space-between;
@@ -162,22 +181,44 @@
     <div id="labelLayer"></div>
     <div id="topbar">
       <button id="descBtn">顯示說明</button>
-      <button id="nerveBtn">神經解剖</button>
       <button id="switchBtn">切換鏡頭</button>
     </div>
     <div id="status">正在載入辨識模型…</div>
   </div>
 
   <div id="panel">
+    <div id="panelNote">
+      勾選要顯示的穴位，上方畫面即時疊加。點各經絡標題可收合／展開清單。同名左右對稱穴位同時顯示時，畫面左側僅顯示圓點、不重複顯示文字說明，避免畫面雜亂。臉部辨識網格未涵蓋髮際線，故部分需以髮際線定位的穴位未收錄。以下解剖與操作說明僅供學習參考，實際臨床操作請依專業判斷。
+    </div>
+    <div id="panelBody">
+      <div id="panelList"></div>
+      <div id="nervePanel">
+        <div class="nerve-block">
+          <div class="nerve-title">三叉神經</div>
+          <p class="nerve-desc">感覺神經：主司臉部皮膚、口鼻黏膜的痛溫觸覺</p>
+          <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_ganglion"> 三叉神經節</label>
+          <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_v1"> 眼神經 V1（眶上孔）</label>
+          <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_v2"> 上頷神經 V2（眶下孔）</label>
+          <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_v3"> 下頷神經 V3（頦孔）</label>
+        </div>
+        <div class="nerve-block">
+          <div class="nerve-title">顏面神經</div>
+          <p class="nerve-desc">運動神經：支配臉部表情肌</p>
+          <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_stylo"> 莖乳孔（神經幹起點）</label>
+          <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_plexus"> 腮腺內神經叢</label>
+          <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_temporal"> 顳支</label>
+          <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_zygomatic"> 顴支</label>
+          <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_buccal"> 頰支</label>
+          <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_mandibular"> 下頷緣支</label>
+          <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_cervical"> 頸支</label>
+        </div>
+      </div>
+    </div>
     <div id="noteToolbar">
       <button id="saveNotesBtn" class="save">儲存我的備註</button>
       <button id="loadNotesBtn">載入我的備註</button>
       <input type="file" id="loadNotesFile" accept="application/json" style="display:none">
     </div>
-    <div id="panelNote">
-      勾選要顯示的穴位，上方畫面即時疊加。點各經絡標題可收合／展開清單。同名左右對稱穴位同時顯示時，畫面左側僅顯示圓點、不重複顯示文字說明，避免畫面雜亂。臉部辨識網格未涵蓋髮際線，故部分需以髮際線定位的穴位未收錄。以下解剖與操作說明僅供學習參考，實際臨床操作請依專業判斷。
-    </div>
-    <div id="panelList"></div>
     <div id="versionFooter">v1.3 · 2026年8月更新</div>
   </div>
 </div>
@@ -203,7 +244,6 @@ const ctx = overlay.getContext('2d');
 const labelLayer = document.getElementById('labelLayer');
 const statusEl = document.getElementById('status');
 const descBtn = document.getElementById('descBtn');
-const nerveBtn = document.getElementById('nerveBtn');
 const switchBtn = document.getElementById('switchBtn');
 const arToggleBtn = document.getElementById('arToggleBtn');
 const arWrap = document.getElementById('arWrap');
@@ -215,7 +255,7 @@ const loadNotesFile = document.getElementById('loadNotesFile');
 let detector = null;
 let currentFacing = 'user';
 let showDesc = false;
-let showNerve = false;
+const nerveSelected = new Set();
 let arEnabled = false;
 let loopRunning = false;
 
@@ -525,9 +565,9 @@ function trigeminalPaths(kp, s, scale) {
       { id:'v3', label:'下頷神經(V3)', pts:[origin, v3Way, f.v3] }
     ],
     endPoints: [
-      { label:'V1 眶上孔', desc:'額神經（眼神經分支）出顱處，與四白、頦孔約略同一垂直線', pos:f.v1 },
-      { label:'V2 眶下孔', desc:'上頷神經分支出顱處（與四白穴位置重疊）', pos:f.v2 },
-      { label:'V3 頦孔', desc:'下齒槽神經（下頷神經分支）出顱處，約在第二小臼齒下方', pos:f.v3 }
+      { id:'v1', label:'V1 眶上孔', desc:'額神經（眼神經分支）出顱處，與四白、頦孔約略同一垂直線', pos:f.v1 },
+      { id:'v2', label:'V2 眶下孔', desc:'上頷神經分支出顱處（與四白穴位置重疊）', pos:f.v2 },
+      { id:'v3', label:'V3 頦孔', desc:'下齒槽神經（下頷神經分支）出顱處，約在第二小臼齒下方', pos:f.v3 }
     ]
   };
 }
@@ -548,22 +588,22 @@ function facialNervePaths(kp, s, scale) {
 
   const branches = [
     // 顳支：上乾發出2條細支，分別走向額肌、眼輪匝肌上部
-    { id:'temporal_a', label:'顳支', pts:[origin, plexus, upperDiv, off(browOuter, 0, -scale*0.05)] },
-    { id:'temporal_b', label:'顳支細支', pts:[upperDiv, off(mid(upperDiv,browOuter,0.6), scale*0.03, -scale*0.02)] },
+    { id:'temporal_a', key:'fac_temporal', label:'顳支', pts:[origin, plexus, upperDiv, off(browOuter, 0, -scale*0.05)] },
+    { id:'temporal_b', key:'fac_temporal', label:'顳支細支', pts:[upperDiv, off(mid(upperDiv,browOuter,0.6), scale*0.03, -scale*0.02)] },
     // 顴支：上乾發出，走向眼輪匝肌下部／顴肌
-    { id:'zygomatic', label:'顴支', pts:[upperDiv, mid(upperDiv, eyeOuter, 0.5), eyeOuter] },
+    { id:'zygomatic', key:'fac_zygomatic', label:'顴支', pts:[upperDiv, mid(upperDiv, eyeOuter, 0.5), eyeOuter] },
     // 頰支：上下乾均有貢獻，示意為上頰支＋下頰支兩條細支
-    { id:'buccal_a', label:'頰支(上)', pts:[plexus, mid(plexus, noseAla, 0.6), noseAla] },
-    { id:'buccal_b', label:'頰支(下)', pts:[lowerDiv, mid(lowerDiv, mouthCorner, 0.6), mouthCorner] },
+    { id:'buccal_a', key:'fac_buccal', label:'頰支(上)', pts:[plexus, mid(plexus, noseAla, 0.6), noseAla] },
+    { id:'buccal_b', key:'fac_buccal', label:'頰支(下)', pts:[lowerDiv, mid(lowerDiv, mouthCorner, 0.6), mouthCorner] },
     // 下頷緣支：下乾沿下頷骨下緣走向頦部
-    { id:'mandibular', label:'下頷緣支', pts:[origin, plexus, lowerDiv, mid(jaw, chin, 0.5)] },
+    { id:'mandibular', key:'fac_mandibular', label:'下頷緣支', pts:[origin, plexus, lowerDiv, mid(jaw, chin, 0.5)] },
     // 頸支：下乾向下走入頸闊肌
-    { id:'cervical', label:'頸支', pts:[lowerDiv, off(jaw, 0, scale*0.22)] }
+    { id:'cervical', key:'fac_cervical', label:'頸支', pts:[lowerDiv, off(jaw, 0, scale*0.22)] }
   ];
   return { origin, plexus, branches };
 }
 
-function computeNerveOverlay(kp) {
+function computeNerveOverlay(kp, sel) {
   const scale = dist(kp[IDX.eyeOuterR], kp[IDX.eyeOuterL]) || 1;
   const visible = getVisibleSides(kp);
   const points = [];
@@ -573,19 +613,19 @@ function computeNerveOverlay(kp) {
     if (!visible[s]) return;
 
     const tri = trigeminalPaths(kp, s, scale);
-    nodes.push({ pos: tri.ganglion, label:'三叉神經節(示意)', color:'#aed581' });
-    tri.branches.forEach(b => paths.push({ pts:b.pts, color:'#aed581', width:1.8 }));
-    tri.endPoints.forEach(ep => points.push(ep));
+    if (sel.has('tri_ganglion')) nodes.push({ pos: tri.ganglion, label:'三叉神經節(示意)', color:'#aed581' });
+    tri.branches.forEach(b => { if (sel.has('tri_'+b.id)) paths.push({ pts:b.pts, color:'#aed581', width:1.8 }); });
+    tri.endPoints.forEach(ep => { if (sel.has('tri_'+ep.id)) points.push(ep); });
 
     const fac = facialNervePaths(kp, s, scale);
-    nodes.push({ pos: fac.origin, label:'莖乳孔(示意)', color:'#ffe082' });
-    nodes.push({ pos: fac.plexus, label:'腮腺內神經叢', color:'#ffe082' });
-    fac.branches.forEach(b => paths.push({ pts:b.pts, color:'#ffe082', width:1.6 }));
+    if (sel.has('fac_stylo')) nodes.push({ pos: fac.origin, label:'莖乳孔(示意)', color:'#ffe082' });
+    if (sel.has('fac_plexus')) nodes.push({ pos: fac.plexus, label:'腮腺內神經叢', color:'#ffe082' });
+    fac.branches.forEach(b => { if (sel.has(b.key)) paths.push({ pts:b.pts, color:'#ffe082', width:1.6 }); });
   });
   return { points, paths, nodes };
 }
 
-const selected = new Set(['ex_yuyao','ex_taiyang','sj_sizhukong','bl_zanzhu','bl_jingming','st_sibai']);
+const selected = new Set();
 
 const NOTES_KEY = 'acupoint_notes_v1';
 let notes = {};
@@ -885,7 +925,7 @@ async function detectLoop() {
     if (faces.length > 0) {
       const kp = faces[0].keypoints;
       drawPoints(computePoints(kp));
-      if (showNerve) drawNerves(computeNerveOverlay(kp));
+      if (nerveSelected.size > 0) drawNerves(computeNerveOverlay(kp, nerveSelected));
       statusEl.style.display = 'none';
     } else {
       ctx.clearRect(0, 0, overlay.width, overlay.height);
@@ -903,11 +943,12 @@ descBtn.addEventListener('click', () => {
   descBtn.classList.toggle('active', showDesc);
 });
 
-nerveBtn.addEventListener('click', () => {
-  showNerve = !showNerve;
-  nerveBtn.textContent = showNerve ? '隱藏神經' : '神經解剖';
-  nerveBtn.classList.toggle('active', showNerve);
-  if (!showNerve) labelLayer.innerHTML = '';
+document.querySelectorAll('.nv-cb').forEach(cb => {
+  cb.addEventListener('change', e => {
+    const key = e.target.dataset.key;
+    if (e.target.checked) nerveSelected.add(key); else nerveSelected.delete(key);
+    if (nerveSelected.size === 0) labelLayer.innerHTML = '';
+  });
 });
 
 switchBtn.addEventListener('click', async () => {
