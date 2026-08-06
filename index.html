@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>顏面部穴位AR學習平台</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; width: 100%;
+    background: #e5e5e3;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif;
+    color: #333;
+  }
+  #app { display: flex; flex-direction: column; min-height: 100vh; }
+
+  header {
+    padding: calc(env(safe-area-inset-top, 10px) + 30px) 20px 26px;
+    text-align: center;
+    background: linear-gradient(180deg, #f2ece7 0%, #e5e5e3 100%);
+    border-bottom: 1px solid #d0d0cd;
+  }
+  header h1 {
+    margin: 0 0 8px;
+    color: #D97757;
+    font-family: "Noto Serif TC", "PMingLiU", "Songti TC", "STSong", serif;
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: 1px;
+  }
+  header p {
+    margin: 0 auto; max-width: 480px;
+    color: #777; font-size: 13px; line-height: 1.8;
+  }
+
+  main { flex: 1; padding: 22px 16px 10px; max-width: 560px; width: 100%; box-sizing: border-box; margin: 0 auto; }
+
+  .intro-box {
+    background: #f2f2f0; border-radius: 12px; padding: 16px 18px;
+    font-size: 12.5px; line-height: 1.9; color: #555; margin-bottom: 22px;
+  }
+  .intro-box b { color: #D97757; }
+
+  .section-title {
+    font-size: 13px; color: #999; font-weight: 700; letter-spacing: 2px;
+    margin: 0 4px 12px;
+  }
+
+  .nav-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+
+  .nav-card {
+    display: flex; align-items: center; gap: 14px;
+    background: #fff; border-radius: 14px; padding: 16px 16px;
+    text-decoration: none; color: inherit;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    border: 1px solid #e8e6e2;
+    transition: transform .1s ease;
+  }
+  .nav-card:active { transform: scale(0.98); }
+
+  .nav-card .icon {
+    flex: 0 0 48px; width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; color: #fff;
+  }
+  .nav-card.c1 .icon { background: #D97757; }
+  .nav-card.c2 .icon { background: #3d7ab0; }
+  .nav-card.c3 .icon { background: #2ecc71; }
+
+  .nav-card .body { flex: 1; min-width: 0; }
+  .nav-card .body .tag {
+    font-size: 10.5px; color: #aaa; font-weight: 600; letter-spacing: 1px; margin-bottom: 2px;
+  }
+  .nav-card .body h2 {
+    margin: 0 0 4px; font-size: 15.5px; font-weight: 700; color: #222;
+  }
+  .nav-card .body p {
+    margin: 0; font-size: 11.5px; color: #888; line-height: 1.6;
+  }
+  .nav-card .chev { flex: 0 0 auto; color: #ccc; font-size: 18px; }
+
+  footer {
+    text-align: center; color: #999; font-size: 11px;
+    padding: 10px 0 calc(env(safe-area-inset-bottom, 10px) + 20px);
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <header>
+    <h1>顏面部穴位AR學習平台</h1>
+    <p>結合擴增實境（AR）臉部辨識與中醫經絡穴位知識，提供顏面部穴位定位學習、自我測驗與臨床針灸應用參考。</p>
+  </header>
+
+  <main>
+    <div class="section-title">功能選單</div>
+    <div class="nav-list">
+      <a class="nav-card c1" href="pages/ar.html">
+        <div class="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8"/>
+            <path d="M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8"/>
+            <path d="M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16"/>
+            <path d="M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16"/>
+            <circle cx="12" cy="12" r="3.2"/>
+          </svg>
+        </div>
+        <div class="body">
+          <div class="tag">LEARN</div>
+          <h2>顏面部穴位AR學習</h2>
+          <p>開啟相機即時疊加顯示穴位位置，含取穴、主治、解剖、操作說明</p>
+        </div>
+        <div class="chev">›</div>
+      </a>
+
+      <a class="nav-card c2" href="pages/quiz.html">
+        <div class="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="4" width="14" height="17" rx="2"/>
+            <path d="M9 3.5h6a1 1 0 0 1 1 1V6H8V4.5a1 1 0 0 1 1-1Z"/>
+            <path d="m8.5 12.5 2 2 4-4.2"/>
+            <path d="M8.5 17h7"/>
+          </svg>
+        </div>
+        <div class="body">
+          <div class="tag">TEST</div>
+          <h2>顏面部穴位學習測驗</h2>
+          <p>AR跑考：對鏡頭實地指出穴位位置｜題庫選題：經絡、主治、取穴選擇測驗</p>
+        </div>
+        <div class="chev">›</div>
+      </a>
+
+      <a class="nav-card c3" href="pages/clinical.html">
+        <div class="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 3v6a4 4 0 0 0 8 0V3"/>
+            <path d="M6 6H4.5M9.5 6H14"/>
+            <path d="M14 9v3a5 5 0 0 1-10 0v-1"/>
+            <circle cx="18" cy="15" r="2.6"/>
+          </svg>
+        </div>
+        <div class="body">
+          <div class="tag">CLINICAL</div>
+          <h2>常見疾病之顏面部穴位針灸技巧與異常狀況</h2>
+          <p>面癱、三叉神經痛等常見病症的選穴與操作要點、危險穴位與異常狀況處理</p>
+        </div>
+        <div class="chev">›</div>
+      </a>
+    </div>
+
+    <div class="intro-box">
+      本平台以 <b>MediaPipe FaceMesh</b> 臉部關鍵點辨識技術為基礎，將顏面部 26 個常用穴位以比例換算法即時疊加於鏡頭畫面中，協助學習者掌握取穴位置與經絡歸屬。內容涵蓋定位學習、跑穴測驗、題庫自測，以及常見顏面疾病的針灸操作技巧與臨床注意事項，僅供衛教與教學參考，實際臨床操作仍須依專業判斷執行。
+    </div>
+  </main>
+
+  <footer>顏面部穴位AR學習平台 v1.5 · 2026年8月更新</footer>
+</div>
+
+</body>
+</html>
