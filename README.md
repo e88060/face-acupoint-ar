@@ -1,0 +1,90 @@
+# 顏面部穴位AR學習平台 v2.2
+
+## 這是什麼
+多頁式網站，含首頁與三個子頁面，結合AR臉部辨識與中醫顏面部穴位知識，
+提供定位學習、跑考測驗、題庫自測與臨床應用參考。
+
+## 網站結構
+```
+/index.html              首頁（簡介＋三個子頁面連結）
+/pages/ar.html           顏面部穴位AR學習
+/pages/quiz.html         顏面部穴位學習測驗（AR跑考／題庫選題測試）
+/pages/clinical.html     常見疾病之顏面部穴位針灸技巧與異常狀況
+/data/acupoints.json     穴位資料（純資料，供未來擴充使用）
+/assets/acupoints-geo.js 穴位定位運算共用邏輯（IDX/ACUPOINTS/calc），
+                         由 ar.html 萃取，quiz.html、clinical.html 皆引用
+```
+
+## 部署方式
+- **GitHub Pages**：整個資料夾（含 index.html、pages/、assets/、data/）
+  上傳到 repo 根目錄，Settings → Pages → Branch 選 main / (root) → Save，
+  即可用 `https://你的帳號.github.io/repo名稱/` 開啟首頁
+- 手機相機權限強制要求 HTTPS（localhost 除外）
+
+## 各頁功能
+
+### 首頁 index.html
+簡介平台功能，提供三張卡片連結至各子頁面。
+
+### 顏面部穴位AR學習 pages/ar.html
+- 上方AR相機區 / 下方經絡分類清單，各經絡可收合展開
+- 26 個顏面穴位（經外奇穴、大腸經、胃經、小腸經、膀胱經、三焦經、
+  膽經、督脈、任脈），每個穴位含取穴、主治功效、解剖結構、針灸操作、
+  可自訂「我的備註」
+- 我的備註可存成帶時間戳記的 JSON 檔、可重新載入還原、自動存於瀏覽器 localStorage
+- 「重要解剖結構」分類：
+  - **神經**：三叉神經、顏面神經分支（虛線示意）
+  - **血管**：顳淺動脈額支、滑車上／眶上動脈、顏面動脈、鼻背動脈、
+    橫顏面動脈（虛線示意）
+  - **肌肉**：額肌、皺眉肌、眼輪匝肌、顴大／顴小肌、提上唇肌群、
+    口輪匝肌、降口角肌／頦肌（外框線＋半透明著色呈現大致範圍，
+    額肌左右連續、口輪匝肌以弧形範圍呈現）
+  - **其他重要構造**：口角聯合結節（Modiolus）、腮腺與腮腺管開口、
+    頰脂墊（點位示意）
+  - **解剖標記點（輔助定位）**：LC外眥、MC內眥、P瞳孔、Ch口角、
+    Tr耳屏等文獻常用體表基準點，開啟「顯示說明」可看縮寫標籤，
+    方便對照肌肉／血管範圍的計算基準
+  - 上述肌肉／血管／其他構造內容參考 Hu et al. (2023) "Face painting as
+    an anatomical learning tool based on individual ultrasonographic
+    examination", *Clinical Anatomy* 36(3):426-432（doi:10.1002/ca.23974）
+    整理改寫，非逐點對應原文獻圖表，僅供教學示意
+
+### 顏面部穴位學習測驗 pages/quiz.html
+- **AR跑考**：隨機出題顯示穴位名稱，使用者對著鏡頭在畫面上點出該穴位位置，
+  系統以臉部關鍵點即時計算正確座標，依相對誤差評分（正確／大致正確／偏離）
+- **題庫選題測試**：可依經絡範圍、題型（歸經／取穴位置／主治功效）、題數
+  自訂測驗，選擇題作答並即時對答案、顯示總分
+
+### 常見疾病之顏面部穴位針灸技巧與異常狀況 pages/clinical.html
+- 常見病症選穴與操作技巧：面癱、三叉神經痛、過敏性鼻炎、顳頜關節障礙、
+  顏面美容針灸
+- 常見異常狀況與處理：暈針、皮下血腫、滯針／彎針、神經損傷風險、感染
+- 依穴位解剖描述自動彙整「顏面高風險穴位一覽」表
+
+## 已知限制 / 待改善方向
+- 額頭上部（原頭臨泣、本神、神庭、上星）因臉部網格無髮際線關鍵點未收錄
+- 各穴位定位公式為比例外推估算，非逐點訓練模型，臉型差異大時仍可能有偏移
+- 肌肉／血管／其他構造範圍同樣為比例外推估算，非個人化精確定位，
+  且FaceMesh無耳朵關鍵點，Tr（耳屏）等耳部相關基準點以顳部／下頷角點近似
+- AR跑考誤差評分門檻（正確/大致正確/偏離）為初版估算值，建議實測後於
+  `pages/quiz.html` 內 `handleArqTap()` 函式中的 `relDist` 判斷式調整
+- clinical.html 內容為衛教彙整初版，可依實際教學需求擴充更多病症與案例
+- clinical.html「顏面高風險穴位一覽」表目前僅取自穴位解剖描述關鍵字，
+  尚未串連 ar.html 新增的血管資料，如需標註穴位鄰近血管可再擴充
+
+## 程式結構重點（繼續修改時參考）
+- `assets/acupoints-geo.js`：`IDX`（關鍵點索引）、`ACUPOINTS`（穴位資料含
+  calc定位函式）、`MERIDIANS`（經絡顏色）共用於 quiz.html / clinical.html。
+  若於 ar.html 新增或修改穴位，需同步更新此檔案以保持測驗/臨床頁資料一致
+  （目前為手動同步，尚無自動化機制）
+- `pages/ar.html`：
+  - `computePoints()` → `drawPoints()`：每幀計算穴位座標並疊加繪製
+  - `buildPanel()`：依 ACUPOINTS 動態產生下方穴位清單 DOM
+  - `MUSCLES` / `VESSELS` / `STRUCTURES` / `LANDMARKS`：肌肉、血管、
+    其他重要構造、解剖標記點的資料與 calc 定位函式
+  - `computeMuscleVesselOverlay()`：彙整上述四類資料為
+    `{areas, paths, nodes}`，併入 `computeNerveOverlay()` 回傳
+  - `drawNerves(overlayData)`：統一繪製函式，`areas`為面（外框＋半透明填色）、
+    `paths`為虛線路徑、`nodes`／`points`為點位標記
+- `pages/quiz.html`：`buildQuestion()` 產生題庫選擇題；`handleArqTap()` 處理
+  AR跑考點擊評分邏輯
