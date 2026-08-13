@@ -1,4 +1,4 @@
-# 顏面部穴位AR學習平台 v2.2
+# 顏面部穴位AR學習平台 v2.68
 
 ## 這是什麼
 多頁式網站，含首頁與三個子頁面，結合AR臉部辨識與中醫顏面部穴位知識，
@@ -11,8 +11,10 @@
 /pages/quiz.html         顏面部穴位學習測驗（AR跑考／題庫選題測試）
 /pages/clinical.html     常見疾病之顏面部穴位針灸技巧與異常狀況
 /data/acupoints.json     穴位資料（純資料，供未來擴充使用）
-/assets/acupoints-geo.js 穴位定位運算共用邏輯（IDX/ACUPOINTS/calc），
-                         由 ar.html 萃取，quiz.html、clinical.html 皆引用
+/assets/acupoints-geo.js 穴位／肌肉／血管／解剖構造定位運算共用邏輯
+                         （IDX / 幾何helper / ACUPOINTS / MUSCLES / VESSELS /
+                         STRUCTURES / LANDMARKS / 三叉・顏面神經路徑），
+                         **完整同步自 pages/ar.html**，quiz.html、clinical.html 皆引用
 ```
 
 ## 部署方式
@@ -56,10 +58,16 @@
   自訂測驗，選擇題作答並即時對答案、顯示總分
 
 ### 常見疾病之顏面部穴位針灸技巧與異常狀況 pages/clinical.html
-- 常見病症選穴與操作技巧：面癱、三叉神經痛、過敏性鼻炎、顳頜關節障礙、
-  顏面美容針灸
-- 常見異常狀況與處理：暈針、皮下血腫、滯針／彎針、神經損傷風險、感染
+- 常見病症選穴與操作技巧（v2.68 依課程共筆與臨床資料大幅擴充）：
+  面癱（顏面神經麻痺）、顏面痙攣（半面痙攣）、三叉神經痛、
+  顳側頭痛／偏頭痛（少陽頭痛）、過敏性鼻炎、顳頜關節障礙、
+  眼部疾患、眩暈、顏面美容針灸（美顏針）
+- 各病症含臨床分型與鑑別、理學檢查重點、常用選穴、分區肌肉操作要點、
+  中西醫治療參考與衛教重點
+- 常見異常狀況與處理：暈針、皮下血腫、滯針／彎針、神經損傷風險、
+  誤入腮腺與深部構造、放血操作之安全界線、頸部禁針區與氣胸風險、感染
 - 依穴位解剖描述自動彙整「顏面高風險穴位一覽」表
+- 文末列出所有參考資料來源
 
 ## 已知限制 / 待改善方向
 - 額頭上部（原頭臨泣、本神、神庭、上星）因臉部網格無髮際線關鍵點未收錄
@@ -68,15 +76,19 @@
   且FaceMesh無耳朵關鍵點，Tr（耳屏）等耳部相關基準點以顳部／下頷角點近似
 - AR跑考誤差評分門檻（正確/大致正確/偏離）為初版估算值，建議實測後於
   `pages/quiz.html` 內 `handleArqTap()` 函式中的 `relDist` 判斷式調整
-- clinical.html 內容為衛教彙整初版，可依實際教學需求擴充更多病症與案例
+- clinical.html 內容為課程共筆與臨床資料之彙整改寫（非逐句引用），
+  可依實際教學需求持續擴充病症與案例
 - clinical.html「顏面高風險穴位一覽」表目前僅取自穴位解剖描述關鍵字，
   尚未串連 ar.html 新增的血管資料，如需標註穴位鄰近血管可再擴充
 
 ## 程式結構重點（繼續修改時參考）
-- `assets/acupoints-geo.js`：`IDX`（關鍵點索引）、`ACUPOINTS`（穴位資料含
-  calc定位函式）、`MERIDIANS`（經絡顏色）共用於 quiz.html / clinical.html。
-  若於 ar.html 新增或修改穴位，需同步更新此檔案以保持測驗/臨床頁資料一致
-  （目前為手動同步，尚無自動化機制）
+- `assets/acupoints-geo.js`：`IDX`（關鍵點索引）、幾何helper（`mid`/`off`/
+  `bandPoints`/`arcThrough3Pts`/`convexHull` 等）、`MERIDIANS`、`ACUPOINTS`、
+  `trigeminalPaths`/`facialNervePaths`、`MUSCLES`、`VESSELS`、`STRUCTURES`、
+  `LANDMARKS`，共用於 quiz.html / clinical.html。
+  ★ **唯一權威來源為 `pages/ar.html`**，本檔為其完整萃取副本，請勿單獨修改；
+  於 ar.html 新增或修改穴位／肌肉／解剖資料後，須重新同步本檔
+  （v2.68 已將兩者的 IDX／MUSCLES／VESSELS／ACUPOINTS 完全對齊）
 - `pages/ar.html`：
   - `computePoints()` → `drawPoints()`：每幀計算穴位座標並疊加繪製
   - `buildPanel()`：依 ACUPOINTS 動態產生下方穴位清單 DOM
@@ -88,3 +100,18 @@
     `paths`為虛線路徑、`nodes`／`points`為點位標記
 - `pages/quiz.html`：`buildQuestion()` 產生題庫選擇題；`handleArqTap()` 處理
   AR跑考點擊評分邏輯
+
+## v2.68 更新摘要
+1. **版本號統一**：index.html、pages/clinical.html、pages/quiz.html（新增頁尾）、
+   pages/ar.html 註解與 README 全部統一為 v2.68 · 2026年8月13日更新
+2. **定位資料以 ar.html 為準完整同步**：重建 `assets/acupoints-geo.js`，
+   將 ar.html 的 IDX（新增 mouthInnerTop/mouthInnerBottom）、幾何helper、
+   ACUPOINTS、MUSCLES（含新版 `calc(kp, side, scale)` 簽章、`calcHole`
+   挖空邏輯、放射狀 fibers）、VESSELS、STRUCTURES、LANDMARKS 全數同步；
+   已通過語法檢查與全部 calc 函式執行測試（25穴位／20肌肉／6血管／
+   4構造／5標記點）
+3. **clinical.html 依參考資料大幅擴充**：新增顏面痙攣、顳側頭痛、眼部疾患、
+   眩暈四個病症；擴充面癱（分型鑑別／House-Brackmann／連帶運動／護眼衛教）、
+   三叉神經痛（流行病學／扳機點／中西醫治療）、過敏性鼻炎（上迎香透針）、
+   顳頜關節障礙（咬肌・翼內外肌針法）、顏面美容針灸（美顏針分區肌肉操作）；
+   異常狀況新增誤入腮腺、放血安全界線、頸部禁針區與氣胸風險；文末加註參考資料
