@@ -11,6 +11,7 @@
 /pages/quiz.html         顏面部穴位學習測驗（AR跑考／題庫選題測試）
 /pages/clinical.html     常見疾病之顏面部穴位針灸技巧與異常狀況
 /data/acupoints.json     穴位資料（純資料，供未來擴充使用）
+/assets/sheet-webhook.gs 測驗成績寫入 Google Sheet 的 Apps Script（需另外部署）
 /assets/acupoints-geo.js 穴位／肌肉／血管／解剖構造定位運算共用邏輯
                          （IDX / 幾何helper / ACUPOINTS / MUSCLES / VESSELS /
                          STRUCTURES / LANDMARKS / 三叉・顏面神經路徑），
@@ -56,6 +57,13 @@
   系統以臉部關鍵點即時計算正確座標，依相對誤差評分（正確／大致正確／偏離）
 - **題庫選題測試**：可依經絡範圍、題型（歸經／取穴位置／主治功效）、題數
   自訂測驗，選擇題作答並即時對答案、顯示總分
+- **成績記錄**：交卷後自動送出至 Google 試算表
+  （https://docs.google.com/spreadsheets/d/1-KL35h7E1uLgnAvQiVU9oxwGnyp2cRpMjF6CTyAecwU/edit ）
+  ・畫面下方會顯示上傳狀態（上傳中／已記錄／失敗）
+  ・上傳失敗時成績暫存於瀏覽器 localStorage（`quiz_results_pending_v1`），
+    下次開啟本頁自動重試，亦可手動「重試上傳」或「下載CSV備份」
+  ・webhook 設定與部署方式見 `assets/sheet-webhook.gs` 檔頭說明，
+    網址填於 `pages/quiz.html` 的 `SHEET_WEBHOOK_URL`
 
 ### 常見疾病之顏面部穴位針灸技巧與異常狀況 pages/clinical.html
 - 常見病症選穴與操作技巧（v2.68 依課程共筆與臨床資料大幅擴充）：
@@ -115,3 +123,14 @@
    三叉神經痛（流行病學／扳機點／中西醫治療）、過敏性鼻炎（上迎香透針）、
    顳頜關節障礙（咬肌・翼內外肌針法）、顏面美容針灸（美顏針分區肌肉操作）；
    異常狀況新增誤入腮腺、放血安全界線、頸部禁針區與氣胸風險；文末加註參考資料
+
+## 成績記錄 webhook 疑難排解
+- **成績沒有進試算表**：先用瀏覽器直接開啟 `SHEET_WEBHOOK_URL`，
+  應回應 `ok: webhook alive`。若被導向 Google 登入頁，代表部署權限
+  設成「僅限機構內使用者」，需改為「任何人」後重新部署。
+- **網址形如 `https://script.google.com/a/macros/<機構網域>/s/.../exec`**：
+  屬機構網域綁定，校外或未登入學員無法寫入；公開部署的網址不含 `/a/macros/<網域>/`。
+- **改了 Apps Script 卻沒生效**：Apps Script 需「部署 → 管理部署作業 → 編輯
+  → 版本選新版本 → 部署」才會更新線上版本。
+- **學員端暫存的成績**：存於瀏覽器 localStorage 的 `quiz_results_pending_v1`，
+  可請學員在頁面下方狀態列點「下載CSV備份」後回傳。
