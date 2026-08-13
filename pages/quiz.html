@@ -279,6 +279,13 @@
    ● 注意：若網址形如 https://script.google.com/a/macros/<機構網域>/s/.../exec，
      代表部署權限被限制在該機構網域內，校外或未登入的學員將無法寫入。
      正確的公開部署網址形如 https://script.google.com/macros/s/.../exec
+
+   ● 送出方式為 JSONP（動態 script 標籤呼叫 doGet），不使用 fetch POST。
+     原因：Apps Script 的 /exec 會 302 轉址到 googleusercontent.com，
+     fetch 讀取回應時常被 CORS 擋下——用 mode:'no-cors' 雖然送得出去，
+     但完全讀不到結果，失敗時前端毫無所覺。JSONP 可繞過 CORS 且能取得
+     真正的寫入確認。因此 **Apps Script 端必須是含 doGet 的新版本**，
+     修改後務必「部署 → 管理部署作業 → 編輯 → 版本選新版本 → 部署」。
 ------------------------------------------------------------- */
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1-KL35h7E1uLgnAvQiVU9oxwGnyp2cRpMjF6CTyAecwU/edit';
 const SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxJ-EJbyn4UieaxQo1xfEu4kL7quxIXvpDOSD197LIA5cWVX3HljpBxsuu0mXrcBR1f/exec';
@@ -339,28 +346,42 @@ function downloadPendingCsv() {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-/* ---- 實際送出 ---- */
-async function postRecord(rec) {
-  if (!SHEET_WEBHOOK_URL) return false;
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), UPLOAD_TIMEOUT_MS);
-  try {
-    // Content-Type 用 text/plain 可避開 CORS preflight（Apps Script 不支援 OPTIONS）
-    const res = await fetch(SHEET_WEBHOOK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(rec),
-      redirect: 'follow',
-      signal: ctrl.signal
+/* ---- 實際送出（JSONP，可繞過 CORS 並取得真正的成功確認） ----
+   Apps Script 的 /exec 收到跨網域請求後會 302 轉址到 googleusercontent.com，
+   用 fetch 讀取回應常被 CORS 擋下；改以動態 script 標籤載入 doGet 即可完全避開，
+   且能透過 callback 拿到寫入結果。每筆成績帶唯一 rid，重試時由伺服器端去重。 */
+function postRecord(rec) {
+  return new Promise(resolve => {
+    if (!SHEET_WEBHOOK_URL) { resolve(false); return; }
+    const cb = '__quizSheetCb' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+    const sc = document.createElement('script');
+    let done = false;
+
+    const cleanup = () => {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      try { delete window[cb]; } catch (e) { window[cb] = undefined; }
+      if (sc.parentNode) sc.parentNode.removeChild(sc);
+    };
+    const timer = setTimeout(() => { cleanup(); resolve(false); }, UPLOAD_TIMEOUT_MS);
+
+    window[cb] = res => { cleanup(); resolve(!!(res && res.ok)); };
+    sc.onerror = () => { cleanup(); resolve(false); };
+
+    const q = new URLSearchParams({
+      callback: cb,
+      rid: rec.rid || '',
+      name: rec.name || '',
+      mode: rec.mode || '',
+      score: String(rec.score),
+      total: String(rec.total),
+      timeText: rec.timeText || '',
+      ts: rec.ts || ''
     });
-    if (!res.ok) return false;
-    const text = (await res.text()).trim();
-    return text.toLowerCase().startsWith('ok');
-  } catch (e) {
-    return false;
-  } finally {
-    clearTimeout(timer);
-  }
+    sc.src = SHEET_WEBHOOK_URL + '?' + q.toString();
+    document.head.appendChild(sc);
+  });
 }
 
 async function flushPending(manual = false) {
@@ -387,6 +408,7 @@ async function flushPending(manual = false) {
 
 function submitResultToSheet({ name, mode, score, total, elapsedSec }) {
   const rec = {
+    rid: Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8),
     ts: new Date().toLocaleString('zh-TW', { hour12: false }),
     name: (name || '').trim() || '(未填姓名)',
     mode, score, total,
@@ -398,8 +420,17 @@ function submitResultToSheet({ name, mode, score, total, elapsedSec }) {
   flushPending();
 }
 
-// 開啟頁面時自動重試先前未送出的成績
-if (loadPending().length) flushPending();
+// 開啟頁面時自動重試先前未送出的成績（舊版暫存紀錄若無 rid 則補發）
+(function () {
+  const q = loadPending();
+  if (!q.length) return;
+  let changed = false;
+  q.forEach(r => {
+    if (!r.rid) { r.rid = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8); changed = true; }
+  });
+  if (changed) savePending(q);
+  flushPending();
+})();
 
 /* ---------------- Tab 切換 ---------------- */
 const tabAR = document.getElementById('tabAR');

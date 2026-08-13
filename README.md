@@ -62,6 +62,9 @@
   ・畫面下方會顯示上傳狀態（上傳中／已記錄／失敗）
   ・上傳失敗時成績暫存於瀏覽器 localStorage（`quiz_results_pending_v1`），
     下次開啟本頁自動重試，亦可手動「重試上傳」或「下載CSV備份」
+  ・送出方式為 JSONP（動態 script 標籤呼叫 Apps Script 的 `doGet`），
+    以繞過 Apps Script `/exec` 轉址造成的 CORS 阻擋，並取得真正的寫入確認
+  ・每筆成績帶唯一 `rid`，伺服器端據此去重，重試不會產生重複列
   ・webhook 設定與部署方式見 `assets/sheet-webhook.gs` 檔頭說明，
     網址填於 `pages/quiz.html` 的 `SHEET_WEBHOOK_URL`
 
@@ -132,5 +135,11 @@
   屬機構網域綁定，校外或未登入學員無法寫入；公開部署的網址不含 `/a/macros/<網域>/`。
 - **改了 Apps Script 卻沒生效**：Apps Script 需「部署 → 管理部署作業 → 編輯
   → 版本選新版本 → 部署」才會更新線上版本。
+- **健康檢查正常但成績寫不進去**：多半是前端送出被 CORS 擋掉。本專案已改用
+  JSONP（`doGet` + `callback`），若 Apps Script 端仍是只有 `doPost` 的舊版本，
+  成績會全部失敗——請確認已部署含 `doGet` 的新版 `assets/sheet-webhook.gs`。
+  可直接在瀏覽器測試：
+  `<你的/exec網址>?callback=cb&rid=test1&name=測試&mode=手動測試&score=1&total=1&timeText=0分01秒`
+  應回傳 `cb({"ok":true,...});` 並在試算表新增一列。
 - **學員端暫存的成績**：存於瀏覽器 localStorage 的 `quiz_results_pending_v1`，
   可請學員在頁面下方狀態列點「下載CSV備份」後回傳。
