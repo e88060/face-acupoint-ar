@@ -210,6 +210,12 @@
 
   .pt-card {
     background: #f2f2f0; border-radius: 10px; padding: 10px 10px 12px;
+    scroll-margin-top: 12px; transition: background .4s ease, box-shadow .4s ease;
+  }
+  /* 由 clinical.html 以 #穴位id 連結進來時的高亮提示 */
+  .pt-card.linked-highlight {
+    background: #fdf2ea;
+    box-shadow: 0 0 0 2px #D97757 inset;
   }
   .pt-header {
     display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
@@ -464,7 +470,7 @@
         <li>以上解剖與操作說明僅供學習參考，實際臨床操作請依專業判斷。</li>
       </ul>
     </div>
-    <div id="versionFooter">v2.68 · 2026年8月13日更新</div>
+    <div id="versionFooter">v2.69 · 2026年8月13日更新</div>
   </div>
 </div>
 
@@ -476,7 +482,7 @@
 
 <script>
 /* ------------------------------------------------------------------
-   顏面部穴位AR學習 v2.68
+   顏面部穴位AR學習 v2.69
    原理：MediaPipe FaceMesh 468 關鍵點 → 以穩定解剖錨點（眉/眼/鼻/口/
         臉頰輪廓/顳部）為基準，用比例換算法推算各穴位相對座標 →
         依勾選狀態即時疊加繪製，並依臉部轉向隱藏遮住那側的點
@@ -1674,6 +1680,8 @@ function buildPanel() {
     items.forEach(pt => {
       const card = document.createElement('div');
       card.className = 'pt-card';
+      card.id = 'pt-' + pt.id;              // 供 clinical.html 以 ar.html#pt-<id> 直接連結
+      card.dataset.ptName = pt.name;
       card.innerHTML =
         '<div class="pt-header">' +
           '<input type="checkbox" class="pt-cb" data-id="' + pt.id + '"' + (selected.has(pt.id) ? ' checked' : '') + '>' +
@@ -2215,8 +2223,50 @@ arToggleBtn.addEventListener('click', () => {
 
 window.addEventListener('resize', resizeCanvas);
 
+/* ------------------------------------------------------------------
+   外部深層連結：ar.html#pt-<穴位id>（亦接受 #<穴位id> 或 #name-<穴位名>）
+   由 clinical.html 的穴位標籤連結進來時，自動展開所屬經絡、勾選該穴位、
+   捲動至該卡片並短暫高亮
+------------------------------------------------------------------- */
+function focusPointFromHash() {
+  const raw = decodeURIComponent((location.hash || '').replace(/^#/, '')).trim();
+  if (!raw) return;
+
+  let key = raw.replace(/^pt-/, '');
+  let pt = ACUPOINTS.find(a => a.id === key);
+  if (!pt) {
+    const nameKey = key.replace(/^name-/, '');
+    pt = ACUPOINTS.find(a => a.name === nameKey || a.code === nameKey);
+  }
+  if (!pt) return;
+
+  const card = document.getElementById('pt-' + pt.id);
+  if (!card) return;
+
+  // 展開所屬經絡分類
+  const section = card.closest('.mer-section');
+  if (section) {
+    const header = section.querySelector('.mer-header');
+    const list = section.querySelector('.mer-list');
+    if (header) header.classList.remove('collapsed');
+    if (list) list.classList.remove('collapsed');
+  }
+
+  // 勾選該穴位，讓它立刻顯示在AR畫面上
+  selected.add(pt.id);
+  const cb = card.querySelector('.pt-cb');
+  if (cb) cb.checked = true;
+
+  card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  card.classList.add('linked-highlight');
+  setTimeout(() => card.classList.remove('linked-highlight'), 2600);
+}
+
+window.addEventListener('hashchange', focusPointFromHash);
+
 (function init() {
   buildPanel();
+  focusPointFromHash();
   turnArOn();
 })();
 </script>
