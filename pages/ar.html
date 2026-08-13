@@ -434,7 +434,7 @@
       <button id="loadNotesBtn">載入我的備註</button>
       <input type="file" id="loadNotesFile" accept="application/json" style="display:none">
     </div>
-    <div id="versionFooter">v2.66 · 2026年8月13日更新</div>
+    <div id="versionFooter">v2.67 · 2026年8月13日更新</div>
   </div>
 </div>
 
@@ -521,6 +521,33 @@ function quadBezierPts(p0, c, p1, steps) {
     });
   }
   return pts;
+}
+
+// 通過 p1→p2→p3 三點的正圓弧取樣（用於額肌上緣等需要真正圓弧外形之處）
+function arcThrough3Pts(p1, p2, p3, steps) {
+  steps = steps || 14;
+  const d = 2 * (p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y));
+  if (Math.abs(d) < 1e-6) return [p1, p2, p3]; // 三點共線，退回折線
+  const s1 = p1.x * p1.x + p1.y * p1.y;
+  const s2 = p2.x * p2.x + p2.y * p2.y;
+  const s3 = p3.x * p3.x + p3.y * p3.y;
+  const ux = (s1 * (p2.y - p3.y) + s2 * (p3.y - p1.y) + s3 * (p1.y - p2.y)) / d;
+  const uy = (s1 * (p3.x - p2.x) + s2 * (p1.x - p3.x) + s3 * (p2.x - p1.x)) / d;
+  const r = Math.hypot(p1.x - ux, p1.y - uy);
+  const norm = a => { while (a < -Math.PI) a += 2 * Math.PI; while (a > Math.PI) a -= 2 * Math.PI; return a; };
+  const a1 = Math.atan2(p1.y - uy, p1.x - ux);
+  const rel2 = norm(Math.atan2(p2.y - uy, p2.x - ux) - a1);
+  let sweep = norm(Math.atan2(p3.y - uy, p3.x - ux) - a1);
+  // 若中間點不落在 a1→a3 的短弧上，改走另一側，確保圓弧真的通過 p2
+  if ((sweep >= 0) !== (rel2 >= 0) || Math.abs(rel2) > Math.abs(sweep)) {
+    sweep = sweep >= 0 ? sweep - 2 * Math.PI : sweep + 2 * Math.PI;
+  }
+  const out = [];
+  for (let i = 1; i <= steps; i++) {
+    const a = a1 + sweep * (i / steps);
+    out.push({ x: ux + r * Math.cos(a), y: uy + r * Math.sin(a) });
+  }
+  return out;
 }
 
 // 取橢圓（可上下半徑不同、呈卵形）外框取樣點，供口輪匝肌等環狀肌繪製用
@@ -979,14 +1006,11 @@ const MUSCLES = [
       const innerTop = off(browInner, dir*sc*0.01, -sc*0.4);
 
       const sideCtrl = off(mid(browOuter, corner, 0.5), dir*sc*0.08, -sc*0.06);
-      const ctrl1 = off(mid(corner, peak, 0.5), dir*sc*0.03, -sc*0.02);
-      const ctrl2 = off(mid(peak, innerTop, 0.5), -dir*sc*0.02, sc*0.01);
-
       const sideArc = quadBezierPts(browOuter, sideCtrl, corner, 5);
-      const topArc1 = quadBezierPts(corner, ctrl1, peak, 4);
-      const topArc2 = quadBezierPts(peak, ctrl2, innerTop, 4);
+      // 上緣改以通過 corner→peak→innerTop 的正圓弧描繪，呈連續圓弧穹頂
+      const topArc = arcThrough3Pts(corner, peak, innerTop, 16);
 
-      return [browInner, browMid, browOuter, ...sideArc, ...topArc1, ...topArc2];
+      return [browInner, browMid, browOuter, ...sideArc, ...topArc];
     },
     // 額肌纖維自眉部向上呈放射狀展開（內側近垂直、越往外側越向外上斜），呼應弧形穹頂上緣，
     // 於半側前額中段最長、內外側漸短
@@ -1260,16 +1284,16 @@ const MUSCLES = [
       const temple = s==='R'?kp[IDX.templeR]:kp[IDX.templeL];
       const mouth = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
       const risOrigin = off(mid(jaw, temple, 0.35), 0, sc*0.02);
-      const origin = mid(risOrigin, mouth, 0.42);
-      return bandPoints([origin, mid(origin, mouth, 0.5), mouth], [sc*0.17, sc*0.145, sc*0.1]);
+      const origin = mid(risOrigin, mouth, 0.5);
+      return bandPoints([origin, mid(origin, mouth, 0.5), mouth], [sc*0.34, sc*0.29, sc*0.2]);
     },
     fibers:(kp,s,sc)=>{
       const jaw = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
       const temple = s==='R'?kp[IDX.templeR]:kp[IDX.templeL];
       const mouth = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
       const risOrigin = off(mid(jaw, temple, 0.35), 0, sc*0.02);
-      const origin = mid(risOrigin, mouth, 0.42);
-      return fiberLines([origin, mid(origin, mouth, 0.5), mouth], [sc*0.17, sc*0.145, sc*0.1], [-0.7, -0.35, 0, 0.35, 0.7]);
+      const origin = mid(risOrigin, mouth, 0.5);
+      return fiberLines([origin, mid(origin, mouth, 0.5), mouth], [sc*0.34, sc*0.29, sc*0.2], [-0.75, -0.45, -0.15, 0.15, 0.45, 0.75]);
     }},
   { id:'m_nasalis_transverse', key:'ms_nasalis', zh:'鼻肌（橫部）', en:'Nasalis, transverse part', side:'LR',
     desc:'起自上頷骨尖牙窩，橫部沿鼻背兩側斜向上行，止於鼻背腱膜，範圍依實際FaceMesh關鍵點群組（鼻背與鼻孔上緣周圍）描繪，收縮時壓縮鼻孔',
@@ -1365,19 +1389,18 @@ const MUSCLES = [
       const cheek = s==='R'?kp[IDX.cheekR]:kp[IDX.cheekL];
       const jaw = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
       const temple = s==='R'?kp[IDX.templeR]:kp[IDX.templeL];
-      const dir = s==='R'?-1:1;
-      const top = off(mid(temple, cheek, 0.55), -dir*sc*0.02, sc*0.02);
-      const bottom = off(mid(jaw, cheek, 0.3), -dir*sc*0.02, sc*0.03);
-      return bandPoints([top, mid(top, bottom, 0.5), bottom], [sc*0.085, sc*0.095, sc*0.075]);
+      // 上端貼近顴弓下緣（耳前），下端至下頷角，整體略向前下傾斜
+      const top = off(mid(temple, cheek, 0.3), 0, sc*0.06);
+      const bottom = off(mid(jaw, cheek, 0.16), 0, -sc*0.01);
+      return bandPoints([top, mid(top, bottom, 0.5), bottom], [sc*0.08, sc*0.075, sc*0.055]);
     },
     fibers:(kp,s,sc)=>{
       const cheek = s==='R'?kp[IDX.cheekR]:kp[IDX.cheekL];
       const jaw = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
       const temple = s==='R'?kp[IDX.templeR]:kp[IDX.templeL];
-      const dir = s==='R'?-1:1;
-      const top = off(mid(temple, cheek, 0.55), -dir*sc*0.02, sc*0.02);
-      const bottom = off(mid(jaw, cheek, 0.3), -dir*sc*0.02, sc*0.03);
-      return fiberLines([top, mid(top, bottom, 0.5), bottom], [sc*0.085, sc*0.095, sc*0.075], [-0.7, -0.4, -0.12, 0.16, 0.45, 0.72]);
+      const top = off(mid(temple, cheek, 0.3), 0, sc*0.06);
+      const bottom = off(mid(jaw, cheek, 0.16), 0, -sc*0.01);
+      return fiberLines([top, mid(top, bottom, 0.5), bottom], [sc*0.08, sc*0.075, sc*0.055], [-0.7, -0.4, -0.12, 0.16, 0.45, 0.72]);
     }}
 ];
 
