@@ -428,7 +428,7 @@
       <button id="loadNotesBtn">載入我的備註</button>
       <input type="file" id="loadNotesFile" accept="application/json" style="display:none">
     </div>
-    <div id="versionFooter">v2.6 · 2026年8月12日更新</div>
+    <div id="versionFooter">v2.7 · 2026年8月12日更新</div>
   </div>
 </div>
 
@@ -618,6 +618,14 @@ function convexHull(points) {
   }
   upper.pop(); lower.pop();
   return lower.concat(upper);
+}
+
+// 依中線鏡射一點（用於將單側FaceMesh關鍵點索引群組鏡射到另一側，假設臉部左右近似對稱）
+function mirrorPoint(p, centerX) { return { x: centerX * 2 - p.x, y: p.y }; }
+// 由索引群組取得該側（R直接取值，L以中線鏡射）之關鍵點陣列
+function sideHullPoints(kp, indices, s, centerX) {
+  const raw = indices.map(i => kp[i]);
+  return s === 'R' ? raw : raw.map(p => mirrorPoint(p, centerX));
 }
 
 const MERIDIANS = {
@@ -955,30 +963,27 @@ function facialNervePaths(kp, s, scale) {
 const NASALIS_TRANSVERSE_IDX = [3,48,49,51,64,102,115,131,134,174,195,196,197,198,209,217,219,220,236];
 const NASALIS_ALAR_IDX = [2,60,75,94,97,98,99,141,164,240,242];
 
+// 以下依使用者提供的第二份 landmarks_groups.json 設定：額肌／降眉間肌之索引已涵蓋雙側
+// （額肌另有9,10,151三個中線共用點），其餘（顴大/小肌、提上唇肌、提上唇鼻翼肌、笑肌、咬肌）
+// 索引僅涵蓋右側（R），左側以中線鏡射取得
+const FRONTALIS_R_IDX = [54,63,66,67,68,69,103,104,105,107,108,109];
+const FRONTALIS_CENTER_IDX = [9,10,151];
+const PROCERUS_IDX = [6,122,168,193,351,417];
+const ZYGO_MAJOR_R_IDX = [50,186,187,205,207,216];
+const ZYGO_MINOR_R_IDX = [50,92,205,206];
+const LLSAN_R_IDX = [47,64,121,126,129,142,165,203,233];
+const LLS_R_IDX = [36,92,101,119,165,203];
+const RISORIUS_R_IDX = [138,192,212,213,214];
+const MASSETER_R_IDX = [58,137,138,147,172,177,192,213,215];
+
 const MUSCLES = [
   { id:'m_frontalis', key:'ms_frontalis', zh:'額肌', en:'Frontalis', side:'LR',
-    desc:'呈弧形穹頂狀覆蓋前額，左右各一肌腹、於正中線（帽狀腱膜／額肌間之纖維中縫）相鄰但分開描繪，起自帽狀腱膜，止於眉部皮膚，範圍寬闊涵蓋整個半側前額、上緣弧形貼齊額部上緣（髮際線附近），收縮時上提眉毛、產生抬頭紋，為額頭除皺注射常用參考肌肉',
+    desc:'呈弧形穹頂狀覆蓋前額，左右各一肌腹、於正中線（帽狀腱膜／額肌間之纖維中縫）相鄰但分開描繪，起自帽狀腱膜，止於眉部皮膚，範圍依實際FaceMesh關鍵點群組（半側前額＋正中線共用點）描繪，收縮時上提眉毛、產生抬頭紋，為額頭除皺注射常用參考肌肉',
     calc:(kp,s,sc)=>{
-      const browOuter = s==='R'?kp[IDX.browOuterR]:kp[IDX.browOuterL];
-      const browMid = s==='R'?kp[IDX.browMidR]:kp[IDX.browMidL];
-      const browInner = s==='R'?kp[IDX.browInnerR]:kp[IDX.browInnerL];
-      const corner = s==='R'?kp[IDX.foreheadCornerR]:kp[IDX.foreheadCornerL];
-      const dir = s==='R'?-1:1;
-
-      // 半側前額最高點（大致位於該側眉毛中段正上方），貼齊髮際線附近
-      const peak = off(mid(browMid, corner, 0.4), 0, -sc*0.52);
-      // 內側（近眉間）頂緣，略低於peak，讓左右兩半在正中線附近有一道淺淺的分界凹陷
-      const innerTop = off(browInner, dir*sc*0.01, -sc*0.4);
-
-      const sideCtrl = off(mid(browOuter, corner, 0.5), dir*sc*0.08, -sc*0.06);
-      const ctrl1 = off(mid(corner, peak, 0.5), dir*sc*0.03, -sc*0.02);
-      const ctrl2 = off(mid(peak, innerTop, 0.5), -dir*sc*0.02, sc*0.01);
-
-      const sideArc = quadBezierPts(browOuter, sideCtrl, corner, 5);
-      const topArc1 = quadBezierPts(corner, ctrl1, peak, 4);
-      const topArc2 = quadBezierPts(peak, ctrl2, innerTop, 4);
-
-      return [browInner, browMid, browOuter, ...sideArc, ...topArc1, ...topArc2];
+      const centerX = kp[IDX.noseBase].x;
+      const sidePts = sideHullPoints(kp, FRONTALIS_R_IDX, s, centerX);
+      const centerPts = FRONTALIS_CENTER_IDX.map(i => kp[i]);
+      return convexHull([...sidePts, ...centerPts]);
     },
     // 額肌纖維呈垂直走向，呼應弧形穹頂上緣，於半側前額中段最長、內外側漸短
     fibers:(kp,s,sc)=>{
@@ -1045,13 +1050,10 @@ const MUSCLES = [
       return ringLines(center, rx, ry, ry, [0.15, 0.26, 0.37, 0.48, 0.59, 0.7, 0.81, 0.92, 1.0], 24);
     }},
   { id:'m_zygo_major', key:'ms_zygo_major', zh:'顴大肌', en:'Zygomaticus major', side:'LR',
-    desc:'起自顴骨體外側面（顴骨隆起處），斜向內下止於口角聯合結節（modiolus），為主要提口角上笑肌肉，收縮時上提口角向外上方，形成微笑動作，是提眉／蘋果肌相關注射常參考的肌肉',
+    desc:'起自顴骨體外側面（顴骨隆起處），斜向內下止於口角聯合結節（modiolus），範圍依實際FaceMesh關鍵點群組描繪，為主要提口角上笑肌肉，收縮時上提口角向外上方，形成微笑動作，是提眉／蘋果肌相關注射常參考的肌肉',
     calc:(kp,s,sc)=>{
-      const eyeOuter = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
-      const cheek = s==='R'?kp[IDX.cheekR]:kp[IDX.cheekL];
-      const origin = mid(eyeOuter, cheek, 0.42);
-      const insertion = modiolusPoint(kp, s, sc);
-      return bandPoints([origin, mid(origin, insertion, 0.5), insertion], [sc*0.035, sc*0.028, sc*0.02]);
+      const centerX = kp[IDX.noseBase].x;
+      return convexHull(sideHullPoints(kp, ZYGO_MAJOR_R_IDX, s, centerX));
     },
     fibers:(kp,s,sc)=>{
       const eyeOuter = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
@@ -1061,13 +1063,10 @@ const MUSCLES = [
       return fiberLines([origin, mid(origin, insertion, 0.5), insertion], [sc*0.035, sc*0.028, sc*0.02], [-0.6, -0.2, 0.2, 0.6]);
     }},
   { id:'m_zygo_minor', key:'ms_zygo_minor', zh:'顴小肌', en:'Zygomaticus minor', side:'LR',
-    desc:'起自顴骨體前面（顴大肌起點內側偏上，較接近眶外側緣），斜向內下止於口角聯合結節（modiolus）附近，收縮時上提上唇並加深鼻唇溝，與顴大肌共同構成微笑動作',
+    desc:'起自顴骨體前面（顴大肌起點內側偏上，較接近眶外側緣），斜向內下止於口角聯合結節（modiolus）附近，範圍依實際FaceMesh關鍵點群組描繪，收縮時上提上唇並加深鼻唇溝，與顴大肌共同構成微笑動作',
     calc:(kp,s,sc)=>{
-      const eyeOuter = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
-      const cheek = s==='R'?kp[IDX.cheekR]:kp[IDX.cheekL];
-      const origin = mid(eyeOuter, cheek, 0.24);
-      const insertion = modiolusPoint(kp, s, sc);
-      return bandPoints([origin, mid(origin, insertion, 0.5), insertion], [sc*0.028, sc*0.022, sc*0.016]);
+      const centerX = kp[IDX.noseBase].x;
+      return convexHull(sideHullPoints(kp, ZYGO_MINOR_R_IDX, s, centerX));
     },
     fibers:(kp,s,sc)=>{
       const eyeOuter = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
@@ -1077,51 +1076,54 @@ const MUSCLES = [
       return fiberLines([origin, mid(origin, insertion, 0.5), insertion], [sc*0.028, sc*0.022, sc*0.016], [-0.6, -0.2, 0.2, 0.6]);
     }},
   { id:'m_llsan', key:'ms_llsan', zh:'提上唇鼻翼肌', en:'Levator labii superioris alaeque nasi (LLSAN)', side:'LR',
-    desc:'起自上頷骨額突（近內眥下方），沿鼻側緣垂直下行止於鼻翼軟骨與上唇外側皮膚，走向緊貼鼻側緣、不跨越鼻背，收縮時同時上提上唇與鼻翼，加深鼻唇溝上段，是淚溝、鼻唇溝填充注射需留意的淺層肌',
+    desc:'起自上頷骨額突（近內眥下方），沿鼻側緣垂直下行止於鼻翼軟骨與上唇外側皮膚，範圍依內眥、鼻翼、口角等穩定關鍵點比例外推描繪，緊貼鼻側緣、不跨越鼻背，收縮時同時上提上唇與鼻翼，加深鼻唇溝上段，是淚溝、鼻唇溝填充注射需留意的淺層肌',
     calc:(kp,s,sc)=>{
       const eyeInner = s==='R'?kp[IDX.eyeInnerR]:kp[IDX.eyeInnerL];
+      const browInner = s==='R'?kp[IDX.browInnerR]:kp[IDX.browInnerL];
       const ala = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
-      const origin = { x: ala.x + (eyeInner.x - ala.x) * 0.15, y: eyeInner.y + sc*0.05 };
-      const way = { x: ala.x, y: mid(origin, ala, 0.55).y };
-      return bandPoints([origin, way, ala], [sc*0.02, sc*0.017, sc*0.013]);
+      const mouth = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
+      const origin = mid(eyeInner, browInner, 0.35);
+      const way = mid(origin, ala, 0.55);
+      const insertion = mid(ala, mouth, 0.28);
+      return bandPoints([origin, way, ala, insertion], [sc*0.018, sc*0.016, sc*0.015, sc*0.012]);
     },
     fibers:(kp,s,sc)=>{
       const eyeInner = s==='R'?kp[IDX.eyeInnerR]:kp[IDX.eyeInnerL];
+      const browInner = s==='R'?kp[IDX.browInnerR]:kp[IDX.browInnerL];
       const ala = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
-      const origin = { x: ala.x + (eyeInner.x - ala.x) * 0.15, y: eyeInner.y + sc*0.05 };
-      const way = { x: ala.x, y: mid(origin, ala, 0.55).y };
-      return fiberLines([origin, way, ala], [sc*0.02, sc*0.017, sc*0.013], [-0.6, -0.2, 0.2, 0.6]);
+      const mouth = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
+      const origin = mid(eyeInner, browInner, 0.35);
+      const way = mid(origin, ala, 0.55);
+      const insertion = mid(ala, mouth, 0.28);
+      return fiberLines([origin, way, ala, insertion], [sc*0.018, sc*0.016, sc*0.015, sc*0.012], [-0.5, 0, 0.5]);
     }},
   { id:'m_lls', key:'ms_lls', zh:'提上唇肌', en:'Levator labii superioris (LLS)', side:'LR',
-    desc:'起自眶下緣下方（LLSAN外側），垂直下行止於上唇外側 1/3 皮膚與黏膜，走向位於LLSAN外側、鼻翼與口角之間，不跨越鼻部，收縮時上提上唇、外露上排牙齒，深部與淚溝、蘋果肌區域相鄰',
+    desc:'起自眶下緣下方（LLSAN外側），垂直下行止於上唇外側 1/3 皮膚與黏膜，範圍依眶下、鼻翼、頰部、口角等穩定關鍵點比例外推描繪，走向位於LLSAN外側、較貼近鼻唇溝，止點較LLSAN更靠近口角，收縮時上提上唇、外露上排牙齒，深部與淚溝、蘋果肌區域相鄰',
     calc:(kp,s,sc)=>{
-      const eyeB = s==='R'?kp[IDX.eyeBottomR]:kp[IDX.eyeBottomL];
+      const eyeBottom = s==='R'?kp[IDX.eyeBottomR]:kp[IDX.eyeBottomL];
+      const cheek = s==='R'?kp[IDX.cheekR]:kp[IDX.cheekL];
       const ala = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
       const mouth = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
-      const originX = ala.x + (eyeB.x - ala.x) * 0.45;
-      const origin = { x: originX, y: eyeB.y + sc*0.08 };
-      const lipX = ala.x + (mouth.x - ala.x) * 0.5;
-      const lip = { x: lipX, y: kp[IDX.upperLipTop].y + sc*0.01 };
-      return bandPoints([origin, mid(origin, lip, 0.5), lip], [sc*0.024, sc*0.02, sc*0.014]);
+      const origin = mid(eyeBottom, cheek, 0.3);
+      const via = mid(ala, cheek, 0.35);
+      const insertion = mid(ala, mouth, 0.75);
+      return bandPoints([origin, via, insertion], [sc*0.02, sc*0.017, sc*0.013]);
     },
     fibers:(kp,s,sc)=>{
-      const eyeB = s==='R'?kp[IDX.eyeBottomR]:kp[IDX.eyeBottomL];
+      const eyeBottom = s==='R'?kp[IDX.eyeBottomR]:kp[IDX.eyeBottomL];
+      const cheek = s==='R'?kp[IDX.cheekR]:kp[IDX.cheekL];
       const ala = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
       const mouth = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
-      const originX = ala.x + (eyeB.x - ala.x) * 0.45;
-      const origin = { x: originX, y: eyeB.y + sc*0.08 };
-      const lipX = ala.x + (mouth.x - ala.x) * 0.5;
-      const lip = { x: lipX, y: kp[IDX.upperLipTop].y + sc*0.01 };
-      return fiberLines([origin, mid(origin, lip, 0.5), lip], [sc*0.024, sc*0.02, sc*0.014], [-0.6, -0.2, 0.2, 0.6]);
+      const origin = mid(eyeBottom, cheek, 0.3);
+      const via = mid(ala, cheek, 0.35);
+      const insertion = mid(ala, mouth, 0.75);
+      return fiberLines([origin, via, insertion], [sc*0.02, sc*0.017, sc*0.013], [-0.6, -0.2, 0.2, 0.6]);
     }},
   { id:'m_risorius', key:'ms_risorius', zh:'笑肌', en:'Risorius', side:'LR',
-    desc:'起自咬肌筋膜（近耳垂前下方），近乎水平走向內止於口角（modiolus），收縮時將口角向外側牽引，形成「露齒笑」的橫向拉扯動作，位置表淺、變異度大',
+    desc:'起自咬肌筋膜（近耳垂前下方），近乎水平走向內止於口角（modiolus），範圍依實際FaceMesh關鍵點群組描繪，收縮時將口角向外側牽引，形成「露齒笑」的橫向拉扯動作，位置表淺、變異度大',
     calc:(kp,s,sc)=>{
-      const jaw = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
-      const temple = s==='R'?kp[IDX.templeR]:kp[IDX.templeL];
-      const origin = off(mid(jaw, temple, 0.35), 0, sc*0.02);
-      const mouth = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
-      return bandPoints([origin, mid(origin, mouth, 0.5), mouth], [sc*0.022, sc*0.018, sc*0.016]);
+      const centerX = kp[IDX.noseBase].x;
+      return convexHull(sideHullPoints(kp, RISORIUS_R_IDX, s, centerX));
     },
     fibers:(kp,s,sc)=>{
       const jaw = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
@@ -1274,18 +1276,18 @@ const MUSCLES = [
       return fiberLines([left, mid(left, right, 0.5), right], sc*0.014, [-0.4, 0, 0.4]);
     }},
   { id:'m_procerus', key:'ms_procerus', zh:'降眉間肌', en:'Procerus', side:'M',
-    desc:'起自鼻骨下部與外側鼻軟骨筋膜，向上止於眉間皮膚，與額肌內側緣纖維交織，收縮時下拉眉間皮膚，形成鼻根處橫紋',
+    desc:'起自鼻骨下部與外側鼻軟骨筋膜，向上止於眉間皮膚，與額肌內側緣纖維交織，範圍以雙側眉頭中點與鼻根（glabella）比例外推，呈緊貼眉間、鼻根上方的緊實區塊，收縮時下拉眉間皮膚，形成鼻根處橫紋',
     calc:(kp,sc)=>{
-      const glab = kp[IDX.glabella];
-      const base = kp[IDX.noseBase];
-      const center = mid(glab, base, 0.4);
-      return ovalPoints(center, sc*0.045, sc*0.035, sc*0.03, 16);
+      const browC = mid(kp[IDX.browInnerR], kp[IDX.browInnerL], 0.5);
+      const center = mid(browC, kp[IDX.glabella], 0.35);
+      const rx = dist(kp[IDX.browInnerR], kp[IDX.browInnerL]) * 0.42;
+      const ry = sc*0.032;
+      return ovalPoints(center, rx, ry, ry, 20);
     },
     fibers:(kp,sc)=>{
-      const glab = kp[IDX.glabella];
-      const base = kp[IDX.noseBase];
-      const center = mid(glab, base, 0.4);
-      return ringLines(center, sc*0.045, sc*0.035, sc*0.03, [0.5, 0.8], 16);
+      const browC = mid(kp[IDX.browInnerR], kp[IDX.browInnerL], 0.5);
+      const center = mid(browC, kp[IDX.glabella], 0.35);
+      return ringLines(center, sc*0.034, sc*0.027, sc*0.022, [0.5, 0.8], 16);
     }},
   { id:'m_depressor_supercilii', key:'ms_depressor_supercilii', zh:'降眉肌', en:'Depressor supercilii', side:'LR',
     desc:'起自上頷骨額突（近淚溝內側），止於眉頭皮下，與皺眉肌、眼輪匝肌內側部纖維交織，收縮時下拉眉頭，與皺眉肌協同產生眉間紋',
@@ -1334,11 +1336,10 @@ const MUSCLES = [
       return ringLines(center, sc*0.028, sc*0.024, sc*0.024, [0.55], 12);
     }},
   { id:'m_masseter_outer', key:'ms_masseter_outer', zh:'咬肌外層', en:'Masseter (superficial)', side:'LR',
-    desc:'起自顴弓前2/3下緣，肌纖維斜向後下止於下頷角外側面，為咬肌淺層、體表可觸及咀嚼時隆起處，收縮時提下頷（閉口），是咀嚼主要肌肉',
+    desc:'起自顴弓前2/3下緣，肌纖維斜向後下止於下頷角外側面，為咬肌淺層、體表可觸及咀嚼時隆起處，範圍依實際FaceMesh關鍵點群組描繪，收縮時提下頷（閉口），是咀嚼主要肌肉',
     calc:(kp,s,sc)=>{
-      const cheek = s==='R'?kp[IDX.cheekR]:kp[IDX.cheekL];
-      const jaw = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
-      return bandPoints([cheek, mid(cheek, jaw, 0.5), jaw], [sc*0.045, sc*0.04, sc*0.03]);
+      const centerX = kp[IDX.noseBase].x;
+      return convexHull(sideHullPoints(kp, MASSETER_R_IDX, s, centerX));
     },
     fibers:(kp,s,sc)=>{
       const cheek = s==='R'?kp[IDX.cheekR]:kp[IDX.cheekL];
