@@ -116,6 +116,24 @@
     color: #666; font-size: 11px; line-height: 1.6; padding: 4px 2px 16px;
     border-bottom: 1px solid #cfcfcc; margin-bottom: 14px;
   }
+  #panelNote .note-title {
+    display: block; color: #3d7ab0; font-size: 11.5px; font-weight: 700;
+    margin-bottom: 6px;
+  }
+  #panelNote ul {
+    margin: 0; padding-left: 16px;
+  }
+  #panelNote li { margin-bottom: 4px; }
+  #refNote {
+    color: #888; font-size: 10.5px; line-height: 1.6; padding: 14px 2px 0;
+    border-top: 1px solid #cfcfcc; margin-top: 16px;
+  }
+  #refNote .note-title {
+    display: block; color: #3d7ab0; font-size: 11px; font-weight: 700;
+    margin-bottom: 6px;
+  }
+  #refNote ul { margin: 0; padding-left: 16px; }
+  #refNote li { margin-bottom: 4px; }
   #panelBody { display: flex; flex-direction: column; gap: 18px; }
 
   .group-section { }
@@ -239,7 +257,12 @@
 
   <div id="panel">
     <div id="panelNote">
-      勾選要顯示的穴位，上方畫面即時疊加。點各經絡標題可收合／展開清單。同名左右對稱穴位同時顯示時，畫面左側僅顯示圓點、不重複顯示文字說明，避免畫面雜亂。臉部辨識網格未涵蓋髮際線，故部分需以髮際線定位的穴位未收錄。「重要解剖結構」內含神經／血管（虛線示意）、肌肉（外框線＋半透明著色示意範圍，額肌左右連續、口輪匝肌以弧形範圍呈現）、其他重要構造如口角聯合結節、腮腺、頰脂墊，以及LC／MC／P／Ch／Tr等常用解剖標誌點（皆以點位示意），部分內容參考Hu et al. 2023, Clinical Anatomy文獻整理。以下解剖與操作說明僅供學習參考，實際臨床操作請依專業判斷。
+      <span class="note-title">使用說明</span>
+      <ul>
+        <li>勾選下方要顯示的穴位，上方AR畫面即時疊加。</li>
+        <li>點各經絡穴位、解剖結構標題可收合／展開清單。</li>
+        <li>使用MediaPipe FaceMesh臉部辨識技術，髮際線、耳部、下頷以下部位定位不精準尚未收錄。</li>
+      </ul>
     </div>
     <div id="panelBody">
       <div class="group-section">
@@ -434,7 +457,14 @@
       <button id="loadNotesBtn">載入我的備註</button>
       <input type="file" id="loadNotesFile" accept="application/json" style="display:none">
     </div>
-    <div id="versionFooter">v2.67 · 2026年8月13日更新</div>
+    <div id="refNote">
+      <span class="note-title">參考資料與注意事項</span>
+      <ul>
+        <li>部分內容參考Hu et al. 2023, Clinical Anatomy文獻整理。</li>
+        <li>以上解剖與操作說明僅供學習參考，實際臨床操作請依專業判斷。</li>
+      </ul>
+    </div>
+    <div id="versionFooter">v2.68 · 2026年8月13日更新</div>
   </div>
 </div>
 
@@ -1003,7 +1033,7 @@ const MUSCLES = [
       // 半側前額最高點（大致位於該側眉毛中段正上方），貼齊髮際線附近
       const peak = off(mid(browMid, corner, 0.4), 0, -sc*0.52);
       // 內側（近眉間）頂緣，略低於peak，讓左右兩半在正中線附近有一道淺淺的分界凹陷
-      const innerTop = off(browInner, dir*sc*0.01, -sc*0.4);
+      const innerTop = off(browInner, -dir*sc*0.05, -sc*0.4);
 
       const sideCtrl = off(mid(browOuter, corner, 0.5), dir*sc*0.08, -sc*0.06);
       const sideArc = quadBezierPts(browOuter, sideCtrl, corner, 5);
@@ -1284,16 +1314,16 @@ const MUSCLES = [
       const temple = s==='R'?kp[IDX.templeR]:kp[IDX.templeL];
       const mouth = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
       const risOrigin = off(mid(jaw, temple, 0.35), 0, sc*0.02);
-      const origin = mid(risOrigin, mouth, 0.5);
-      return bandPoints([origin, mid(origin, mouth, 0.5), mouth], [sc*0.34, sc*0.29, sc*0.2]);
+      const origin = mid(risOrigin, mouth, 0.25);
+      return bandPoints([origin, mid(origin, mouth, 0.5), mouth], [sc*0.227, sc*0.193, sc*0.133]);
     },
     fibers:(kp,s,sc)=>{
       const jaw = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
       const temple = s==='R'?kp[IDX.templeR]:kp[IDX.templeL];
       const mouth = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
       const risOrigin = off(mid(jaw, temple, 0.35), 0, sc*0.02);
-      const origin = mid(risOrigin, mouth, 0.5);
-      return fiberLines([origin, mid(origin, mouth, 0.5), mouth], [sc*0.34, sc*0.29, sc*0.2], [-0.75, -0.45, -0.15, 0.15, 0.45, 0.75]);
+      const origin = mid(risOrigin, mouth, 0.25);
+      return fiberLines([origin, mid(origin, mouth, 0.5), mouth], [sc*0.227, sc*0.193, sc*0.133], [-0.75, -0.45, -0.15, 0.15, 0.45, 0.75]);
     }},
   { id:'m_nasalis_transverse', key:'ms_nasalis', zh:'鼻肌（橫部）', en:'Nasalis, transverse part', side:'LR',
     desc:'起自上頷骨尖牙窩，橫部沿鼻背兩側斜向上行，止於鼻背腱膜，範圍依實際FaceMesh關鍵點群組（鼻背與鼻孔上緣周圍）描繪，收縮時壓縮鼻孔',
@@ -1389,18 +1419,24 @@ const MUSCLES = [
       const cheek = s==='R'?kp[IDX.cheekR]:kp[IDX.cheekL];
       const jaw = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
       const temple = s==='R'?kp[IDX.templeR]:kp[IDX.templeL];
-      // 上端貼近顴弓下緣（耳前），下端至下頷角，整體略向前下傾斜
-      const top = off(mid(temple, cheek, 0.3), 0, sc*0.06);
+      const eyeOuter = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
+      const ala = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
+      // 上端向中線靠攏，約與顴大肌起點同高（顴弓下緣），下端至下頷角
+      const zygoOrigin = mid(off(mid(eyeOuter, cheek, 0.7), 0, sc*0.16), ala, 0.12);
+      const top = mid(off(mid(temple, cheek, 0.3), 0, sc*0.06), zygoOrigin, 0.5);
       const bottom = off(mid(jaw, cheek, 0.16), 0, -sc*0.01);
-      return bandPoints([top, mid(top, bottom, 0.5), bottom], [sc*0.08, sc*0.075, sc*0.055]);
+      return bandPoints([top, mid(top, bottom, 0.5), bottom], [sc*0.107, sc*0.1, sc*0.073]);
     },
     fibers:(kp,s,sc)=>{
       const cheek = s==='R'?kp[IDX.cheekR]:kp[IDX.cheekL];
       const jaw = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
       const temple = s==='R'?kp[IDX.templeR]:kp[IDX.templeL];
-      const top = off(mid(temple, cheek, 0.3), 0, sc*0.06);
+      const eyeOuter = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
+      const ala = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
+      const zygoOrigin = mid(off(mid(eyeOuter, cheek, 0.7), 0, sc*0.16), ala, 0.12);
+      const top = mid(off(mid(temple, cheek, 0.3), 0, sc*0.06), zygoOrigin, 0.5);
       const bottom = off(mid(jaw, cheek, 0.16), 0, -sc*0.01);
-      return fiberLines([top, mid(top, bottom, 0.5), bottom], [sc*0.08, sc*0.075, sc*0.055], [-0.7, -0.4, -0.12, 0.16, 0.45, 0.72]);
+      return fiberLines([top, mid(top, bottom, 0.5), bottom], [sc*0.107, sc*0.1, sc*0.073], [-0.7, -0.4, -0.12, 0.16, 0.45, 0.72]);
     }}
 ];
 
