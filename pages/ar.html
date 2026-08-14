@@ -185,6 +185,17 @@
     box-sizing: border-box; padding: 4px 7px; font-size: 11px;
     border: 1px solid #ddd; border-radius: 5px; color: #333; background: #fff;
   }
+  /* 神經分支的走向說明（顯示於各分支勾選框下方） */
+  .nv-detail {
+    margin: 0 0 4px 20px; font-size: 10.5px; line-height: 1.55; color: #666;
+  }
+  .nv-landmark {
+    margin: 8px 0 0; padding: 7px 8px; background: #eceae4; border-radius: 7px;
+    font-size: 10.5px; line-height: 1.6; color: #555;
+  }
+  .nv-landmark b { color: #333; }
+  .nv-landmark ol { margin: 4px 0 0; padding-left: 18px; }
+  .nv-landmark li { margin-bottom: 3px; }
   .ms-attr { display: flex; gap: 6px; padding: 1px 0 1px 20px; font-size: 11px; line-height: 1.5; }
   .ms-attr .ms-attr-label { flex: 0 0 32px; color: #3d7ab0; font-weight: 600; }
   .ms-attr .ms-attr-val { flex: 1; color: #666; }
@@ -297,15 +308,32 @@
               <div class="nerve-block">
                 <div class="nerve-title collapsed"><span class="arrow">▾</span>顏面神經</div>
                 <div class="nerve-body collapsed">
-                  <p class="nerve-desc">運動神經：支配臉部表情肌。神經穿出腮腺前緣後呈扇形展開，五大分支體表投影與走向如下（實線表示，區別於三叉神經的虛線）：</p>
+                  <p class="nerve-desc">運動神經：支配臉部表情肌。<b>五大分支體表投影與走向：</b>神經穿出腮腺前緣後呈扇形展開（畫面以實線表示，區別於三叉神經的虛線），其主要體表分支定位如下：</p>
                   <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_stylo"> 莖乳孔（神經幹起點）</label><input class="note-input anat-note" data-note-id="fac_stylo" placeholder="備註…" value="">
                   <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_plexus"> 腮腺內神經叢</label><input class="note-input anat-note" data-note-id="fac_plexus" placeholder="備註…" value="">
-                  <label class="nerve-cb" title="從耳垂上緣經顴弓中、後1/3交界處向前上方行至額肌，位於外耳道口至眼外眥連線上方"><input type="checkbox" class="nv-cb" data-key="fac_temporal"> 顳支 Temporal branch</label><input class="note-input anat-note" data-note-id="fac_temporal" placeholder="備註…" value="">
-                  <label class="nerve-cb" title="沿顴骨表面水平前行至眼輪匝肌及外眼角"><input type="checkbox" class="nv-cb" data-key="fac_zygomatic"> 顴支 Zygomatic branch</label><input class="note-input anat-note" data-note-id="fac_zygomatic" placeholder="備註…" value="">
-                  <label class="nerve-cb" title="平行於腮腺管（Stensen's duct）上下方前行，位於顴弓下方至口角區"><input type="checkbox" class="nv-cb" data-key="fac_buccal"> 頰支 Buccal branch</label><input class="note-input anat-note" data-note-id="fac_buccal" placeholder="備註…" value="">
-                  <label class="nerve-cb" title="沿下頷骨下緣下方或上方橫過顏面動靜脈，位置較淺，易在下頷角受損"><input type="checkbox" class="nv-cb" data-key="fac_mandibular"> 下頷緣支 Marginal mandibular branch</label><input class="note-input anat-note" data-note-id="fac_mandibular" placeholder="備註…" value="">
-                  <label class="nerve-cb" title="向下穿過腮腺下極，在頸闊肌（Platysma）深面支配頸部"><input type="checkbox" class="nv-cb" data-key="fac_cervical"> 頸支 Cervical branch</label><input class="note-input anat-note" data-note-id="fac_cervical" placeholder="備註…" value="">
-                  <p class="nerve-desc">手術尋找顏面神經主幹常用三大解剖地標（耳屏軟骨切跡、鼓乳縫、二腹肌後腹），詳見「常見疾病」頁「神經損傷風險」段落。</p>
+                  <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_temporal"> 顳支 Temporal branch</label>
+                  <p class="nv-detail">從耳垂上緣經顴弓中、後 1/3 交界處向前上方行至額肌，位於外耳道口至眼外眥連線上方。</p>
+                  <input class="note-input anat-note" data-note-id="fac_temporal" placeholder="備註…" value="">
+                  <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_zygomatic"> 顴支 Zygomatic branch</label>
+                  <p class="nv-detail">沿顴骨表面水平前行至眼輪匝肌及外眼角。</p>
+                  <input class="note-input anat-note" data-note-id="fac_zygomatic" placeholder="備註…" value="">
+                  <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_buccal"> 頰支 Buccal branch</label>
+                  <p class="nv-detail">平行於腮腺管（Stensen's duct）上下方前行，位於顴弓下方至口角區。</p>
+                  <input class="note-input anat-note" data-note-id="fac_buccal" placeholder="備註…" value="">
+                  <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_mandibular"> 下頷邊緣支 Marginal mandibular branch</label>
+                  <p class="nv-detail">沿下頷骨下緣下方或上方橫過顏面動靜脈，位置較淺，易在下頷角受損。</p>
+                  <input class="note-input anat-note" data-note-id="fac_mandibular" placeholder="備註…" value="">
+                  <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_cervical"> 頸支 Cervical branch</label>
+                  <p class="nv-detail">向下穿過腮腺下極，在頸闊肌（Platysma）深面支配頸部。</p>
+                  <input class="note-input anat-note" data-note-id="fac_cervical" placeholder="備註…" value="">
+                  <div class="nv-landmark">
+                    <b>手術尋找顏面神經主幹（Main trunk）的三個經典解剖結構：</b>
+                    <ol>
+                      <li><b>耳屏軟骨切跡（Tragal pointer）</b>：耳屏軟骨前緣尖端，神經主幹位於其深面約 1.0 至 1.5 公分處（內下方）。</li>
+                      <li><b>鼓乳縫（Tympanomastoid suture）</b>：位於外耳道骨部與乳突之間的骨縫，主幹通常在此骨縫下方約 6 至 8 公厘處離開莖乳孔。</li>
+                      <li><b>二腹肌後腹（Posterior belly of digastric muscle）</b>：沿二腹肌後腹上緣向後追溯至乳突切跡，神經主幹剛好位於該肌上緣的深面。</li>
+                    </ol>
+                  </div>
                 </div>
               </div>
             </div>
@@ -471,7 +499,7 @@
         <li>以上解剖與操作說明僅供學習參考，實際臨床操作請依專業判斷。</li>
       </ul>
     </div>
-    <div id="versionFooter">v2.70 · 2026年8月14日更新</div>
+    <div id="versionFooter">v2.71 · 2026年8月14日更新</div>
   </div>
 </div>
 
@@ -483,7 +511,7 @@
 
 <script>
 /* ------------------------------------------------------------------
-   顏面部穴位AR學習 v2.70
+   顏面部穴位AR學習 v2.71
    原理：MediaPipe FaceMesh 468 關鍵點 → 以穩定解剖錨點（眉/眼/鼻/口/
         臉頰輪廓/顳部）為基準，用比例換算法推算各穴位相對座標 →
         依勾選狀態即時疊加繪製，並依臉部轉向隱藏遮住那側的點
@@ -1633,6 +1661,15 @@ function computeMuscleVesselOverlay(kp, sel, scale) {
   return { areas, paths, nodes, fibers };
 }
 
+// 顏面神經各分支於畫面上顯示的名稱；顳支細支、下頰支屬同一分支的細分岔，不重複標示
+const FAC_BRANCH_LABEL = {
+  temporal_a: '顳支',
+  zygomatic: '顴支',
+  buccal_a: '頰支',
+  mandibular: '下頷邊緣支',
+  cervical: '頸支'
+};
+
 function computeNerveOverlay(kp, sel) {
   const scale = dist(kp[IDX.eyeOuterR], kp[IDX.eyeOuterL]) || 1;
   const visible = getVisibleSides(kp);
@@ -1646,15 +1683,25 @@ function computeNerveOverlay(kp, sel) {
 
     const tri = trigeminalPaths(kp, s, scale);
     if (sel.has('tri_ganglion')) nodes.push({ pos: tri.ganglion, zh:'三叉神經節(示意)', en:'', color:'#aed581' });
-    // 三叉神經行於較深層，維持虛線示意
-    tri.branches.forEach(b => { if (sel.has('tri_'+b.id)) paths.push({ pts:b.pts, color:'#aed581', width:1.8, dash:true }); });
+    // 三叉神經行於較深層，維持虛線示意；分支名稱標示於路徑中段
+    // （末端已有眶上孔／眶下孔／頦孔等標籤，避免重疊）
+    tri.branches.forEach(b => {
+      if (!sel.has('tri_'+b.id)) return;
+      paths.push({ pts:b.pts, color:'#aed581', width:1.8, dash:true,
+                   label:b.zh, labelEn:b.en, labelAt:'mid' });
+    });
     tri.endPoints.forEach(ep => { if (sel.has('tri_'+ep.id)) points.push(ep); });
 
     const fac = facialNervePaths(kp, s, scale);
     if (sel.has('fac_stylo')) nodes.push({ pos: fac.origin, zh:'莖乳孔(示意)', en:'', color:'#ffe082' });
     if (sel.has('fac_plexus')) nodes.push({ pos: fac.plexus, zh:'腮腺內神經叢', en:'', color:'#ffe082' });
-    // 顏面神經五大分支行於體表淺層，改以實線表示（區別於三叉神經虛線）
-    fac.branches.forEach(b => { if (sel.has(b.key)) paths.push({ pts:b.pts, color:'#ffe082', width:1.6, dash:false }); });
+    // 顏面神經五大分支行於體表淺層，改以實線表示（區別於三叉神經虛線）；
+    // 分支名稱標示於各分支末端，細支不重複標示
+    fac.branches.forEach(b => {
+      if (!sel.has(b.key)) return;
+      paths.push({ pts:b.pts, color:'#ffe082', width:1.6, dash:false,
+                   label:FAC_BRANCH_LABEL[b.id] || null, labelEn:b.en, labelAt:'end' });
+    });
   });
 
   const mv = computeMuscleVesselOverlay(kp, sel, scale);
@@ -2018,6 +2065,15 @@ function drawNerves(overlayData) {
   overlayData.points.forEach(p => {
     labeled.push({ kind:'point', c: toCanvasPoint(p.pos, mapping), zh:p.zh, en:p.en });
   });
+  // 神經分支名稱：預設即顯示，不需開啟「顯示說明」；
+  // labelAt='end' 標於路徑末端（顏面神經）、'mid' 標於路徑中段（三叉神經，末端已有神經孔標籤）
+  (overlayData.paths || []).forEach(p => {
+    if (!p.label || !p.pts || !p.pts.length) return;
+    const anchor = p.labelAt === 'mid'
+      ? p.pts[Math.floor((p.pts.length - 1) / 2)]
+      : p.pts[p.pts.length - 1];
+    labeled.push({ kind:'path', c: toCanvasPoint(anchor, mapping), zh:p.label, en:p.labelEn, color:p.color });
+  });
 
   const byName = {};
   labeled.forEach(item => { (byName[item.zh] = byName[item.zh] || []).push(item); });
@@ -2030,6 +2086,17 @@ function drawNerves(overlayData) {
   });
 
   labeled.forEach(item => {
+    // 分支名稱僅顯示文字，不另外畫圓點（路徑本身已表示位置）
+    if (item.kind === 'path') {
+      if (suppressed.has(item)) return;
+      const lbl = document.createElement('div');
+      lbl.className = 'dot-label';
+      lbl.style.left = item.c.x + 'px';
+      lbl.style.top = item.c.y + 'px';
+      lbl.innerHTML = '<span class="lbl-name">' + item.zh + (showDesc && item.en ? ' ' + item.en : '') + '</span>';
+      labelLayer.appendChild(lbl);
+      return;
+    }
     ctx.beginPath();
     if (item.kind === 'node') {
       ctx.arc(item.c.x, item.c.y, 3.5, 0, Math.PI * 2);
