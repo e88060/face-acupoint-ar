@@ -418,8 +418,24 @@ const ACUPOINTS = [
 /* ------------------------------------------------------------------
    神經解剖示意
    三叉神經：神經節（示意投影於耳前顳骨區）→三大分支主幹→末梢出顱孔
-   顏面神經：莖乳孔→腮腺內神經叢（鵝足叢）→顳顏面/頸顏面二乾→
-             五條終末支，並於顳支、頰支加繪細支分岔
+   顏面神經：莖乳孔（主幹自莖乳孔穿出腮腺前緣後呈扇形展開）→腮腺內神經叢
+             （鵝足叢）→顳顏面/頸顏面二乾→五條終末支體表投影與走向：
+             ・顳支 Temporal branch：耳垂上緣→顴弓中、後1/3交界處→前上方
+               走行至額肌，路徑約在外耳道口至眼外眥連線上方
+             ・顴支 Zygomatic branch：沿顴骨表面水平前行，止於眼輪匝肌
+               及外眼角
+             ・頰支 Buccal branch：平行腮腺管（Stensen's duct）上、下方
+               前行，位於顴弓下方至口角區
+             ・下頷邊緣支 Marginal mandibular branch：沿下頷骨下緣上、
+               下方橫過顏面動靜脈，位置較淺，下頷角處易受損
+             ・頸支 Cervical branch：向下穿過腮腺下極，於頸闊肌
+               （Platysma）深面走行支配頸部
+             （顳支、頰支另加繪細支分岔示意其扇形展開）
+   手術尋找顏面神經主幹（Main trunk）常用三大經典解剖地標：
+   耳屏軟骨切跡（Tragal pointer，其深面內下方約1.0–1.5cm）、
+   鼓乳縫（Tympanomastoid suture，其下方約6–8mm）、
+   二腹肌後腹（Posterior belly of digastric muscle，其上緣深面）
+   [參考文獻見 pages/clinical.html「神經損傷風險」段落]
    同樣以 FaceMesh 關鍵點比例外推估算，僅供教學示意，非個人化精確定位
 ------------------------------------------------------------------- */
 function trigeminalGanglion(kp, s) {
@@ -469,32 +485,42 @@ function trigeminalPaths(kp, s, scale) {
 }
 
 function facialNervePaths(kp, s, scale) {
+  // 莖乳孔（神經幹起點，示意投影）：以下頷角與顳點連線內插一點示意
+  // 手術定位可另參考耳屏軟骨切跡（內下方1.0–1.5cm）、鼓乳縫（下方6–8mm）、
+  // 二腹肌後腹（上緣深面）三大經典解剖地標，惟 FaceMesh 無耳部關鍵點，
+  // 本頁僅以下頷角／顳點粗略示意其體表投影，非精確手術定位
   const origin = mid(s==='R'?kp[IDX.jawR]:kp[IDX.jawL], s==='R'?kp[IDX.templeR]:kp[IDX.templeL], 0.3);
   const cheek = s==='R'?kp[IDX.cheekR]:kp[IDX.cheekL];
   const jaw = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
   const chin = kp[IDX.chin];
+  const temple = s==='R'?kp[IDX.templeR]:kp[IDX.templeL];
   const browOuter = s==='R'?kp[IDX.browOuterR]:kp[IDX.browOuterL];
   const eyeOuter = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
   const noseAla = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
   const mouthCorner = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
 
-  const plexus = mid(origin, cheek, 0.4);                 // 腮腺內神經叢（鵝足叢）
+  const plexus = mid(origin, cheek, 0.4);                 // 腮腺內神經叢（鵝足叢），主幹穿出腮腺前緣後於此呈扇形展開
   const upperDiv = mid(plexus, browOuter, 0.28);           // 顳顏面乾
   const lowerDiv = mid(plexus, jaw, 0.45);                 // 頸顏面乾
+  // 顴弓中、後1/3交界處示意點，供顳支路徑經過（外耳道口至眼外眥連線上方）
+  const zygomaticArchPt = mid(temple, origin, 0.45);
 
   const branches = [
-    // 顳支：上乾發出2條細支，分別走向額肌、眼輪匝肌上部
-    { id:'temporal_a', key:'fac_temporal', zh:'顳支', en:'', pts:[origin, plexus, upperDiv, off(browOuter, 0, -scale*0.05)] },
+    // 顳支 Temporal branch：耳垂上緣經顴弓中、後1/3交界處向前上方行至額肌，
+    // 位於外耳道口至眼外眥連線上方；另加繪1條細支示意其扇形分岔
+    { id:'temporal_a', key:'fac_temporal', zh:'顳支', en:'Temporal branch', pts:[origin, plexus, zygomaticArchPt, upperDiv, off(browOuter, 0, -scale*0.05)] },
     { id:'temporal_b', key:'fac_temporal', zh:'顳支細支', en:'', pts:[upperDiv, off(mid(upperDiv,browOuter,0.6), scale*0.03, -scale*0.02)] },
-    // 顴支：上乾發出，走向眼輪匝肌下部／顴肌
-    { id:'zygomatic', key:'fac_zygomatic', zh:'顴支', en:'', pts:[upperDiv, mid(upperDiv, eyeOuter, 0.5), eyeOuter] },
-    // 頰支：上下乾均有貢獻，示意為上頰支＋下頰支兩條細支
-    { id:'buccal_a', key:'fac_buccal', zh:'頰支(上)', en:'', pts:[plexus, mid(plexus, noseAla, 0.6), noseAla] },
-    { id:'buccal_b', key:'fac_buccal', zh:'頰支(下)', en:'', pts:[lowerDiv, mid(lowerDiv, mouthCorner, 0.6), mouthCorner] },
-    // 下頷緣支：下乾沿下頷骨下緣走向頦部
-    { id:'mandibular', key:'fac_mandibular', zh:'下頷緣支', en:'', pts:[origin, plexus, lowerDiv, mid(jaw, chin, 0.5)] },
-    // 頸支：下乾向下走入頸闊肌
-    { id:'cervical', key:'fac_cervical', zh:'頸支', en:'', pts:[lowerDiv, off(jaw, 0, scale*0.22)] }
+    // 顴支 Zygomatic branch：沿顴骨表面水平前行至眼輪匝肌及外眼角
+    { id:'zygomatic', key:'fac_zygomatic', zh:'顴支', en:'Zygomatic branch', pts:[upperDiv, mid(upperDiv, eyeOuter, 0.5), eyeOuter] },
+    // 頰支 Buccal branch：平行腮腺管（Stensen's duct）上、下方前行，位於顴弓下方至口角區，
+    // 示意為上、下兩條細支
+    { id:'buccal_a', key:'fac_buccal', zh:'頰支(上)', en:'Buccal branch', pts:[plexus, mid(plexus, noseAla, 0.6), noseAla] },
+    { id:'buccal_b', key:'fac_buccal', zh:'頰支(下)', en:'Buccal branch', pts:[lowerDiv, mid(lowerDiv, mouthCorner, 0.6), mouthCorner] },
+    // 下頷邊緣支 Marginal mandibular branch：沿下頷骨下緣下方或上方橫過顏面動靜脈，
+    // 位置較淺，易在下頷角受損
+    { id:'mandibular', key:'fac_mandibular', zh:'下頷緣支', en:'Marginal mandibular branch', pts:[origin, plexus, lowerDiv, mid(jaw, chin, 0.5)] },
+    // 頸支 Cervical branch：向下穿過腮腺下極，在頸闊肌（Platysma）深面支配頸部
+    { id:'cervical', key:'fac_cervical', zh:'頸支', en:'Cervical branch', pts:[lowerDiv, off(jaw, 0, scale*0.22)] }
   ];
   return { origin, plexus, branches };
 }
