@@ -1,4 +1,4 @@
-/* 共用穴位幾何資料 — 由 pages/ar.html (v2.68) 之 IDX / 幾何helper / ACUPOINTS /
+/* 共用穴位幾何資料 — 由 pages/ar.html (v2.74) 之 IDX / 幾何helper / ACUPOINTS /
    MUSCLES / VESSELS / STRUCTURES / LANDMARKS 定位邏輯完整萃取同步，
    供 quiz.html（AR跑考測驗）與 clinical.html 使用。
    ★ 唯一權威來源為 pages/ar.html，本檔為其自動同步副本，請勿單獨修改。 */
@@ -267,13 +267,8 @@ const ACUPOINTS = [
     indications:'目赤癢痛、眼瞼瞤動、口眼歪斜、頭面疼痛',
     anatomy:'為眶下孔所在，布有眶下神經、眶下動靜脈',
     technique:'直刺0.2–0.3寸，或沿皮刺，不可深刺以免傷及眶下孔',
-    calc:(kp,s)=>{
-      const top = s==='R'?kp[IDX.eyeTopR]:kp[IDX.eyeTopL];
-      const bot = s==='R'?kp[IDX.eyeBottomR]:kp[IDX.eyeBottomL];
-      const eyeH = dist(top,bot);
-      const px = pupilCenter(kp,s).x;
-      return { x: px, y: bot.y + eyeH*1.0 };
-    }},
+    // 四白即眶下孔所在，直接引用神經解剖的 foramenPoints，確保穴位與神經孔標記永不分離
+    calc:(kp,s)=> foramenPoints(kp,s).v2 },
   { id:'st_juliao', name:'巨髎', code:'ST3', meridian:'ST', side:'LR',
     desc:'瞳孔直下，平鼻翼下緣',
     indications:'口眼歪斜、鼻衄、齒痛、唇頰腫',
@@ -439,11 +434,20 @@ const ACUPOINTS = [
    同樣以 FaceMesh 關鍵點比例外推估算，僅供教學示意，非個人化精確定位
 ------------------------------------------------------------------- */
 function trigeminalGanglion(kp, s) {
-  // 三叉神經節深藏於顱底，此處以耳前顳骨根部（顳點與下頷角之間偏上）示意其體表投影
+  // 三叉神經節（位於顳骨岩部尖端之Meckel腔）深藏於顱底，其體表投影約在
+  // 顴弓中段深面、耳屏前方約1公分、大致與外眥同高處（v2.73修正：原投影過低
+  // 貼近下頷角，致V1主幹看似由臉頰下方斜行而上，與實際走向不符）
   const jaw = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
   const temple = s==='R'?kp[IDX.templeR]:kp[IDX.templeL];
-  return mid(jaw, temple, 0.15);
+  return mid(jaw, temple, 0.82);
 }
+// 三叉神經節以虛線橢圓（閉合曲線）示意其範圍，而非單一點
+function trigeminalGanglionOval(kp, s, scale) {
+  const c = trigeminalGanglion(kp, s);
+  const pts = ovalPoints(c, scale*0.14, scale*0.10, scale*0.10, 24);
+  return pts.concat([pts[0]]);
+}
+// 三大分支之體表定位點（三孔約略位於同一垂直線上，通過瞳孔中心）
 function foramenPoints(kp, s) {
   const brow = s==='R'?kp[IDX.browMidR]:kp[IDX.browMidL];
   const eyeTop = s==='R'?kp[IDX.eyeTopR]:kp[IDX.eyeTopL];
@@ -451,30 +455,283 @@ function foramenPoints(kp, s) {
   const eyeH = dist(eyeTop, eyeBot);
   const mc = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
   const ch = kp[IDX.chin];
+  const pupil = pupilCenter(kp, s);
   return {
-    v1: mid(brow, eyeTop, 0.3),
-    v2: { x: eyeBot.x, y: eyeBot.y + eyeH*1.0 },
-    v3: mid(mc, ch, 0.45)
+    // 眶上孔／眶上切跡：眼眶上緣中外側交界處，約在瞳孔正上方垂直線
+    v1: { x: pupil.x, y: mid(brow, eyeTop, 0.25).y },
+    // 眶下孔：眼眶下緣中點下方約0.5–1cm，約在瞳孔正下方。
+    // v2.74修正：眶下緣本身已在下眼瞼緣下方約0.5–0.8cm，故自下眼瞼緣起算應為
+    // 1.3–1.8cm（原 eyeH*1.0 ≈ 1cm，實際落在眶下緣上而非孔上）。
+    // 四白穴（ST2）即取眶下孔，故其 calc 直接引用此點，兩者永遠不會走位。
+    v2: { x: pupil.x, y: eyeBot.y + eyeH*1.5 },
+    // 頦孔：下顎骨前外側、約第二小臼齒根尖下方，與上述二孔約略同一垂直線
+    v3: { x: pupil.x, y: mid(mc, ch, 0.45).y }
   };
+}
+/* v2.73新增：V1眼神經四條皮支各自的出眶／出孔點
+   舊版將眶上、滑車上、滑車下、淚腺四支一律自「眶上孔」一點發出，與實際解剖不符。
+   實際上此四支分屬三條不同父幹、各有獨立出口：
+     ・眶上神經    → 眶上孔／眶上切跡，離正中線約25mm（瞳孔垂線）
+     ・滑車上神經  → 額切跡，位於眶上孔內側約8–10mm（離正中線約17mm，約當內眥垂線）
+     ・滑車下神經  → 滑車下方、內眥韌帶上方出眶（約內眥正上方）
+     ・淚腺神經    → 眶上緣外1/3、眶外上角出眶（約眉尾垂線）
+     ・鼻外神經    → 鼻骨下緣與上外側鼻軟骨交界處（rhinion）才穿出皮下，
+                     在此之前（篩前神經段）行於鼻腔內，非自眉間下行 */
+function v1ExitPoints(kp, s, scale) {
+  const browMid  = s==='R'?kp[IDX.browMidR]:kp[IDX.browMidL];
+  const browIn   = s==='R'?kp[IDX.browInnerR]:kp[IDX.browInnerL];
+  const browOut  = s==='R'?kp[IDX.browOuterR]:kp[IDX.browOuterL];
+  const eyeTop   = s==='R'?kp[IDX.eyeTopR]:kp[IDX.eyeTopL];
+  const eyeIn    = s==='R'?kp[IDX.eyeInnerR]:kp[IDX.eyeInnerL];
+  const eyeOut   = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
+  const pupil    = pupilCenter(kp, s);
+  const glabella = kp[IDX.glabella];
+  const noseTip  = kp[IDX.noseTip];
+  return {
+    // 眶上孔／眶上切跡：瞳孔垂線、眶上緣
+    supraorbital:   { x: pupil.x, y: mid(browMid, eyeTop, 0.25).y },
+    // 額切跡：眶上孔內側約8–10mm，約當內眥垂線／攢竹內側
+    supratrochlear: { x: eyeIn.x, y: mid(browIn, eyeTop, 0.25).y },
+    // 滑車下神經出眶處：滑車下方、內眥韌帶上方
+    infratrochlear: { x: eyeIn.x, y: eyeIn.y - scale*0.055 },
+    // 淚腺神經出眶處：眶上緣外1/3、眶外上角
+    lacrimal:       { x: mid(pupil, eyeOut, 0.85).x, y: mid(browOut, eyeTop, 0.30).y },
+    // rhinion：鼻骨下緣與上外側鼻軟骨交界，鼻外神經自此穿出皮下
+    rhinion:        mid(glabella, noseTip, 0.50)
+  };
+}
+
+/* v2.74新增：三叉神經皮節（感覺分布區）示意多邊形
+   分區界線依常用教學標準：
+   ・V1／V2 之界＝眼裂（上眼瞼屬V1、下眼瞼屬V2），向外側延伸至顳部；
+     鼻部另以鼻背旁正中線為界——鼻背至鼻尖屬V1（鼻外神經），鼻側與鼻翼屬V2（眶下神經）
+   ・V2／V3 之界＝自口角向後上斜行、經顴弓下方至耳屏前（上唇屬V2、下唇屬V3）
+   ・下頷角一帶並非V3，而由頸神經叢的耳大神經（C2–3）支配。臨床上「下頷角感覺保留」
+     是鑑別三叉神經病變與非器質性感覺缺失的關鍵，故另以灰色區塊標出
+   ・耳顳神經（V3）之支配尚續向耳前與耳上頭皮延伸，該範圍超出 FaceMesh 可靠涵蓋區
+     （本頁已聲明耳部、髮際線未收錄），故填色僅畫至下顏面
+   眼裂本身（睜眼範圍）落在V1下緣與V2上緣之間，兩區皆不覆蓋，故眼球不會被填色遮住。 */
+function trigeminalDermatomes(kp, s, scale) {
+  const dir      = s==='R' ? -1 : 1;
+  const eyeOuter = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
+  const eyeInner = s==='R'?kp[IDX.eyeInnerR]:kp[IDX.eyeInnerL];
+  const eyeTop   = s==='R'?kp[IDX.eyeTopR]:kp[IDX.eyeTopL];
+  const eyeBot   = s==='R'?kp[IDX.eyeBottomR]:kp[IDX.eyeBottomL];
+  const temple   = s==='R'?kp[IDX.templeR]:kp[IDX.templeL];
+  const cheek    = s==='R'?kp[IDX.cheekR]:kp[IDX.cheekL];
+  const jaw      = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
+  const fCorner  = s==='R'?kp[IDX.foreheadCornerR]:kp[IDX.foreheadCornerL];
+  const noseAla  = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
+  const mCorner  = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
+  const glabella = kp[IDX.glabella];
+  const noseTip  = kp[IDX.noseTip];
+  const fTop     = kp[IDX.foreheadTop];
+  const chin     = kp[IDX.chin];
+  const oralTop  = kp[IDX.mouthInnerTop];
+  const oralBot  = kp[IDX.mouthInnerBottom];
+  const lowerLip = kp[IDX.lowerLipBottom];
+
+  // 鼻背旁正中線：V1／V2 於鼻部之分界（三點共用，兩區邊界因此完全密合、不留縫）
+  const nasal = [
+    off(mid(glabella, noseTip, 0.12), dir*scale*0.048, 0),
+    off(mid(glabella, noseTip, 0.55), dir*scale*0.068, 0),
+    off(noseTip,                      dir*scale*0.050, -scale*0.010)
+  ];
+  const tempMid  = off(temple, dir*scale*0.02, -scale*0.05);   // V1／V2 於顳部之分界
+  const cheekMid = off(cheek, -dir*scale*0.02, scale*0.10);    // V2／V3 於面頰之分界
+  const preAur   = off(mid(temple, jaw, 0.42), dir*scale*0.05, 0);
+  const ramus    = off(preAur, dir*scale*0.03, scale*0.17);    // 下頷枝前緣
+  const angleCut = off(mid(chin, jaw, 0.76), 0, -scale*0.05);  // 於下頷角前方收起
+  /* 前額上緣：V1 實際續行至顱頂（約冠狀縫一帶），惟髮際線以上非 FaceMesh 可靠涵蓋區，
+     故上緣比照本頁額肌之作法貼齊髮際線附近（foreheadTop／foreheadCorner），
+     並以三點拉出圓頂弧線——只取兩點會在正中線形成尖角。 */
+  const foreheadArc = [
+    off(fTop,                     0,              -scale*0.06),
+    off(mid(fTop, fCorner, 0.55), 0,              -scale*0.03),
+    off(fCorner,                  dir*scale*0.03, -scale*0.10)
+  ];
+
+  // V1：前額（實際續至頭頂，畫面外）＋上眼瞼＋鼻背同側半
+  const v1 = [
+    foreheadArc[0], foreheadArc[1], foreheadArc[2],
+    off(fCorner, dir*scale*0.04, scale*0.02),
+    tempMid,
+    eyeOuter, off(eyeTop, 0, -scale*0.006), eyeInner,
+    nasal[0], nasal[1], nasal[2],
+    off(noseTip, 0, scale*0.006),
+    glabella,
+    foreheadArc[0]
+  ];
+
+  // V2：下眼瞼＋前顳部＋顴頰部＋鼻側與鼻翼＋上唇
+  const v2 = [
+    tempMid,
+    eyeOuter, off(eyeBot, 0, scale*0.006), eyeInner,
+    nasal[0], nasal[1], nasal[2],
+    noseAla,
+    // 鼻基底（鼻小柱／人中一帶亦屬V2）：少了這一點，左右兩側會在人中留下三角空洞
+    off(kp[IDX.noseBase], dir*scale*0.030, scale*0.010),
+    off(oralTop, 0, -scale*0.004),
+    mCorner,
+    cheekMid,
+    preAur,
+    tempMid
+  ];
+
+  // V3：下唇＋頦部＋下頷體表面（於下頷角前方即收起）
+  const v3 = [
+    mCorner,
+    cheekMid,
+    preAur,
+    ramus,
+    angleCut,
+    off(mid(chin, jaw, 0.45), 0, scale*0.035),
+    chin,
+    off(lowerLip, 0, scale*0.012),
+    off(oralBot, 0, scale*0.004),
+    mCorner
+  ];
+
+  // 下頷角豁免區：耳大神經（C2–3）支配範圍，非三叉神經
+  const spared = [
+    ramus,
+    off(preAur, dir*scale*0.11, scale*0.31),
+    off(jaw, dir*scale*0.09, scale*0.09),
+    off(mid(chin, jaw, 0.80), 0, scale*0.03),
+    angleCut,
+    ramus
+  ];
+
+  return { v1, v2, v3, spared };
 }
 function trigeminalPaths(kp, s, scale) {
   const origin = trigeminalGanglion(kp, s);
   const f = foramenPoints(kp, s);
   const eyeOuter = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
+  const eyeInner = s==='R'?kp[IDX.eyeInnerR]:kp[IDX.eyeInnerL];
+  const browInner = s==='R'?kp[IDX.browInnerR]:kp[IDX.browInnerL];
   const cheek = s==='R'?kp[IDX.cheekR]:kp[IDX.cheekL];
   const jaw = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
+  const temple = s==='R'?kp[IDX.templeR]:kp[IDX.templeL];
+  const noseAla = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
+  const mouthCorner = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
+  const noseTip = kp[IDX.noseTip];
+  const glabella = kp[IDX.glabella];
+  const upperLip = kp[IDX.upperLipTop];
+  const lowerLip = kp[IDX.lowerLipBottom];
+  const chin = kp[IDX.chin];
+  const dir = s==='R' ? -1 : 1;   // 向臉部外側為正
+
   // V1 眼神經：沿眶外側緣上行至眶上孔
   const v1Way = off(mid(origin, eyeOuter, 0.65), 0, -scale*0.06);
   // V2 上頷神經：沿顴弓下方、頰部斜向眶下孔
   const v2Way = mid(origin, cheek, 0.55);
-  // V3 下頷神經：沿下頷枝下緣前行至頦孔
-  const v3Way = mid(origin, jaw, 0.65);
+  // V3 下頷神經：出卵圓孔後沿下頷枝內側面下行至下頷孔（v2.74：主幹止於下頷孔，
+  // 其後由下齒槽神經接續入下頷管、出頦孔，主幹不再與下齒槽神經整段重疊畫兩次）
+  const v3Way = mid(origin, jaw, 0.42);
+  const mandForamen = mid(origin, jaw, 0.70);
+
+  // V1四支皮支各自的出眶／出孔點（v2.73：不再共用眶上孔一點）
+  const x1 = v1ExitPoints(kp, s, scale);
+  // V1三分支（淚腺、額、鼻睫）之分歧點，示意投影於眶上裂／眶尖處（眶外上緣後方）
+  const v1Split = off(mid(x1.lacrimal, x1.supratrochlear, 0.30), 0, scale*0.10);
+  // 顴神經分為顴顳、顴面二支之分歧點，示意投影於眶外側壁（顴骨眶面）
+  const zygSplit = off(eyeOuter, dir*scale*0.10, -scale*0.02);
+  // 耳前定位點：下頷骨髁突頸部與外耳道之間，耳顳神經由此穿出腮腺上緣、沿耳屏前上行
+  const preAuricular = off(mid(temple, jaw, 0.42), dir*scale*0.05, 0);
+
+  /* 穿出神經孔後之末梢分支（實線）——僅示意各支分布方向與支配區，非精確走行。
+     v2.74修正：眶下神經上唇支、頦神經下唇支原以 -dir 偏移，因上／下唇的錨點
+     （upperLipTop、lowerLipBottom）本就落在正中線上，導致左右兩側末梢互相越過中線
+     交叉成 X 形；已一律改為 +dir，使各側分支只走行於同側半邊。鼻背諸支同理。 */
+  // v2.73：另以 dash:true 標記仍行於眶內／鼻腔內之深層父幹段（額神經、鼻睫神經、
+  // 篩前神經），使讀者看得出「兩條supra同出額神經」「滑車下與鼻外同出鼻睫神經」之階層
+  const distal = [
+    // ── V1 眼神經：入眶前先分為 淚腺神經／額神經／鼻睫神經 三支 ──
+    // 額神經：於眶頂骨膜上前行（深層，虛線），至眶上緣分出眶上、滑車上二支
+    { id:'v1_frontal', key:'tri_v1', zh:'額神經', en:'Frontal n.', dash:true,
+      pts:[v1Split, x1.supraorbital] },
+    { id:'v1_frontal_b', key:'tri_v1', zh:'', en:'', dash:true,
+      pts:[v1Split, x1.supratrochlear] },
+    // 眶上神經：出眶上孔後分內、外側支，外側支可上行至頂部頭皮
+    { id:'v1_supraorbital', key:'tri_v1', zh:'眶上神經', en:'Supraorbital n.',
+      pts:[x1.supraorbital, off(x1.supraorbital, dir*scale*0.03, -scale*0.30), off(x1.supraorbital, dir*scale*0.11, -scale*0.62)] },
+    { id:'v1_so_medial', key:'tri_v1', zh:'', en:'',
+      pts:[x1.supraorbital, off(x1.supraorbital, -dir*scale*0.02, -scale*0.28), off(x1.supraorbital, -dir*scale*0.05, -scale*0.54)] },
+    // 滑車上神經：出額切跡後貼近正中線上行，支配前額近中線之帶狀區
+    { id:'v1_supratrochlear', key:'tri_v1', zh:'滑車上神經', en:'Supratrochlear n.',
+      pts:[x1.supratrochlear, off(x1.supratrochlear, -dir*scale*0.01, -scale*0.20), off(x1.supratrochlear, -dir*scale*0.03, -scale*0.44)] },
+    // 鼻睫神經：沿眶內側壁前行（深層，虛線），分出滑車下神經與篩前神經
+    { id:'v1_nasociliary', key:'tri_v1', zh:'鼻睫神經', en:'Nasociliary n.', dash:true,
+      pts:[v1Split, off(x1.infratrochlear, dir*scale*0.07, scale*0.03), x1.infratrochlear] },
+    // 滑車下神經：支配內半上眼皮、內眥、淚囊與鼻根側面
+    { id:'v1_infratrochlear', key:'tri_v1', zh:'滑車下神經', en:'Infratrochlear n.',
+      pts:[x1.infratrochlear, off(eyeInner, -dir*scale*0.01, scale*0.03), off(mid(glabella, noseTip, 0.28), dir*scale*0.025, 0)] },
+    // 篩前神經：經篩板入鼻腔後於鼻腔內下行（深層，虛線），至鼻骨下緣穿出
+    { id:'v1_ant_ethmoid', key:'tri_v1', zh:'篩前神經', en:'Ant. ethmoidal n.', dash:true,
+      pts:[x1.infratrochlear, off(mid(glabella, noseTip, 0.25), dir*scale*0.020, 0), x1.rhinion] },
+    // 鼻外神經：自rhinion穿出皮下，支配鼻背下段至鼻尖（不含鼻翼）
+    { id:'v1_extnasal', key:'tri_v1', zh:'鼻外神經', en:'External nasal n.',
+      pts:[x1.rhinion, off(mid(x1.rhinion, noseTip, 0.6), dir*scale*0.020, 0), off(noseTip, dir*scale*0.025, -scale*0.02)] },
+    // 淚腺神經：沿眶外側壁前行至淚腺（深層，虛線）
+    { id:'v1_lacrimal_orb', key:'tri_v1', zh:'', en:'', dash:true,
+      pts:[v1Split, x1.lacrimal] },
+    // 淚腺神經皮支：眶外上角出眶，僅支配外半上眼皮與外眥外上方之小三角區
+    { id:'v1_lacrimal', key:'tri_v1', zh:'淚腺神經', en:'Lacrimal n.',
+      pts:[x1.lacrimal, off(eyeOuter, dir*scale*0.03, -scale*0.13)] },
+
+    /* ── V2 上頷神經：經圓孔出顱→翼腭窩→眶下裂→眶下溝／管→眶下孔 ──
+       v2.74修正：
+       ①顴神經（Zygomatic n.）在眶內即由V2主幹分出（深層，虛線），再分顴顳、顴面二支，
+         舊版此二支憑空出現於眶外，看不出同源。
+       ②顴顳支自顴骨顴顳孔穿出於「額顴縫後方、眶外緣後」之顳窩，位置在外眥『上方』
+         偏後，舊版起點落在外眥下方，方向相反。
+       ③顴面支自顴骨外側面之顴面孔穿出，位於外眥外下方約2–2.5cm的顴突隆起上，
+         舊版僅約1cm，過於貼近眼眶。 */
+    { id:'v2_zygomatic', key:'tri_v2', zh:'顴神經', en:'Zygomatic n.', dash:true,
+      pts:[off(eyeOuter, dir*scale*0.14, scale*0.12), off(eyeOuter, dir*scale*0.09, scale*0.02), zygSplit] },
+    { id:'v2_zygtemporal', key:'tri_v2', zh:'顴顳支', en:'Zygomaticotemporal br.',
+      pts:[zygSplit, off(mid(eyeOuter, temple, 0.55), dir*scale*0.02, -scale*0.14), off(temple, dir*scale*0.02, -scale*0.34)] },
+    { id:'v2_zygfacial', key:'tri_v2', zh:'顴面支', en:'Zygomaticofacial br.',
+      pts:[off(eyeOuter, dir*scale*0.09, scale*0.24), off(eyeOuter, dir*scale*0.15, scale*0.38)] },
+    // 眶下神經：出眶下孔後即散為瞼支、鼻支、上唇支三群（此三支皆為皮下實線）
+    { id:'v2_infraorbital', key:'tri_v2', zh:'眶下神經', en:'Infraorbital n.',
+      pts:[f.v2, mid(f.v2, upperLip, 0.55), off(upperLip, dir*scale*0.05, -scale*0.015)] },
+    { id:'v2_io_ala', key:'tri_v2', zh:'', en:'',
+      pts:[f.v2, mid(f.v2, noseAla, 0.6), noseAla] },
+    { id:'v2_io_lid', key:'tri_v2', zh:'', en:'',
+      pts:[f.v2, off(f.v2, dir*scale*0.16, -scale*0.10)] },
+
+    /* ── V3 下頷神經：經卵圓孔出顱，此處僅繪與面部感覺相關者 ──
+       v2.74修正：
+       ①耳顳神經自V3後幹分出後，行於「下頷骨髁突頸部與外耳道之間」，再自腮腺上緣
+         穿出、與顳淺動脈伴行沿耳屏前上行；舊版三個控制點全繫於顳點（約眼裂高度），
+         起點過高且過前，看不出「繞髁突、經耳前」的關鍵走行。
+       ②補上下齒槽神經（Inferior alveolar n.）——頦神經之母幹，經下頷孔入下頷管
+         （深層虛線），為下齒槽神經阻斷術（IANB）之對象，臨床重要性最高。
+       ③頰神經行於顳肌下方、自咬肌前緣淺出後穿頰肌，支配頰部皮膚與黏膜，
+         其分布不越過口角，舊版末端過度延伸至口角外側。 */
+    { id:'v3_auriculotemporal', key:'tri_v3', zh:'耳顳神經', en:'Auriculotemporal n.',
+      pts:[preAuricular, off(preAuricular, dir*scale*0.02, -scale*0.16), off(temple, dir*scale*0.05, -scale*0.42)] },
+    { id:'v3_buccal', key:'tri_v3', zh:'頰神經(感覺)', en:'Buccal n. (V3)',
+      pts:[mid(origin, cheek, 0.55), mid(cheek, mouthCorner, 0.40), off(mouthCorner, dir*scale*0.22, scale*0.02)] },
+    // 下齒槽神經：經下頷孔入下頷管（行於下頷骨內，虛線），末端出頦孔續為頦神經
+    { id:'v3_inferior_alveolar', key:'tri_v3', zh:'下齒槽神經', en:'Inferior alveolar n.', dash:true,
+      pts:[mandForamen, off(jaw, -dir*scale*0.06, scale*0.02), f.v3] },
+    { id:'v3_mental', key:'tri_v3', zh:'頦神經', en:'Mental n.',
+      pts:[f.v3, mid(f.v3, lowerLip, 0.5), off(lowerLip, dir*scale*0.05, scale*0.015)] },
+    { id:'v3_mental_chin', key:'tri_v3', zh:'', en:'',
+      pts:[f.v3, mid(f.v3, chin, 0.6), off(chin, dir*scale*0.05, -scale*0.02)] }
+  ];
+
   return {
     ganglion: origin,
+    ganglionOval: trigeminalGanglionOval(kp, s, scale),
+    distal,
     branches: [
-      { id:'v1', zh:'眼神經', en:'V1', pts:[origin, v1Way, f.v1] },
+      { id:'v1', zh:'眼神經', en:'V1', pts:[origin, v1Way, v1Split] },
       { id:'v2', zh:'上頷神經', en:'V2', pts:[origin, v2Way, f.v2] },
-      { id:'v3', zh:'下頷神經', en:'V3', pts:[origin, v3Way, f.v3] }
+      { id:'v3', zh:'下頷神經', en:'V3', pts:[origin, v3Way, mandForamen] }
     ],
     endPoints: [
       { id:'v1', zh:'眶上孔', en:'V1', desc:'額神經（眼神經分支）出顱處，與四白、頦孔約略同一垂直線', pos:f.v1 },
@@ -485,11 +742,6 @@ function trigeminalPaths(kp, s, scale) {
 }
 
 function facialNervePaths(kp, s, scale) {
-  // 莖乳孔（神經幹起點，示意投影）：以下頷角與顳點連線內插一點示意
-  // 手術定位可另參考耳屏軟骨切跡（內下方1.0–1.5cm）、鼓乳縫（下方6–8mm）、
-  // 二腹肌後腹（上緣深面）三大經典解剖地標，惟 FaceMesh 無耳部關鍵點，
-  // 本頁僅以下頷角／顳點粗略示意其體表投影，非精確手術定位
-  const origin = mid(s==='R'?kp[IDX.jawR]:kp[IDX.jawL], s==='R'?kp[IDX.templeR]:kp[IDX.templeL], 0.3);
   const cheek = s==='R'?kp[IDX.cheekR]:kp[IDX.cheekL];
   const jaw = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
   const chin = kp[IDX.chin];
@@ -498,12 +750,22 @@ function facialNervePaths(kp, s, scale) {
   const eyeOuter = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
   const noseAla = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
   const mouthCorner = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
+  const dir = s==='R' ? -1 : 1;   // 向臉部外側為正
+
+  // 莖乳孔（神經幹起點，示意投影）：定位於耳垂位置
+  // （耳垂約在顳點至下頷角連線上段、略偏外側；FaceMesh 無耳部關鍵點，故以此比例外推）
+  // 手術定位可另參考耳屏軟骨切跡（內下方1.0–1.5cm）、鼓乳縫（下方6–8mm）、
+  // 二腹肌後腹（上緣深面）三大經典解剖地標，本頁僅為體表示意，非精確手術定位
+  const origin = off(mid(temple, jaw, 0.34), dir*scale*0.03, scale*0.03);
 
   const plexus = mid(origin, cheek, 0.4);                 // 腮腺內神經叢（鵝足叢），主幹穿出腮腺前緣後於此呈扇形展開
   const upperDiv = mid(plexus, browOuter, 0.28);           // 顳顏面乾
   const lowerDiv = mid(plexus, jaw, 0.45);                 // 頸顏面乾
   // 顴弓中、後1/3交界處示意點，供顳支路徑經過（外耳道口至眼外眥連線上方）
   const zygomaticArchPt = mid(temple, origin, 0.45);
+  // 頰支：自下頷角起水平向中線前行，至頰部再分出上、下兩細支
+  const buccalStart = jaw;
+  const buccalFork = { x: jaw.x + (mouthCorner.x - jaw.x) * 0.5, y: jaw.y };
 
   const branches = [
     // 顳支 Temporal branch：耳垂上緣經顴弓中、後1/3交界處向前上方行至額肌，
@@ -512,10 +774,10 @@ function facialNervePaths(kp, s, scale) {
     { id:'temporal_b', key:'fac_temporal', zh:'顳支細支', en:'', pts:[upperDiv, off(mid(upperDiv,browOuter,0.6), scale*0.03, -scale*0.02)] },
     // 顴支 Zygomatic branch：沿顴骨表面水平前行至眼輪匝肌及外眼角
     { id:'zygomatic', key:'fac_zygomatic', zh:'顴支', en:'Zygomatic branch', pts:[upperDiv, mid(upperDiv, eyeOuter, 0.5), eyeOuter] },
-    // 頰支 Buccal branch：平行腮腺管（Stensen's duct）上、下方前行，位於顴弓下方至口角區，
-    // 示意為上、下兩條細支
-    { id:'buccal_a', key:'fac_buccal', zh:'頰支(上)', en:'Buccal branch', pts:[plexus, mid(plexus, noseAla, 0.6), noseAla] },
-    { id:'buccal_b', key:'fac_buccal', zh:'頰支(下)', en:'Buccal branch', pts:[lowerDiv, mid(lowerDiv, mouthCorner, 0.6), mouthCorner] },
+    // 頰支 Buccal branch：自下頷角水平向中線前行，於頰部（腮腺管 Stensen's duct 附近）
+    // 再分出上、下兩細支——上支走向鼻翼、下支走向口角
+    { id:'buccal_a', key:'fac_buccal', zh:'頰支(上)', en:'Buccal branch', pts:[buccalStart, buccalFork, mid(buccalFork, noseAla, 0.55), noseAla] },
+    { id:'buccal_b', key:'fac_buccal', zh:'頰支(下)', en:'Buccal branch', pts:[buccalFork, mid(buccalFork, mouthCorner, 0.6), mouthCorner] },
     // 下頷邊緣支 Marginal mandibular branch：沿下頷骨下緣下方或上方橫過顏面動靜脈，
     // 位置較淺，易在下頷角受損
     { id:'mandibular', key:'fac_mandibular', zh:'下頷緣支', en:'Marginal mandibular branch', pts:[origin, plexus, lowerDiv, mid(jaw, chin, 0.5)] },
