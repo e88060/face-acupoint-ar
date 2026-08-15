@@ -1,4 +1,4 @@
-/* 共用穴位幾何資料 — 由 pages/ar.html (v2.74) 之 IDX / 幾何helper / ACUPOINTS /
+/* 共用穴位幾何資料 — 由 pages/ar.html (v2.75) 之 IDX / 幾何helper / ACUPOINTS /
    MUSCLES / VESSELS / STRUCTURES / LANDMARKS 定位邏輯完整萃取同步，
    供 quiz.html（AR跑考測驗）與 clinical.html 使用。
    ★ 唯一權威來源為 pages/ar.html，本檔為其自動同步副本，請勿單獨修改。 */
@@ -752,37 +752,65 @@ function facialNervePaths(kp, s, scale) {
   const mouthCorner = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
   const dir = s==='R' ? -1 : 1;   // 向臉部外側為正
 
-  // 莖乳孔（神經幹起點，示意投影）：定位於耳垂位置
-  // （耳垂約在顳點至下頷角連線上段、略偏外側；FaceMesh 無耳部關鍵點，故以此比例外推）
-  // 手術定位可另參考耳屏軟骨切跡（內下方1.0–1.5cm）、鼓乳縫（下方6–8mm）、
-  // 二腹肌後腹（上緣深面）三大經典解剖地標，本頁僅為體表示意，非精確手術定位
-  const origin = off(mid(temple, jaw, 0.34), dir*scale*0.03, scale*0.03);
+  const noseBase = kp[IDX.noseBase];
+  const upperLip = kp[IDX.upperLipTop];
+  const lowerLip = kp[IDX.lowerLipBottom];
 
-  const plexus = mid(origin, cheek, 0.4);                 // 腮腺內神經叢（鵝足叢），主幹穿出腮腺前緣後於此呈扇形展開
-  const upperDiv = mid(plexus, browOuter, 0.28);           // 顳顏面乾
-  const lowerDiv = mid(plexus, jaw, 0.45);                 // 頸顏面乾
-  // 顴弓中、後1/3交界處示意點，供顳支路徑經過（外耳道口至眼外眥連線上方）
-  const zygomaticArchPt = mid(temple, origin, 0.45);
-  // 頰支：自下頷角起水平向中線前行，至頰部再分出上、下兩細支
-  const buccalStart = jaw;
-  const buccalFork = { x: jaw.x + (mouthCorner.x - jaw.x) * 0.5, y: jaw.y };
+  /* 莖乳孔（Stylomastoid foramen）：位於乳突與莖突之間，即外耳道口的「後下方」、
+     約當耳垂高度的乳突前緣。
+     v2.75修正：原取 mid(temple, jaw, 0.34) 再向外偏，落點約在外眥略下方（耳屏上緣
+     高度），比實際位置高了將近一個耳廓；更關鍵的是該點與 cheek 幾乎重合，使其後
+     以 mid(origin, cheek, 0.4) 算出的腮腺內神經叢與莖乳孔畫在同一點上（畫面上兩個
+     標籤直接疊住）。現改以顳點至下頷角連線的 0.62 處再向外偏，落在耳垂高度。
+     手術定位另參考耳屏軟骨切跡（深面內下方1.0–1.5cm）、鼓乳縫（下方6–8mm）、
+     二腹肌後腹（上緣深面）三大經典地標；FaceMesh 無耳部關鍵點，此處僅為體表示意 */
+  const origin = off(mid(temple, jaw, 0.62), dir*scale*0.06, scale*0.02);
+
+  /* 腮腺內神經叢（鵝足叢 Pes anserinus）：主幹出莖乳孔後約1.3cm即於腮腺內分為
+     顳顏面乾與頸顏面乾，位置在莖乳孔的「前上方」
+     （v2.75修正：原式方向相反，會把神經叢往顴部拉） */
+  const plexus   = off(origin, -dir*scale*0.09, -scale*0.05);
+  const upperDiv = off(plexus,  dir*scale*0.02, -scale*0.08);   // 顳顏面乾
+  const lowerDiv = off(plexus, -dir*scale*0.02,  scale*0.09);   // 頸顏面乾
+
+  /* 耳屏（Tragus）示意點。顳支的臨床體表投影採 Pitanguy 線：
+     「耳屏下方0.5cm」至「眉尾上方1.5cm」的連線，途中跨越顴弓的中、後1/3交界處 */
+  const tragus       = off(mid(temple, jaw, 0.25), dir*scale*0.05, 0);
+  const zygArchCross = off(mid(eyeOuter, tragus, 0.68), 0, scale*0.03);
+  const pitanguyEnd  = off(browOuter, dir*scale*0.02, -scale*0.17);
+
+  /* 腮腺管（Stensen's duct）體表投影＝耳屏至人中中點連線的中間1/3段。
+     頰支即沿此線的上、下方前行
+     （v2.75修正：原頰支自「下頷角」水平前行，那是下頷緣支的走行位置；
+       頰支實際自腮腺前緣沿腮腺管方向前行，兩者不應混為一談） */
+  const philtrumMid = mid(noseBase, upperLip, 0.5);
+  const duct = t => mid(tragus, philtrumMid, t);
 
   const branches = [
-    // 顳支 Temporal branch：耳垂上緣經顴弓中、後1/3交界處向前上方行至額肌，
-    // 位於外耳道口至眼外眥連線上方；另加繪1條細支示意其扇形分岔
-    { id:'temporal_a', key:'fac_temporal', zh:'顳支', en:'Temporal branch', pts:[origin, plexus, zygomaticArchPt, upperDiv, off(browOuter, 0, -scale*0.05)] },
-    { id:'temporal_b', key:'fac_temporal', zh:'顳支細支', en:'', pts:[upperDiv, off(mid(upperDiv,browOuter,0.6), scale*0.03, -scale*0.02)] },
-    // 顴支 Zygomatic branch：沿顴骨表面水平前行至眼輪匝肌及外眼角
-    { id:'zygomatic', key:'fac_zygomatic', zh:'顴支', en:'Zygomatic branch', pts:[upperDiv, mid(upperDiv, eyeOuter, 0.5), eyeOuter] },
-    // 頰支 Buccal branch：自下頷角水平向中線前行，於頰部（腮腺管 Stensen's duct 附近）
-    // 再分出上、下兩細支——上支走向鼻翼、下支走向口角
-    { id:'buccal_a', key:'fac_buccal', zh:'頰支(上)', en:'Buccal branch', pts:[buccalStart, buccalFork, mid(buccalFork, noseAla, 0.55), noseAla] },
-    { id:'buccal_b', key:'fac_buccal', zh:'頰支(下)', en:'Buccal branch', pts:[buccalFork, mid(buccalFork, mouthCorner, 0.6), mouthCorner] },
-    // 下頷邊緣支 Marginal mandibular branch：沿下頷骨下緣下方或上方橫過顏面動靜脈，
-    // 位置較淺，易在下頷角受損
-    { id:'mandibular', key:'fac_mandibular', zh:'下頷緣支', en:'Marginal mandibular branch', pts:[origin, plexus, lowerDiv, mid(jaw, chin, 0.5)] },
+    // 顳支 Temporal branch：自顳顏面乾上行，跨越顴弓中、後1/3交界處後
+    // 沿 Pitanguy 線斜向前上方行至額肌；另加繪1條細支示意其扇形分岔
+    { id:'temporal_a', key:'fac_temporal', zh:'顳支', en:'Temporal branch',
+      pts:[origin, plexus, upperDiv, zygArchCross, mid(zygArchCross, pitanguyEnd, 0.55), pitanguyEnd] },
+    { id:'temporal_b', key:'fac_temporal', zh:'顳支細支', en:'',
+      pts:[zygArchCross, off(mid(zygArchCross, pitanguyEnd, 0.5), dir*scale*0.05, 0), off(pitanguyEnd, dir*scale*0.07, -scale*0.06)] },
+    // 顴支 Zygomatic branch：沿顴骨表面前行至眼輪匝肌及外眼角
+    { id:'zygomatic', key:'fac_zygomatic', zh:'顴支', en:'Zygomatic branch',
+      pts:[upperDiv, off(mid(upperDiv, eyeOuter, 0.55), 0, -scale*0.02), off(eyeOuter, dir*scale*0.01, scale*0.02)] },
+    // 頰支 Buccal branch：自腮腺前緣沿腮腺管方向前行，於頰部分出上、下兩支——
+    // 上支行於腮腺管上方走向鼻翼與上唇，下支行於其下方走向口角
+    { id:'buccal_a', key:'fac_buccal', zh:'頰支(上)', en:'Buccal branch',
+      pts:[plexus, off(duct(0.45), 0, -scale*0.06), off(duct(0.68), 0, -scale*0.05), off(noseAla, dir*scale*0.02, scale*0.02)] },
+    { id:'buccal_b', key:'fac_buccal', zh:'頰支(下)', en:'Buccal branch',
+      pts:[plexus, off(duct(0.55), 0, scale*0.05), off(mouthCorner, dir*scale*0.06, -scale*0.01)] },
+    /* 下頷邊緣支 Marginal mandibular branch：自頸顏面乾沿下頷枝後緣下行，
+       貼下頷骨下緣前行、於咬肌前緣（antegonial notch）處橫過顏面動靜脈，
+       再上勾至下唇與頦部的降肌群。位置淺，下頷角處最易受損 */
+    { id:'mandibular', key:'fac_mandibular', zh:'下頷緣支', en:'Marginal mandibular branch',
+      pts:[origin, plexus, lowerDiv, off(jaw, dir*scale*0.01, scale*0.05),
+           off(mid(jaw, chin, 0.45), 0, scale*0.02), off(lowerLip, dir*scale*0.10, -scale*0.01)] },
     // 頸支 Cervical branch：向下穿過腮腺下極，在頸闊肌（Platysma）深面支配頸部
-    { id:'cervical', key:'fac_cervical', zh:'頸支', en:'Cervical branch', pts:[lowerDiv, off(jaw, 0, scale*0.22)] }
+    { id:'cervical', key:'fac_cervical', zh:'頸支', en:'Cervical branch',
+      pts:[lowerDiv, off(jaw, dir*scale*0.03, scale*0.11), off(jaw, -dir*scale*0.01, scale*0.28)] }
   ];
   return { origin, plexus, branches };
 }
@@ -1223,48 +1251,95 @@ const MUSCLES = [
 ];
 
 const VESSELS = [
+  /* v2.75：六條動脈逐一比對走行後修正。共通原則——動脈與同名神經多半伴行，
+     故凡有對應神經孔者（眶上孔、額切跡）一律改為引用同一組定位點，避免
+     「神經畫在A點、動脈畫在B點」這種同行血管神經卻分家的矛盾。 */
   { id:'v_sta_frontal', key:'vs_sta', zh:'顳淺動脈額支', en:'Superficial temporal artery, frontal branch (STA)', side:'LR',
-    desc:'顳淺動脈於耳前上行後分出額支，斜向內上方走行供應額肌區域，與顳肌前緣、髮際線關係密切，為額部填充或提眉手術須避開的重要血管',
+    desc:'顳淺動脈為頸外動脈終末支之一，於耳屏前方上行，至顴弓上方約2–3公分處分為額支與頂支；額支再斜向前上方越過顳部走向額結節，與對側及眶上動脈吻合。為額顳部填充、提眉手術與顳淺動脈活檢的關鍵血管',
     calc:(kp,s,sc)=>{
       const temple = s==='R'?kp[IDX.templeR]:kp[IDX.templeL];
+      const jaw = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
       const outer = s==='R'?kp[IDX.browOuterR]:kp[IDX.browOuterL];
-      const way = mid(temple, outer, 0.55);
-      const end = off(outer, 0, -sc*0.18);
-      return [temple, way, end];
+      const dir = s==='R'?-1:1;
+      // v2.75：原起點直接取 temple（眼裂高度）並僅上行 0.18*sc，等於把「耳前上行段」
+      // 與「分叉點」壓成一點，且長度不足以呈現額支跨越顳部走向額結節的走向
+      const preAur = off(mid(temple, jaw, 0.22), dir*sc*0.05, 0);   // 耳屏前上行段
+      const bifurc = off(temple, dir*sc*0.02, -sc*0.12);            // 顴弓上方2–3cm之分叉處
+      return [preAur, bifurc, off(mid(temple, outer, 0.5), 0, -sc*0.26), off(outer, dir*sc*0.02, -sc*0.44)];
     }},
   { id:'v_supratrochlear', key:'vs_stroch', zh:'滑車上動脈', en:'Supratrochlear artery', side:'LR',
-    desc:'眼動脈分支，自眶上緣內側穿出後垂直上行進入額肌深層，是眉間、額頭中線注射時風險較高的血管之一，走行接近皺眉肌內側緣',
+    desc:'眼動脈分支，與滑車上神經伴行自額切跡穿出（離正中線約1.7公分，約當內眥垂線），沿眉間旁垂直上行、先行於皺眉肌深面再穿至淺層。為眉間與額頭中線填充時風險最高的血管之一——此處逆行栓塞可經眼動脈系統造成失明',
     calc:(kp,s,sc)=>{
-      const inner = s==='R'?kp[IDX.browInnerR]:kp[IDX.browInnerL];
-      return [inner, off(inner, 0, -sc*0.28)];
+      const eyeIn = s==='R'?kp[IDX.eyeInnerR]:kp[IDX.eyeInnerL];
+      const browIn = s==='R'?kp[IDX.browInnerR]:kp[IDX.browInnerL];
+      const eyeTop = s==='R'?kp[IDX.eyeTopR]:kp[IDX.eyeTopL];
+      const dir = s==='R'?-1:1;
+      // v2.75：改與 v1ExitPoints().supratrochlear 同一定位（額切跡＝內眥垂線），
+      // 原取 browInner 之 x 略偏外；長度亦由 0.28 延長至 0.52，反映其上行至髮際
+      const exit = { x: eyeIn.x, y: mid(browIn, eyeTop, 0.25).y };
+      return [exit, off(exit, 0, -sc*0.24), off(exit, -dir*sc*0.02, -sc*0.52)];
     }},
   { id:'v_supraorbital', key:'vs_sorb', zh:'眶上動脈', en:'Supraorbital artery', side:'LR',
-    desc:'眼動脈分支，經眶上孔（切跡）穿出後先行於額肌深層，再穿出至淺層與顳淺動脈額支吻合，走行位置略外於滑車上動脈',
+    desc:'眼動脈分支，與眶上神經一同經眶上孔（切跡）穿出後先行於額肌深面，再穿至淺層並與顳淺動脈額支、對側眶上動脈吻合。走行位置略外於滑車上動脈，兩者於額部形成豐富吻合網',
     calc:(kp,s,sc)=>{
-      const midB = s==='R'?kp[IDX.browMidR]:kp[IDX.browMidL];
-      return [midB, off(midB, 0, -sc*0.32)];
+      const dir = s==='R'?-1:1;
+      // v2.75：改為直接引用眶上孔（foramenPoints().v1），確保與眶上神經同一出口
+      const f = foramenPoints(kp, s).v1;
+      return [f, off(f, dir*sc*0.02, -sc*0.26), off(f, dir*sc*0.07, -sc*0.54)];
     }},
   { id:'v_facial', key:'vs_facial', zh:'顏面動脈', en:'Facial artery', side:'LR',
-    desc:'源自頸外動脈，繞下頷骨下緣前行、越過咬肌前緣進入臉部，沿鼻唇溝上行至內眥附近，走行迂曲且緊鄰法令紋，是臉部填充注射最需留意、避免血管栓塞的主幹血管',
+    desc:'源自頸外動脈，於咬肌前緣處越過下頷骨下緣（antegonial notch）進入臉部——此處可直接觸得搏動，為顏面動脈最可靠的體表定位點。其後沿鼻唇溝迂曲上行，於口角外側分出上、下唇動脈，再續行至鼻翼外側溝。走行緊鄰法令紋，是臉部填充注射最需留意的主幹血管',
     calc:(kp,s,sc)=>{
       const jaw = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
       const mouth = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
       const ala = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
-      const glab = off(kp[IDX.glabella], s==='R'?-sc*0.03:sc*0.03, 0);
-      return [jaw, mid(jaw, mouth, 0.6), ala, glab];
+      const dir = s==='R'?-1:1;
+      // v2.75：原路徑自下頷角直接斜切至鼻翼再收到「眉間」——跳過了口角外側的
+      // 唇動脈分出處，且終點取 glabella（正中線鼻根）比實際的內眥偏內側甚多。
+      // 現改為：下頷緣→口角外側→鼻翼外側溝，內眥段另立「角動脈」單獨呈現
+      return [
+        off(jaw, -dir*sc*0.02, sc*0.03),
+        off(mouth, dir*sc*0.13, sc*0.09),
+        off(mouth, dir*sc*0.10, -sc*0.02),
+        off(ala, dir*sc*0.05, sc*0.02),
+        off(ala, dir*sc*0.03, -sc*0.06)
+      ];
+    }},
+  { id:'v_angular', key:'vs_angular', zh:'角動脈', en:'Angular artery', side:'LR',
+    desc:'顏面動脈的終末段，自鼻翼外側溝上行至內眥，於該處與眼動脈的鼻背動脈直接吻合——這條吻合正是鼻唇溝／鼻部填充造成「逆行性眼動脈栓塞、單眼失明」的解剖路徑，為顏面注射最高風險區段',
+    calc:(kp,s,sc)=>{
+      const ala = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
+      const eyeIn = s==='R'?kp[IDX.eyeInnerR]:kp[IDX.eyeInnerL];
+      const dir = s==='R'?-1:1;
+      return [off(ala, dir*sc*0.03, -sc*0.06), off(mid(ala, eyeIn, 0.55), dir*sc*0.015, 0), off(eyeIn, dir*sc*0.01, sc*0.04)];
     }},
   { id:'v_dorsal_nasal', key:'vs_dna', zh:'鼻背動脈', en:'Dorsal nasal artery', side:'LR',
-    desc:'眼動脈終末分支之一，自內眥上方下行至鼻背兩側，左右鼻背動脈間常有交通支，為鼻部填充注射時須格外小心的血管',
+    desc:'眼動脈終末分支之一，自內眥韌帶上方穿出眼眶後轉向下行於鼻背「外側」，與同側角動脈及對側鼻背動脈吻合。鼻部填充注射時須格外小心——此處與眼動脈僅隔一個吻合',
     calc:(kp,s,sc)=>{
-      const glab = off(kp[IDX.glabella], s==='R'?-sc*0.02:sc*0.02, 0);
-      return [glab, kp[IDX.noseBase]];
+      const eyeIn = s==='R'?kp[IDX.eyeInnerR]:kp[IDX.eyeInnerL];
+      const ala = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
+      const glab = kp[IDX.glabella];
+      const tip = kp[IDX.noseTip];
+      const dir = s==='R'?-1:1;
+      // v2.75：原式自 glabella 偏移 0.02*sc（幾乎正中線）垂直下行至 noseBase，
+      // 等於畫在鼻背正中；實際鼻背動脈起於內眥、行於鼻背兩側
+      return [off(eyeIn, dir*sc*0.01, -sc*0.03),
+              off(mid(glab, tip, 0.35), dir*sc*0.055, 0),
+              off(mid(glab, tip, 0.80), dir*sc*0.060, 0),
+              off(ala, -dir*sc*0.01, -sc*0.05)];
     }},
   { id:'v_transverse_facial', key:'vs_tfa', zh:'橫顏面動脈', en:'Transverse facial artery', side:'LR',
-    desc:'顳淺動脈分支，起於顴弓下方，橫向穿過咬肌表面走向頰部，供應腮腺及鄰近皮膚，為顳頜關節、頰部注射操作時的參考血管',
+    desc:'顳淺動脈於腮腺內分出，自顴弓下方約1公分處「水平向前」跨過咬肌表面走向頰部，行於顴弓與腮腺管之間，供應腮腺、咬肌與鄰近皮膚。為顳頜關節注射與頰部操作的參考血管',
     calc:(kp,s,sc)=>{
       const temple = s==='R'?kp[IDX.templeR]:kp[IDX.templeL];
+      const jaw = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
       const cheek = s==='R'?kp[IDX.cheekR]:kp[IDX.cheekL];
-      return [temple, mid(temple, cheek, 0.6)];
+      const dir = s==='R'?-1:1;
+      // v2.75：原式為 [temple, mid(temple, cheek, 0.6)]，是一段沿臉部輪廓「向下」
+      // 的短線，與「橫向前行」的走向完全相反，畫面上幾乎看不出是一條血管
+      return [off(mid(temple, jaw, 0.20), dir*sc*0.04, sc*0.02),
+              off(cheek, -dir*sc*0.10, -sc*0.02),
+              off(cheek, -dir*sc*0.30, -sc*0.01)];
     }}
 ];
 
