@@ -160,6 +160,22 @@
     font-size: 11.5px; padding: 4px 10px; border-radius: 8px; cursor: pointer; white-space: nowrap;
   }
   #uploadBar button:active { background: rgba(255,255,255,.28); }
+
+  /* 連線自我檢測按鈕 */
+  button.conn-test {
+    background: transparent; border: 1px solid #c9c9c5; color: #888;
+    font-size: 11.5px; padding: 6px 14px; border-radius: 8px; cursor: pointer;
+  }
+  button.conn-test:active { background: #dcdcd8; }
+
+  /* 題型標籤 */
+  .q-tag {
+    display: inline-block; font-size: 11px; font-weight: 700; color: #fff;
+    background: #b0aca5; border-radius: 6px; padding: 2px 8px; margin-bottom: 10px;
+  }
+  .q-tag.acu { background: #D97757; }
+  .q-tag.ana { background: #3d7ab0; }
+  .q-tag.dis { background: #6a9a5b; }
 </style>
 </head>
 <body>
@@ -188,20 +204,24 @@
     </div>
     <div id="arqPanel">
       <div id="arqStart">
+        <div id="arqResultMsg" style="display:none;font-size:12.5px;color:#666;line-height:1.9;margin-bottom:16px;"></div>
         <div class="name-field">
           <label for="arqStudentName">學員姓名</label>
           <input type="text" id="arqStudentName" placeholder="請輸入姓名">
         </div>
-        <p>AR跑考會隨機出題，共兩種題型：(1)依系統顯示的穴位名稱，用手指在下方相機畫面中點出該穴位所在位置；(2)畫面中會標示出某一穴位／肌肉／神經／血管，請於下方選項選出正確名稱。作答前不會顯示穴位位置，回答後才會顯示正解。建議正臉面對鏡頭、光線充足。</p>
-        <button id="arqStartBtn">開始跑考（15題：穴位辨認7題＋指認題8題）</button>
+        <p>AR跑考會隨機出題，共兩種題型：(1)<b>點位題5題</b>——依系統顯示的穴位名稱，用手指在下方相機畫面中點出該穴位所在位置；(2)<b>指認題15題</b>——畫面中會標示出某一構造（穴位5題／肌肉5題／血管神經5題），請於下方選項選出正確名稱。作答前不會顯示位置，回答後才會顯示正解。建議正臉面對鏡頭、光線充足。<br>
+        <span style="color:#3d7ab0;font-weight:600;">＊請上下左右移動臉部讓立體定位更容易<br>＊可拉近距離讓點選更精確</span></p>
+        <button id="arqStartBtn">開始跑考（20題：點位題5題＋指認題15題）</button>
+        <div style="margin-top:14px;"><button class="conn-test" type="button">測試成績上傳連線</button></div>
       </div>
       <div id="arqQuestion" style="display:none;">
         <div class="targetName" id="arqName"></div>
         <div class="targetCode" id="arqCode"></div>
-        <div id="arqTapHint">👆 請在上方相機畫面點出此穴位位置</div>
+        <div id="arqTapHint">👆 請在上方相機畫面點出此穴位位置<br>
+        <span style="color:#888;font-weight:400;">＊上下左右移動臉部可讓立體定位更容易　＊拉近距離可讓點選更精確</span></div>
       </div>
       <div id="arqIdentifyQuestion">
-        <div class="prompt">請觀察上方相機畫面中標示的構造，選出正確名稱</div>
+        <div class="prompt" id="arqIdentifyPrompt">請觀察上方相機畫面中標示的構造，選出正確名稱</div>
         <div id="arqIdentifyOptions"></div>
       </div>
       <div id="arqFeedback">
@@ -219,13 +239,18 @@
         <label for="quizStudentName">學員姓名</label>
         <input type="text" id="quizStudentName" placeholder="請輸入姓名">
       </div>
-      <p style="font-size:11.5px;color:#999;margin:0 0 16px;">測驗將從全部經穴題庫中隨機抽取15題（涵蓋經絡歸經、取穴位置、主治功效題型）。</p>
+      <p style="font-size:11.5px;color:#999;margin:0 0 16px;line-height:1.9;">測驗共20題，隨機抽取：<br>
+      ・穴位10題（經絡歸經／取穴位置／主治功效）<br>
+      ・解剖結構5題（神經運動與感覺支配2題、肌肉起止點與功能3題）<br>
+      ・常見疾病5題（臨床症狀、分期分型）</p>
       <button id="startQuizBtn">開始測驗</button>
+      <div style="margin-top:14px;text-align:center;"><button class="conn-test" type="button">測試成績上傳連線</button></div>
     </div>
 
     <div id="quizRunning" style="display:none; flex-direction:column; flex:1;">
-      <div id="quizProgress"><span id="qIndexLabel">第 1 / 15 題</span><span id="qScoreLabel">答對 0 題</span></div>
+      <div id="quizProgress"><span id="qIndexLabel">第 1 / 20 題</span><span id="qScoreLabel">答對 0 題</span></div>
       <div id="quizBody">
+        <div id="qTag" class="q-tag"></div>
         <div id="qText"></div>
         <div id="qOptions"></div>
         <div id="qFeedback"></div>
@@ -245,10 +270,11 @@
   <span id="uploadMsg"></span>
   <button id="uploadRetryBtn" type="button" style="display:none;">重試上傳</button>
   <button id="uploadCsvBtn" type="button" style="display:none;">下載CSV備份</button>
+  <button id="uploadOpenBtn" type="button" style="display:none;">檢查webhook</button>
   <button id="uploadCloseBtn" type="button">關閉</button>
 </div>
 
-<footer>顏面部穴位AR學習平台 v2.75 · 2026年8月15日更新</footer>
+<footer>顏面部穴位AR學習平台 v2.76 · 2026年8月16日更新</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core@4.20.0/dist/tf-core.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter@4.20.0/dist/tf-converter.min.js"></script>
@@ -313,6 +339,7 @@ const uploadBar = document.getElementById('uploadBar');
 const uploadMsg = document.getElementById('uploadMsg');
 const uploadRetryBtn = document.getElementById('uploadRetryBtn');
 const uploadCsvBtn = document.getElementById('uploadCsvBtn');
+const uploadOpenBtn = document.getElementById('uploadOpenBtn');
 const uploadCloseBtn = document.getElementById('uploadCloseBtn');
 let uploadHideTimer = null;
 
@@ -322,11 +349,13 @@ function showUploadBar(state, text, opts = {}) {
   uploadMsg.textContent = text;
   uploadRetryBtn.style.display = opts.retry ? '' : 'none';
   uploadCsvBtn.style.display = opts.csv ? '' : 'none';
+  uploadOpenBtn.style.display = opts.open ? '' : 'none';
   if (opts.autoHide) uploadHideTimer = setTimeout(() => { uploadBar.className = ''; }, opts.autoHide);
 }
 uploadCloseBtn.addEventListener('click', () => { uploadBar.className = ''; });
 uploadRetryBtn.addEventListener('click', () => flushPending(true));
 uploadCsvBtn.addEventListener('click', downloadPendingCsv);
+uploadOpenBtn.addEventListener('click', () => window.open(SHEET_WEBHOOK_URL, '_blank'));
 
 function downloadPendingCsv() {
   const rows = loadPending();
@@ -350,9 +379,15 @@ function downloadPendingCsv() {
    Apps Script 的 /exec 收到跨網域請求後會 302 轉址到 googleusercontent.com，
    用 fetch 讀取回應常被 CORS 擋下；改以動態 script 標籤載入 doGet 即可完全避開，
    且能透過 callback 拿到寫入結果。每筆成績帶唯一 rid，重試時由伺服器端去重。 */
-function postRecord(rec) {
+/* 回傳 { ok, reason }：
+   reason = 'timeout'  → 12秒內沒有任何回應。多半是 /exec 被導向 Google 登入頁
+                         （部署權限不是「任何人」），瀏覽器載入了HTML而非JS，
+                         script標籤既不觸發 onerror 也不會呼叫 callback。
+   reason = 'neterror' → script 載入失敗（網址錯誤／部署已刪除／離線）。
+   reason = 'server'   → 有回應但 Apps Script 端寫入失敗（權限、試算表ID等）。 */
+function postRecord(rec, healthCheck = false) {
   return new Promise(resolve => {
-    if (!SHEET_WEBHOOK_URL) { resolve(false); return; }
+    if (!SHEET_WEBHOOK_URL) { resolve({ ok: false, reason: 'nourl' }); return; }
     const cb = '__quizSheetCb' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
     const sc = document.createElement('script');
     let done = false;
@@ -364,25 +399,39 @@ function postRecord(rec) {
       try { delete window[cb]; } catch (e) { window[cb] = undefined; }
       if (sc.parentNode) sc.parentNode.removeChild(sc);
     };
-    const timer = setTimeout(() => { cleanup(); resolve(false); }, UPLOAD_TIMEOUT_MS);
+    const timer = setTimeout(() => { cleanup(); resolve({ ok: false, reason: 'timeout' }); }, UPLOAD_TIMEOUT_MS);
 
-    window[cb] = res => { cleanup(); resolve(!!(res && res.ok)); };
-    sc.onerror = () => { cleanup(); resolve(false); };
+    window[cb] = res => {
+      cleanup();
+      resolve(res && res.ok
+        ? { ok: true, res }
+        : { ok: false, reason: 'server', detail: (res && res.error) || '' });
+    };
+    sc.onerror = () => { cleanup(); resolve({ ok: false, reason: 'neterror' }); };
 
-    const q = new URLSearchParams({
-      callback: cb,
-      rid: rec.rid || '',
-      name: rec.name || '',
-      mode: rec.mode || '',
-      score: String(rec.score),
-      total: String(rec.total),
-      timeText: rec.timeText || '',
-      ts: rec.ts || ''
-    });
+    const q = healthCheck
+      ? new URLSearchParams({ callback: cb, _: String(Date.now()) })
+      : new URLSearchParams({
+          callback: cb,
+          rid: rec.rid || '',
+          name: rec.name || '',
+          mode: rec.mode || '',
+          score: String(rec.score),
+          total: String(rec.total),
+          timeText: rec.timeText || '',
+          ts: rec.ts || ''
+        });
     sc.src = SHEET_WEBHOOK_URL + '?' + q.toString();
     document.head.appendChild(sc);
   });
 }
+
+const FAIL_HINT = {
+  timeout: '無回應（多半是Apps Script部署權限未設為「任何人」，或未以新版本重新部署）',
+  neterror: '無法連線（webhook網址錯誤或部署已刪除）',
+  server: 'Apps Script回報寫入失敗',
+  nourl: '尚未設定webhook網址'
+};
 
 async function flushPending(manual = false) {
   const queue = loadPending();
@@ -392,19 +441,36 @@ async function flushPending(manual = false) {
   }
   showUploadBar('pending', `成績上傳中…（${queue.length} 筆）`);
   const failed = [];
+  let lastReason = '';
   for (const rec of queue) {
-    const ok = await postRecord(rec);
-    if (!ok) failed.push(rec);
+    const r = await postRecord(rec);
+    if (!r.ok) { failed.push(rec); lastReason = r.detail || FAIL_HINT[r.reason] || r.reason; }
   }
   savePending(failed);
   if (!failed.length) {
     showUploadBar('ok', '✓ 成績已記錄至Google試算表', { autoHide: 5000 });
   } else {
     showUploadBar('fail',
-      `⚠ 成績上傳失敗，${failed.length} 筆已暫存於本機（下次開啟本頁會自動重試）`,
-      { retry: true, csv: true });
+      `⚠ 成績上傳失敗（${lastReason}）；${failed.length} 筆已暫存於本機，下次開啟本頁會自動重試`,
+      { retry: true, csv: true, open: true });
   }
 }
+
+/* ---- 連線自我檢測：不寫入資料，僅呼叫 webhook 健康檢查 ---- */
+async function testWebhookConnection() {
+  showUploadBar('pending', '正在測試與Google試算表的連線…');
+  const r = await postRecord(null, true);
+  if (r.ok) {
+    const n = (r.res && typeof r.res.count === 'number') ? `，目前已有 ${r.res.count} 筆成績` : '';
+    showUploadBar('ok', `✓ 連線正常，成績可正常寫入試算表${n}`, { autoHide: 8000 });
+  } else {
+    showUploadBar('fail', `⚠ 連線失敗：${FAIL_HINT[r.reason] || r.reason}${r.detail ? '（' + r.detail + '）' : ''}`,
+      { open: true, csv: true });
+  }
+}
+document.querySelectorAll('button.conn-test').forEach(b => {
+  b.addEventListener('click', testWebhookConnection);
+});
 
 function submitResultToSheet({ name, mode, score, total, elapsedSec }) {
   const rec = {
@@ -450,6 +516,144 @@ function switchTab(mode) {
 }
 
 /* ==================================================================
+   題庫資料：解剖結構（神經支配／肌肉起止點與功能）
+   參考：Hu et al. (2023) Clinical Anatomy 36(3):426-432、標準解剖學教科書
+================================================================== */
+
+/* ---- 神經：運動支配（該神經支配哪一組肌肉） ---- */
+const NERVE_MOTOR = [
+  { nerve:'顏面神經顳支', muscles:'額肌、皺眉肌、降眉間肌與眼輪匝肌上部' },
+  { nerve:'顏面神經顴支', muscles:'眼輪匝肌（以眶下部為主）及外眥周圍表情肌' },
+  { nerve:'顏面神經頰支', muscles:'頰肌、口輪匝肌、顴大肌、顴小肌、笑肌與提上唇肌群' },
+  { nerve:'顏面神經下頷緣支', muscles:'降口角肌、降下唇肌與頦肌' },
+  { nerve:'顏面神經頸支', muscles:'頸闊肌' },
+  { nerve:'三叉神經下頷神經(V3)', muscles:'咬肌、顳肌、翼內肌、翼外肌等咀嚼肌群' }
+];
+
+/* ---- 神經：感覺支配（該區域皮膚感覺由哪條神經支配） ---- */
+const NERVE_SENSORY = [
+  { region:'前額、上眼瞼與鼻背上部', nerve:'三叉神經眼神經(V1)' },
+  { region:'下眼瞼、鼻翼、面頰、上唇與上齒', nerve:'三叉神經上頷神經(V2)' },
+  { region:'下唇、頦部、下齒與耳前顳部', nerve:'三叉神經下頷神經(V3)' },
+  { region:'舌前2/3的味覺', nerve:'顏面神經（鼓索神經）' },
+  { region:'眉頭內側與上眼瞼內側（眶上孔內側）', nerve:'滑車上神經（眼神經分支）' },
+  { region:'眶下孔以下之面頰與鼻翼外側皮膚', nerve:'眶下神經（上頷神經分支）' },
+  { region:'頦孔周圍之下唇與頦部皮膚', nerve:'頦神經（下齒槽神經末支）' }
+];
+
+/* ---- 肌肉：起止點與功能 ---- */
+const MUSCLE_FACTS = [
+  { name:'額肌', oi:'起自帽狀腱膜，止於眉部與眉間皮膚', action:'上提眉毛，形成額部橫紋（抬頭紋）' },
+  { name:'皺眉肌', oi:'起自額骨眉弓內側端（近鼻根），止於眉毛中段皮下', action:'牽引眉頭向內下方，形成眉間縱紋' },
+  { name:'眼輪匝肌', oi:'起自眶內側緣、上頷骨額突與內眥韌帶，止於環繞眼裂之皮膚與外眥韌帶', action:'閉合眼瞼（眨眼與緊閉眼），並協助淚液泵送' },
+  { name:'顴大肌', oi:'起自顴骨外側面，止於口角（口角軸 modiolus）', action:'將口角牽引向外上方，為微笑之主要肌肉' },
+  { name:'顴小肌', oi:'起自顴骨外側面顴大肌內側，止於上唇外側皮膚與口輪匝肌', action:'上提上唇並加深鼻唇溝' },
+  { name:'提上唇鼻翼肌', oi:'起自上頷骨額突（鼻根旁），分兩束止於鼻翼軟骨與上唇外側皮膚', action:'上提鼻翼與上唇、擴張鼻孔' },
+  { name:'提上唇肌', oi:'起自眶下緣上方之上頷骨，止於上唇皮膚與口輪匝肌', action:'上提上唇並加深鼻唇溝' },
+  { name:'笑肌', oi:'起自咬肌筋膜與腮腺筋膜，止於口角皮膚', action:'將口角水平向外牽引，形成露齒的橫向笑容' },
+  { name:'口輪匝肌', oi:'起自上下頷骨近中線處及周圍表情肌纖維，止於唇部皮膚與黏膜', action:'閉合並前突嘴唇（噘嘴、吹口哨、吸吮）' },
+  { name:'降口角肌', oi:'起自下頷骨斜線，止於口角（口角軸 modiolus）', action:'下拉口角，形成悲傷或不悅的表情' },
+  { name:'降下唇肌', oi:'起自下頷骨斜線（頦孔與正中線之間），止於下唇皮膚與口輪匝肌', action:'下拉並外翻下唇' },
+  { name:'頦肌', oi:'起自下頷骨切牙窩，止於頦部皮膚', action:'上提並前突下唇，使頦部皮膚起皺' },
+  { name:'頰肌', oi:'起自上下頷骨臼齒部齒槽突外側面與翼下頷縫，止於口角並與口輪匝肌纖維交織', action:'使頰部緊貼齒列，咀嚼時將食物推回齒間並協助吹氣' },
+  { name:'鼻肌（橫部）', oi:'起自上頷骨尖牙窩，止於跨越鼻背之腱膜並與對側同名肌相接', action:'壓迫鼻翼、縮小鼻孔' },
+  { name:'鼻肌（翼部）', oi:'起自上頷骨側門齒上方，止於鼻翼軟骨後緣', action:'向下外牽引鼻翼、擴張鼻孔' },
+  { name:'降眉間肌', oi:'起自鼻骨下部與鼻外側軟骨上部之筋膜，止於眉間之前額皮膚', action:'下拉眉頭內側，形成鼻根部橫紋' },
+  { name:'降眉肌', oi:'起自上頷骨額突（內眥韌帶上方），止於眉頭內側皮膚', action:'下拉眉頭內側' },
+  { name:'咬肌', oi:'起自顴弓，止於下頷枝外側面與下頷角之咬肌粗隆', action:'上提下頷骨以閉口咬合，淺層並協助下頷前突' },
+  { name:'翼內肌', oi:'起自蝶骨翼突外側板內面之翼窩與上頷結節，止於下頷角內側面之翼肌粗隆', action:'上提下頷骨閉口，並協助下頷前突與向對側側方運動' },
+  { name:'翼外肌', oi:'起自蝶骨大翼下面與翼突外側板外面，止於下頷髁突頸部之翼肌凹與顳頜關節盤', action:'使下頷前突與下拉（啟動張口），單側收縮使下頷偏向對側' }
+];
+
+/* ==================================================================
+   題庫資料：常見疾病（症狀／分期分型）
+   內容對應 pages/clinical.html
+================================================================== */
+const DISEASE_SYMPTOM = [
+  { q:'面癱（顏面神經麻痺）患者出現「說話時覺得周遭聲音突然變大」的聽覺過敏，是下列何者麻痺所致？',
+    a:'鐙骨肌', wrong:['鼓膜張肌','頰肌','翼外肌'],
+    ex:'鐙骨肌由顏面神經支配，麻痺後無法調控中耳聽小骨而產生聽覺過敏（hypercusis）。' },
+  { q:'面癱最需優先處理、可能危及視力的併發症為何？',
+    a:'眼瞼閉合不全導致角膜潰瘍', wrong:['同側舌前2/3味覺減退','耳後乳突疼痛','鼻唇溝變淺'],
+    ex:'眼瞼閉合不全使眼睛乾澀，嚴重可引發角膜潰瘍，護眼為第一優先。' },
+  { q:'顏面痙攣（半面痙攣）最常從哪一條肌肉開始發作？',
+    a:'眼輪匝肌', wrong:['口輪匝肌','顴大肌','額肌'],
+    ex:'最常自眼輪匝肌開始，其次為口輪匝肌，再其次為顴肌；下眼瞼較上眼瞼常見。' },
+  { q:'關於顏面痙攣的臨床表現，下列敘述何者正確？',
+    a:'約80%的患者在睡眠中仍會出現痙攣', wrong:['睡眠時必定完全消失','雙側同時發病者占多數','可由意志力完全抑制'],
+    ex:'半面痙攣在睡眠中仍可能發作，與抽動症（tic）可短暫由意志抑制、睡眠中消失不同。' },
+  { q:'三叉神經痛的典型疼痛性質為何？',
+    a:'針刺、燒灼或爆炸樣，持續數秒至數分鐘，發作後有幾分鐘不反應期',
+    wrong:['持續性鈍痛，數日不緩解','脹痛伴搏動感，活動後加重','間歇性痠麻，夜間加劇'],
+    ex:'發作後的「不反應期（refractory period）」為三叉神經痛的重要特徵。' },
+  { q:'下列何者為三叉神經痛的典型「扳機點」誘發因素？',
+    a:'洗臉、刷牙、刮鬍子、吹電風扇', wrong:['彎腰、提重物','長時間注視螢幕','進出冷氣房的溫差'],
+    ex:'扳機點為觸發敏感位置，說話、洗臉、飲食、刷牙、刮鬍子、打噴嚏與吹風皆可誘發。' },
+  { q:'顳頜關節障礙的三大主症為何？',
+    a:'張口受限、關節區疼痛、關節彈響', wrong:['耳鳴、眩暈、聽力減退','面部麻木、味覺減退、流涎','鼻塞、噴嚏、鼻癢'],
+    ex:'症狀常於晨起或咀嚼硬物後加重，壓力大、夜間磨牙者更明顯。' },
+  { q:'過敏性鼻炎的典型四大症狀為何？',
+    a:'陣發性噴嚏、清水樣鼻涕、鼻塞、鼻癢', wrong:['黃稠鼻涕、發燒、頭痛、咳嗽','鼻出血、嗅覺喪失、面痛、牙痛','鼻乾、結痂、灼熱感、口渴'],
+    ex:'可伴眼癢流淚、鼻後滴流；兒童常見黑眼圈（allergic shiner）與鼻橫紋。' },
+  { q:'過敏性鼻炎患者的嗅覺障礙，最主要的機轉為何？',
+    a:'鼻塞使氣體分子無法到達上鼻道的嗅覺受器', wrong:['嗅上皮與嗅覺細胞直接壞死','嗅球中樞病變','三叉神經眼支受損'],
+    ex:'此屬呼吸性嗅覺障礙，與末梢性（嗅上皮損傷）及中樞性不同。' },
+  { q:'眩暈發作時常伴隨的重要客觀徵象為何？',
+    a:'眼球震顫（nystagmus）', wrong:['瞳孔散大','角膜反射消失','舌偏向患側'],
+    ex:'眼球震顫在強烈照光下會被抑制，故須在燈暗時以特殊器具檢查。' },
+  { q:'偏頭痛相較於一般顳側頭痛，較常出現下列何種伴隨症狀？',
+    a:'畏光、畏聲與噁心嘔吐，活動後加重', wrong:['張口時關節彈響','清水樣鼻涕與噴嚏','發作後數分鐘的不反應期'],
+    ex:'顳側頭痛則多與肌肉張力、姿勢與壓力相關，觸診常見一側顳肌緊繃或壓痛。' },
+  { q:'顏面美容針灸常見的伴隨體徵，下列何者常見於偏頭痛患者？',
+    a:'顳肌萎縮', wrong:['額肌肥厚','眼輪匝肌痙攣','翼內肌鈣化'],
+    ex:'美容針灸常見體徵包括咬肌肥厚、顳肌萎縮（多見於偏頭痛者）、頸闊肌鬆弛與肩頸前傾。' }
+];
+
+const DISEASE_STAGING = [
+  { q:'面癱依病變部位分為中樞型與末梢型，下列何者為「中樞型」的特徵？',
+    a:'上臉部不受影響，仍可閉眼、額部皺紋不會消失',
+    wrong:['上下臉部皆受影響，無法閉眼且額紋消失','必定合併同側CN6麻痺','必定合併聽覺過敏與味覺減退'],
+    ex:'閉眼與皺額之肌肉由兩側大腦半球共同支配，故中樞型仍保留；最快速的床邊鑑別即看額紋與閉眼。' },
+  { q:'面癱的分期，下列何者正確？',
+    a:'急性期（1–2週內）／恢復期（2週後）／後遺症期（3個月以上未恢復）',
+    wrong:['急性期（3天內）／亞急性期（1個月）／慢性期（半年以上）','發作期／緩解期兩期','輕度／中度／重度三級'],
+    ex:'急性期宜淺刺輕刺激，恢復期可透刺加強刺激量。' },
+  { q:'面癱的嚴重度分級 House-Brackmann scale 共分幾級？',
+    a:'I–VI級，數字越大越嚴重', wrong:['I–IV級，數字越大越輕微','1–3級','A–C三型'],
+    ex:'須用力才能閉眼約為 III 級，完全無法閉眼為 VI 級，可作為療程前後的客觀追蹤指標。' },
+  { q:'面癱末梢型中的「腦內型」，病灶位於何處？',
+    a:'橋腦', wrong:['莖乳孔外之末梢神經','腮腺內神經叢','大腦皮質運動區'],
+    ex:'腦內型常合併對側半身不遂，並可伴同側CN6麻痺；腦外型病灶則在末梢神經。' },
+  { q:'三叉神經痛最好發於哪些分支？',
+    a:'V2（上頷支）與V3（下頷支）', wrong:['V1（眼支）與V2（上頷支）','僅V1（眼支）','三支發生率相同'],
+    ex:'三分支之出顱孔（眶上孔／眶下孔／頦孔）約略在同一垂直線上。' },
+  { q:'三叉神經痛依病因分型，「典型（原發性）」最主要的成因為何？',
+    a:'血管壓迫神經造成脫髓鞘', wrong:['腫瘤壓迫','多發性硬化症','帶狀皰疹病毒感染'],
+    ex:'次發性者則須考慮腫瘤與多發性硬化症，必須安排影像檢查。' },
+  { q:'顏面痙攣依病因分型，最主要的原發性成因為何？',
+    a:'血管壓迫顏面神經的神經根出口區（root exit zone）',
+    wrong:['小腦橋腦角腫瘤','貝爾氏麻痺後之連帶運動','外傷後神經再生異常'],
+    ex:'腫瘤僅占0.3–1.3%，貝爾氏麻痺後連帶運動約5.7%。' },
+  { q:'顳頜關節障礙依組織來源分型，何者針灸療效最佳？',
+    a:'肌源性（咀嚼肌群緊張或激痛點）', wrong:['關節源性之關節盤不可復位型','關節退化型','咬合不正型'],
+    ex:'關節源性者包含關節盤移位（可復位／不可復位）與關節退化，多需較長療程或牙科介入。' },
+  { q:'過敏性鼻炎的中醫辨證分型中，「噴嚏連連、清涕如水、遇冷即發、畏風自汗」屬何證？',
+    a:'肺氣虛寒', wrong:['脾氣虛弱','腎陽不足','肺經鬱熱'],
+    ex:'脾氣虛弱者鼻塞鼻脹較重、納差便溏；腎陽不足者病程日久、腰膝痠軟；肺經鬱熱者涕黃黏稠。' },
+  { q:'眩暈的病理性分型中，「中樞性眩暈」的特徵為何？',
+    a:'無疲乏性，常伴半身不遂、顏面神經麻痺或複視等神經缺損',
+    wrong:['具疲乏性，伴或不伴聽神經症狀','僅見於高處或暈車時','必定合併耳鳴與聽力喪失'],
+    ex:'末梢性眩暈（迷路與前庭神經疾病）則具疲乏性，病因含前庭神經炎、BPPV、梅尼爾氏病等。' },
+  { q:'顏面美容針灸的三大操作目標為何？',
+    a:'Small、Slow、Symmetric（小幅度、慢速、左右對稱）',
+    wrong:['Strong、Speed、Straight','Safe、Sterile、Shallow','Superficial、Stable、Standard'],
+    ex:'另有兩道定位線：額肌的邊緣為第一條線，第二條線起點為顴大肌與顴小肌。' },
+  { q:'顏面美容針灸依施術部位分區，「下臉部」包含下列哪一組肌肉？',
+    a:'口輪匝肌、降口角肌、頦肌、咬肌', wrong:['額肌、皺眉肌、降眉間肌、眼輪匝肌','提上唇肌群、顴大小肌、笑肌、鼻肌','頸闊肌、二腹肌、胸鎖乳突肌'],
+    ex:'上臉部為額肌、皺眉肌、降眉間肌、眼輪匝肌等；中臉部為提上唇肌群、顴大小肌、笑肌、鼻肌；頸部為頸闊肌、二腹肌、SCM。' }
+];
+
+/* ==================================================================
    題庫選題測試
 ================================================================== */
 const quizStudentName = document.getElementById('quizStudentName');
@@ -459,12 +663,17 @@ const quizRunning = document.getElementById('quizRunning');
 const quizResult = document.getElementById('quizResult');
 const qIndexLabel = document.getElementById('qIndexLabel');
 const qScoreLabel = document.getElementById('qScoreLabel');
+const qTag = document.getElementById('qTag');
 const qText = document.getElementById('qText');
 const qOptions = document.getElementById('qOptions');
 const qFeedback = document.getElementById('qFeedback');
 const qNextBtn = document.getElementById('qNextBtn');
 
-const QUIZ_QUESTION_COUNT = 15;
+const QUIZ_ACU_COUNT = 10;      // 穴位題
+const QUIZ_NERVE_COUNT = 2;     // 解剖—神經（運動／感覺支配）
+const QUIZ_MUSCLE_COUNT = 3;    // 解剖—肌肉（起止點／功能）
+const QUIZ_DISEASE_SYM = 3;     // 常見疾病—症狀
+const QUIZ_DISEASE_STG = 2;     // 常見疾病—分期分型
 let quizQuestions = [];
 let quizIndex = 0;
 let quizScore = 0;
@@ -480,31 +689,88 @@ function shuffle(arr) {
 }
 function sample(arr, n) { return shuffle(arr).slice(0, n); }
 
+/* 由「正解＋干擾項」組成一題；干擾項自動去重並補足至4個選項 */
+function makeQ(cat, tag, text, correct, wrongPool, explain) {
+  const wrongs = [...new Set(wrongPool.filter(w => w && w !== correct))];
+  const opts = shuffle([correct, ...shuffle(wrongs).slice(0, 3)]);
+  return { cat, tag, text, opts, answer: correct, explain };
+}
+
+/* ---------------- 穴位題（題幹不顯示穴位代號） ---------------- */
 function buildQuestion(point, type, pool) {
   const others = pool.filter(p => p.id !== point.id);
   if (type === 'code') {
-    const correct = MERIDIANS[point.meridian].name;
-    const wrongPool = shuffle([...new Set(others.map(p => MERIDIANS[p.meridian].name))].filter(n => n !== correct));
-    const opts = shuffle([correct, ...wrongPool.slice(0, 3)]);
-    return { text: `「${point.name}（${point.code}）」屬於哪一經絡？`, opts, answer: correct,
-      explain: `${point.name}：${point.desc}` };
+    return makeQ('acu', '穴位・歸經',
+      `「${point.name}」屬於哪一經絡？`,
+      MERIDIANS[point.meridian].name,
+      [...new Set(others.map(p => MERIDIANS[p.meridian].name))],
+      `${point.name}（${point.code}）：${point.desc}`);
   }
   if (type === 'loc') {
-    const correct = point.desc;
-    const wrongPool = shuffle(others.map(p => p.desc));
-    const opts = shuffle([correct, ...wrongPool.slice(0, 3)]);
-    return { text: `「${point.name}（${point.code}）」的取穴位置為何？`, opts, answer: correct,
-      explain: `主治：${point.indications}` };
+    return makeQ('acu', '穴位・取穴位置',
+      `「${point.name}」的取穴位置為何？`,
+      point.desc, others.map(p => p.desc),
+      `${point.name}（${point.code}）主治：${point.indications}`);
   }
   if (type === 'ind') {
-    const correct = point.indications;
-    const wrongPool = shuffle(others.map(p => p.indications));
-    const opts = shuffle([correct, ...wrongPool.slice(0, 3)]);
-    return { text: `「${point.name}（${point.code}）」的主治功效為何？`, opts, answer: correct,
-      explain: `取穴：${point.desc}` };
+    return makeQ('acu', '穴位・主治功效',
+      `「${point.name}」的主治功效為何？`,
+      point.indications, others.map(p => p.indications),
+      `${point.name}（${point.code}）取穴：${point.desc}`);
   }
-  // all: 隨機挑一種
   return buildQuestion(point, sample(['code','loc','ind'], 1)[0], pool);
+}
+
+/* ---------------- 解剖—神經（運動支配／感覺支配） ---------------- */
+function buildNerveMotorQ() {
+  const it = sample(NERVE_MOTOR, 1)[0];
+  return makeQ('ana', '解剖・神經運動支配',
+    `「${it.nerve}」主要支配下列哪一組肌肉？`,
+    it.muscles, NERVE_MOTOR.map(x => x.muscles),
+    `${it.nerve}：支配${it.muscles}。`);
+}
+function buildNerveSensoryQ() {
+  const it = sample(NERVE_SENSORY, 1)[0];
+  return makeQ('ana', '解剖・神經感覺支配',
+    `「${it.region}」的感覺由下列何者支配？`,
+    it.nerve, NERVE_SENSORY.map(x => x.nerve),
+    `${it.region} → ${it.nerve}。`);
+}
+function buildNerveQuestions(n) {
+  const qs = [buildNerveMotorQ(), buildNerveSensoryQ()];
+  while (qs.length < n) qs.push(Math.random() < 0.5 ? buildNerveMotorQ() : buildNerveSensoryQ());
+  return qs.slice(0, n);
+}
+
+/* ---------------- 解剖—肌肉（起止點／功能） ---------------- */
+function buildMuscleQ(m, type) {
+  if (type === 'oi') {
+    return makeQ('ana', '解剖・肌肉起止點',
+      `「${m.name}」的起止點為何？`,
+      m.oi, MUSCLE_FACTS.map(x => x.oi),
+      `${m.name}：${m.oi}；功能為${m.action}。`);
+  }
+  return makeQ('ana', '解剖・肌肉功能',
+    `「${m.name}」的主要功能為何？`,
+    m.action, MUSCLE_FACTS.map(x => x.action),
+    `${m.name}：${m.oi}。`);
+}
+function buildMuscleQuestions(n) {
+  const ms = sample(MUSCLE_FACTS, n);
+  const types = shuffle(['oi', 'action', ...Array(Math.max(n - 2, 0)).fill(0)
+    .map(() => Math.random() < 0.5 ? 'oi' : 'action')]);
+  return ms.map((m, i) => buildMuscleQ(m, types[i]));
+}
+
+/* ---------------- 常見疾病（症狀／分期分型） ---------------- */
+function buildDiseaseQ(item, tag) {
+  return makeQ('dis', tag, item.q, item.a, item.wrong, item.ex);
+}
+function buildDiseaseQuestions(nSym, nStg) {
+  return [
+    ...sample(DISEASE_SYMPTOM, nSym).map(x => buildDiseaseQ(x, '疾病・臨床症狀')),
+    ...sample(DISEASE_STAGING, nStg).map(x => buildDiseaseQ(x, '疾病・分期分型'))
+  ];
 }
 
 startQuizBtn.addEventListener('click', () => {
@@ -514,8 +780,12 @@ startQuizBtn.addEventListener('click', () => {
     return;
   }
   const pool = ACUPOINTS.slice();
-  const chosen = sample(pool, Math.min(QUIZ_QUESTION_COUNT, pool.length));
-  quizQuestions = chosen.map(p => buildQuestion(p, 'all', pool));
+  const acuQs = sample(pool, Math.min(QUIZ_ACU_COUNT, pool.length)).map(p => buildQuestion(p, 'all', pool));
+  quizQuestions = [
+    ...shuffle(acuQs),
+    ...shuffle([...buildNerveQuestions(QUIZ_NERVE_COUNT), ...buildMuscleQuestions(QUIZ_MUSCLE_COUNT)]),
+    ...shuffle(buildDiseaseQuestions(QUIZ_DISEASE_SYM, QUIZ_DISEASE_STG))
+  ];
   quizIndex = 0; quizScore = 0;
   quizStartTime = Date.now();
 
@@ -531,6 +801,8 @@ function renderQuestion() {
   const q = quizQuestions[quizIndex];
   qIndexLabel.textContent = `第 ${quizIndex + 1} / ${quizQuestions.length} 題`;
   qScoreLabel.textContent = `答對 ${quizScore} 題`;
+  qTag.textContent = q.tag || '';
+  qTag.className = 'q-tag ' + (q.cat || '');
   qText.textContent = q.text;
   qOptions.innerHTML = '';
   q.opts.forEach(opt => {
@@ -589,9 +861,11 @@ const arqStatus = document.getElementById('arqStatus');
 const arqStartBtn = document.getElementById('arqStartBtn');
 const arqStopBtn = document.getElementById('arqStopBtn');
 const arqStart = document.getElementById('arqStart');
+const arqResultMsg = document.getElementById('arqResultMsg');
 const arqStudentName = document.getElementById('arqStudentName');
 const arqQuestion = document.getElementById('arqQuestion');
 const arqIdentifyQuestion = document.getElementById('arqIdentifyQuestion');
+const arqIdentifyPrompt = document.getElementById('arqIdentifyPrompt');
 const arqIdentifyOptions = document.getElementById('arqIdentifyOptions');
 const arqFeedback = document.getElementById('arqFeedback');
 const arqName = document.getElementById('arqName');
@@ -636,29 +910,31 @@ function arqFaceScale(kp) {
 }
 
 /* ---------------- 題型2（指認題）題庫：穴位／肌肉／神經／血管 ---------------- */
+/* group：出題與干擾選項的分組依據——
+   'acupoint' 穴位／'muscle' 肌肉／'vn' 血管與神經，各組選項只在同組內取用 */
 function buildIdentifyPool() {
   const pool = [];
   ACUPOINTS.filter(p => typeof p.calc === 'function').forEach(p => {
-    pool.push({ type: 'acupoint', name: p.name, side: p.side, ref: p });
+    pool.push({ group: 'acupoint', type: 'acupoint', name: p.name, side: p.side, ref: p });
   });
   MUSCLES.filter(m => m.id !== 'm_pterygoid_lateral' && m.id !== 'm_pterygoid_medial').forEach(m => {
-    pool.push({ type: 'muscle', name: m.zh, side: m.side, ref: m });
+    pool.push({ group: 'muscle', type: 'muscle', name: m.zh, side: m.side, ref: m });
   });
   VESSELS.forEach(v => {
-    pool.push({ type: 'vessel', name: v.zh, side: v.side, ref: v });
+    pool.push({ group: 'vn', type: 'vessel', name: v.zh, side: v.side, ref: v });
   });
   [
     { id: 'v1', name: '三叉神經眼神經(V1)' },
     { id: 'v2', name: '三叉神經上頷神經(V2)' },
     { id: 'v3', name: '三叉神經下頷神經(V3)' }
-  ].forEach(b => pool.push({ type: 'nerve', subtype: 'trigeminal', branchId: b.id, name: b.name, side: 'LR' }));
+  ].forEach(b => pool.push({ group: 'vn', type: 'nerve', subtype: 'trigeminal', branchId: b.id, name: b.name, side: 'LR' }));
   [
     { id: 'temporal_a', name: '顏面神經顳支' },
     { id: 'zygomatic', name: '顏面神經顴支' },
     { id: 'buccal_a', name: '顏面神經頰支' },
     { id: 'mandibular', name: '顏面神經下頷緣支' },
     { id: 'cervical', name: '顏面神經頸支' }
-  ].forEach(b => pool.push({ type: 'nerve', subtype: 'facial', branchId: b.id, name: b.name, side: 'LR' }));
+  ].forEach(b => pool.push({ group: 'vn', type: 'nerve', subtype: 'facial', branchId: b.id, name: b.name, side: 'LR' }));
   return pool;
 }
 const IDENTIFY_POOL = buildIdentifyPool();
@@ -756,22 +1032,33 @@ async function arqDetectLoop() {
   arqLoopId = requestAnimationFrame(arqDetectLoop);
 }
 
-const ARQ_TAP_COUNT = 7;
-const ARQ_IDENTIFY_COUNT = 8;
+const ARQ_TAP_COUNT = 5;                       // 點位題
+const ARQ_IDENTIFY_PER_GROUP = { acupoint: 5, muscle: 5, vn: 5 };   // 指認題各組題數
+const ARQ_TOTAL_COUNT = ARQ_TAP_COUNT +
+  Object.values(ARQ_IDENTIFY_PER_GROUP).reduce((a, b) => a + b, 0);
 
-function buildArqQueue(tapCount, identifyCount) {
+function buildArqQueue() {
   const eligible = ACUPOINTS.filter(p => typeof p.calc === 'function');
   const uniqueNames = [...new Set(eligible.map(p => p.name))];
-  const chosenNames = sample(uniqueNames, Math.min(tapCount, uniqueNames.length));
+  const chosenNames = sample(uniqueNames, Math.min(ARQ_TAP_COUNT, uniqueNames.length));
   const tapList = chosenNames.map(name => {
     const p = eligible.find(pt => pt.name === name);
     return { qtype: 'tap', point: p, side: p.side === 'LR' ? (Math.random() < 0.5 ? 'R' : 'L') : 'M' };
   });
 
-  const identifyItems = sample(IDENTIFY_POOL, Math.min(identifyCount, IDENTIFY_POOL.length));
-  const identifyList = identifyItems.map(it => ({
-    qtype: 'identify', item: it, side: it.side === 'LR' ? (Math.random() < 0.5 ? 'R' : 'L') : 'M'
-  }));
+  // 指認題：穴位／肌肉／血管神經三組各自抽題，組內名稱不重複
+  const identifyList = [];
+  Object.keys(ARQ_IDENTIFY_PER_GROUP).forEach(g => {
+    const groupPool = IDENTIFY_POOL.filter(x => x.group === g);
+    const uniq = [];
+    groupPool.forEach(x => { if (!uniq.some(u => u.name === x.name)) uniq.push(x); });
+    sample(uniq, Math.min(ARQ_IDENTIFY_PER_GROUP[g], uniq.length)).forEach(it => {
+      identifyList.push({
+        qtype: 'identify', item: it,
+        side: it.side === 'LR' ? (Math.random() < 0.5 ? 'R' : 'L') : 'M'
+      });
+    });
+  });
 
   return shuffle([...tapList, ...identifyList]);
 }
@@ -782,6 +1069,7 @@ arqStartBtn.addEventListener('click', async () => {
     arqStudentName.focus();
     return;
   }
+  arqResultMsg.style.display = 'none';
   arqStatus.style.display = 'block';
   arqStatus.textContent = '正在啟動相機…';
   try {
@@ -793,7 +1081,7 @@ arqStartBtn.addEventListener('click', async () => {
     arqDetectLoop();
     arqStatus.textContent = '請將臉部正對鏡頭';
 
-    arqQueue = buildArqQueue(ARQ_TAP_COUNT, ARQ_IDENTIFY_COUNT);
+    arqQueue = buildArqQueue();
     arqQIdx = 0; arqCorrectCount = 0;
     arqStartTime = Date.now();
     arqScoreDisplay.textContent = `0 / ${arqQueue.length}`;
@@ -821,9 +1109,15 @@ function nextArqQuestion() {
   } else {
     arqAwaitingTap = false;
     arqCurrentIdentify = { item: q.item, side: q.side };
-    const distractPool = IDENTIFY_POOL.filter(x => x.name !== q.item.name);
+    // 干擾選項只從同一組（穴位／肌肉／血管神經）中取用
+    const distractPool = IDENTIFY_POOL.filter(x => x.group === q.item.group && x.name !== q.item.name);
     const wrongNames = [...new Set(shuffle(distractPool).map(x => x.name))].slice(0, 3);
     const opts = shuffle([q.item.name, ...wrongNames]);
+    arqIdentifyPrompt.textContent = q.item.group === 'acupoint'
+      ? '請觀察上方相機畫面中標示的位置，選出正確的穴位名稱'
+      : q.item.group === 'muscle'
+        ? '請觀察上方相機畫面中標示的範圍，選出正確的肌肉名稱'
+        : '請觀察上方相機畫面中標示的路徑，選出正確的血管／神經名稱';
     arqIdentifyOptions.innerHTML = '';
     opts.forEach(name => {
       const btn = document.createElement('button');
@@ -908,6 +1202,9 @@ arqNextBtn.addEventListener('click', () => {
   nextArqQuestion();
 });
 
+/* v2.76：原本以 arqStart.innerHTML 覆寫結束畫面，會一併移除姓名輸入框與
+   開始按鈕（後續 arqStartBtn 指向已脫離DOM的節點，姓名亦讀不到），
+   改為插入一個獨立的結果訊息區塊，保留原有欄位。 */
 function finishArqQuiz() {
   arqQuestion.style.display = 'none';
   arqIdentifyQuestion.style.display = 'none';
@@ -917,14 +1214,12 @@ function finishArqQuiz() {
     name: arqStudentName.value.trim(), mode: 'AR跑考',
     score: arqCorrectCount, total: arqQueue.length, elapsedSec
   });
+  arqResultMsg.innerHTML =
+    `<p style="font-size:16px;font-weight:700;color:#D97757;margin:0 0 6px;">測驗結束！得分 ${arqCorrectCount} / ${arqQueue.length}</p>
+     <p style="margin:0;">可重新開始測驗，系統將重新隨機出題。</p>`;
+  arqResultMsg.style.display = 'block';
+  arqStartBtn.textContent = `再測一次（${ARQ_TOTAL_COUNT}題）`;
   arqStart.style.display = 'block';
-  arqStart.innerHTML = `<p style="font-size:16px;font-weight:700;color:#D97757;">測驗結束！得分 ${arqCorrectCount} / ${arqQueue.length}</p>
-    <p>可重新開始測驗，系統將重新隨機出題。</p>`;
-  const btn = document.createElement('button');
-  btn.id = 'arqStartBtn';
-  btn.textContent = '再測一次（15題）';
-  arqStart.appendChild(btn);
-  btn.addEventListener('click', () => arqStartBtn.click());
   arqStopBtn.style.display = 'none';
 }
 
