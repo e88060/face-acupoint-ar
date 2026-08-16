@@ -75,7 +75,9 @@ function alreadyLogged_(sh, rid) {
 function writeRow_(d) {
   var lock = LockService.getScriptLock();
   try {
-    lock.waitLock(20000); // 避免多位學員同時交卷造成覆寫
+    lock.waitLock(10000); // 避免多位學員同時交卷造成覆寫
+    // v2.76：原為 20000，比前端逾時（舊版12秒）還長，會出現「伺服器仍在等鎖、
+    // 前端已判定失敗」的情況。現縮短為 10 秒，並將前端逾時放寬至 30 秒。
   } catch (err) {
     return { ok: false, error: 'busy' };
   }

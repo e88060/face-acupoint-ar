@@ -320,7 +320,11 @@ const SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxJ-EJbyn4Uie
 
 /* 尚未成功送出的成績暫存於瀏覽器，重新開啟頁面時會自動重試 */
 const PENDING_KEY = 'quiz_results_pending_v1';
-const UPLOAD_TIMEOUT_MS = 12000;
+/* v2.76：原本設 12 秒，但伺服器端 LockService.waitLock 最長會等 20 秒，
+   再加上 Apps Script 首次呼叫（冷啟動）開啟試算表可能耗時 5–15 秒，
+   常常伺服器其實寫入成功、前端卻已判定逾時而顯示失敗。
+   現前端放寬到 30 秒，並將 sheet-webhook.gs 的 waitLock 縮短為 10 秒。 */
+const UPLOAD_TIMEOUT_MS = 30000;
 
 function formatElapsed(sec) {
   const m = Math.floor(sec / 60), s = Math.round(sec % 60);
@@ -427,9 +431,9 @@ function postRecord(rec, healthCheck = false) {
 }
 
 const FAIL_HINT = {
-  timeout: '無回應（多半是Apps Script部署權限未設為「任何人」，或未以新版本重新部署）',
-  neterror: '無法連線（webhook網址錯誤或部署已刪除）',
-  server: 'Apps Script回報寫入失敗',
+  timeout: '30秒內無回應（Apps Script可能卡在權限驗證，或部署權限未設為「任何人」）',
+  neterror: 'script載入被拒（多半是 /exec 回傳登入頁而非JS，即部署權限不是「任何人」）',
+  server: 'Apps Script有回應但寫入失敗',
   nourl: '尚未設定webhook網址'
 };
 
