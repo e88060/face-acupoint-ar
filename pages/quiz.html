@@ -314,9 +314,12 @@
      修改後務必「部署 → 管理部署作業 → 編輯 → 版本選新版本 → 部署」。
 ------------------------------------------------------------- */
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1-KL35h7E1uLgnAvQiVU9oxwGnyp2cRpMjF6CTyAecwU/edit';
-const SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxJ-EJbyn4UieaxQo1xfEu4kL7quxIXvpDOSD197LIA5cWVX3HljpBxsuu0mXrcBR1f/exec';
-// 舊版（h.tmu.edu.tw 網域綁定，校外／未登入學員無法寫入，已停用）：
-// https://script.google.com/a/macros/h.tmu.edu.tw/s/AKfycbylkWdePAjjQSeKQoXW6w7CXWd6cKzxJlkyY-FS3uYv9x_yA4iU1g45nYrUsP9QpFQ/exec
+const SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxNtC8Yc4hsQtrGRAsS6MpKdOEJGhYNzBD2f-t_0uo_LHKnIg6PvTfD6qhSTSM4uQT7/exec';
+// 歷史版本（皆已停用）：
+// v2.75 及之前：AKfycbxJ-EJbyn4UieaxQo1xfEu4kL7quxIXvpDOSD197LIA5cWVX3HljpBxsuu0mXrcBR1f
+//   → 部署權限非「任何人」，第三方請求被導向Google登入頁，JSONP的script標籤觸發onerror
+// 更早：https://script.google.com/a/macros/h.tmu.edu.tw/s/AKfycbylkWdePAjjQSeKQoXW6w7CXWd6cKzxJlkyY-FS3uYv9x_yA4iU1g45nYrUsP9QpFQ/exec
+//   → 網址含 /a/macros/<機構網域>/，部署被限制在機構內
 
 /* 尚未成功送出的成績暫存於瀏覽器，重新開啟頁面時會自動重試 */
 const PENDING_KEY = 'quiz_results_pending_v1';
