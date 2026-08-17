@@ -109,6 +109,27 @@
   .sec-body p:last-child { margin-bottom: 0; }
   .sec-body b { color: #222; }
 
+  /* ---------------- v2.77：內容改以條列整理 ---------------- */
+  /* 項目符號／編號清單 */
+  .c-list { margin: 0 0 10px; padding-left: 22px; }
+  .c-list > li { margin-bottom: 5px; padding-left: 2px; }
+  .c-list > li:last-child { margin-bottom: 0; }
+  .c-list.c-list { list-style-position: outside; }
+  ul.c-list { list-style-type: disc; }
+  ul.c-list ul.c-list { list-style-type: circle; margin-top: 5px; }
+  ol.c-list { list-style-type: decimal; }
+  .c-list::marker, .c-list > li::marker { color: #D97757; }
+
+  /* 條列前的小標題（取代原本整段粗體） */
+  .sub-lead {
+    margin: 12px 0 6px; font-size: 13px; color: #b85a30;
+    font-weight: 600; letter-spacing: .3px;
+  }
+  .sub-lead:first-child { margin-top: 0; }
+
+  /* 條目開頭的名詞標籤：以顏色區分，不再用粗體 */
+  .term { color: #222; font-weight: 600; }
+
   /* 異常狀況卡片 */
   details.sec.complication {
     background: #fff; border: 1px solid #e8e6e2; border-radius: 12px;
@@ -187,7 +208,7 @@
     <div class="nav-group">
       <div class="nav-group-label">神經疾患</div>
       <div class="nav-links">
-        <a href="#d-facial-palsy">面癱</a>
+        <a href="#d-facial-palsy">顏面神經麻痺</a>
         <a href="#d-hemifacial-spasm">顏面痙攣</a>
         <a href="#d-trigeminal">三叉神經痛</a>
       </div>
@@ -227,91 +248,138 @@
 
     <section class="disease-card" id="d-facial-palsy">
       <div class="disease-head">
-        <h2>面癱（顏面神經麻痺・口眼歪斜）<span class="badge">常見</span></h2>
+        <h2>顏面神經麻痺（面癱、口眼歪斜）<span class="badge">常見</span></h2>
         <div class="subtitle">第7對腦神經（顏面神經）失調所致；周邊性顏面神經麻痺／Bell's palsy 為主，中醫辨證多屬風寒、風熱或風痰阻絡</div>
         <button class="expand-all" type="button" data-target="d-facial-palsy">全部展開</button>
       </div>
       <details class="sec">
         <summary><span class="sec-title">臨床表現</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p>顏面神經支配臉部表情肌，受損時患者無法微笑、閉緊嘴巴，進食時食物容易從口角流出；眼周與額部肌肉無力，影響眼睛張開或閉合，抬頭紋與眼部表情逐漸消失。</p>
+        <div class="sec-body">
+   <p>顏面神經支配臉部表情肌，受損時患者無法微笑、閉緊嘴巴，進食時食物容易從口角流出；眼周與額部肌肉無力，影響眼睛張開或閉合，抬頭紋與眼部表情逐漸消失。</p>
    <p>常見伴隨症狀：<span class="hl">聽覺過敏（hypercusis）</span>——鐙骨肌麻痺無法調控中耳聽小骨，說話時覺得周遭聲音突然變大；耳朵或耳後乳突疼痛；<span class="hl">同側舌前2/3味覺減退</span>（鼓索神經）；鼻唇溝變淺、嘴角偏斜、流口水。</p>
    <p>較少見者可有臉頰麻木、視力模糊。顏面神經上唾液核支配淚腺、鼻腺、舌下腺，失調亦會造成腺體分泌異常。</p>
-   <div class="warn-box">⚠ 眼瞼閉合不全會使眼睛乾澀，嚴重可引發<span class="hl">角膜潰瘍</span>，為本病最需優先處理的併發症。</div></div>
+   <div class="warn-box">⚠ 眼瞼閉合不全會使眼睛乾澀，嚴重可引發<span class="hl">角膜潰瘍</span>，為本病最需優先處理的併發症。</div>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">病因、流行病學與預後</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>周邊性（最常見）三大原因：</b></p>
-   <p>①<b>病毒感染</b>：帶狀皰疹病毒、上呼吸道感染病毒等，好發於免疫力低下者（過度疲勞、睡眠不足、糖尿病、高血壓等慢性病患）。<br>
-   ②<b>環境因素</b>：季節變換、溫差變化大，容易感染病毒進而影響顏面神經。<br>
-   ③<b>神經損傷</b>：車禍、臉部外傷或手術。</p>
-   <p><b>中樞性</b>則由腦部病變引起，如中風、腦出血、腦腫瘤。</p>
-   <p><b>高風險族群：</b>產後婦女、糖尿病患者、水痘帶狀皰疹病毒感染者（耳前有灼熱感疼痛感者須考慮 Ramsay Hunt 亨特氏症候群）。</p>
-   <p><b>預後：</b>大多數患者在治療後<span class="hl">三個月內</span>逐漸恢復。<span class="hl">年齡較大、顏面完全麻痺、有糖尿病或高血壓病史者恢復較慢。</span></p>
-   <p><b>連帶運動（synkinesis）：</b>恢復過程中神經「接錯線」，如咀嚼時不自覺眨眼、眨眼時臉頰抽動，或進食時流眼淚。通常隨治療逐漸改善，頑固者可考慮肉毒桿菌注射。</p>
-   <p>多年後仍可能復發，<span class="hl">大多發生於同側同一部位</span>。</p></div>
+        <div class="sec-body">
+   <p class="sub-lead">周邊性（最常見）三大原因：</p>
+   <ol class="c-list">
+     <li><span class="term">病毒感染</span>：帶狀皰疹病毒、上呼吸道感染病毒等，好發於免疫力低下者（過度疲勞、睡眠不足、糖尿病、高血壓等慢性病患）。</li>
+     <li><span class="term">環境因素</span>：季節變換、溫差變化大，容易感染病毒進而影響顏面神經。</li>
+     <li><span class="term">神經損傷</span>：車禍、臉部外傷或手術。</li>
+   </ol>
+   <ul class="c-list">
+     <li><span class="term">中樞性</span>則由腦部病變引起，如中風、腦出血、腦腫瘤。</li>
+     <li><span class="term">高風險族群：</span>產後婦女、糖尿病患者、水痘帶狀皰疹病毒感染者（耳前有灼熱感疼痛感者須考慮 Ramsay Hunt 亨特氏症候群）。</li>
+     <li><span class="term">預後：</span>大多數患者在治療後<span class="hl">三個月內</span>逐漸恢復。<span class="hl">年齡較大、顏面完全麻痺、有糖尿病或高血壓病史者恢復較慢。</span></li>
+     <li><span class="term">連帶運動（synkinesis）：</span>恢復過程中神經「接錯線」，如咀嚼時不自覺眨眼、眨眼時臉頰抽動，或進食時流眼淚。通常隨治療逐漸改善，頑固者可考慮肉毒桿菌注射。</li>
+   </ul>
+   <p>多年後仍可能復發，<span class="hl">大多發生於同側同一部位</span>。</p>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">檢驗與檢查</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>顏面神經麻痺六項檢查重點：</b></p>
-   <p>①額部皺紋是否消失　②閉眼是否正常　③是否有聽覺過敏　④鼻唇溝是否消失或變淺　⑤嘴角是否偏斜　⑥是否流口水　⑦同側味覺是否減退或消失。</p>
+        <div class="sec-body">
+   <p class="sub-lead">顏面神經麻痺六項檢查重點：</p>
+   <ol class="c-list">
+     <li>額部皺紋是否消失</li>
+     <li>閉眼是否正常</li>
+     <li>是否有聽覺過敏</li>
+     <li>鼻唇溝是否消失或變淺</li>
+     <li>嘴角是否偏斜</li>
+     <li>是否流口水</li>
+     <li>同側味覺是否減退或消失。</li>
+   </ol>
    <p>另建議檢查眼外肌運動（EOM）、口腔黏膜與唾液分泌狀況。</p>
-   <p><b>角膜反射：</b>以濕棉絮輕觸角膜，感覺由三叉神經第一分支（眼支）傳入、動作由顏面神經傳出（<span class="hl">5進7出</span>），反射中樞在橋腦。常用於昏迷患者，且因屬反射動作，患者無法偽裝，為最有效的檢查方式之一。</p>
-   <p><b>嚴重度分級 House-Brackmann scale（I–VI級）：</b>數字越大越嚴重。<span class="hl">須用力才能閉眼約為 III 級，完全無法閉眼為 VI 級</span>，可作為療程前後的客觀追蹤指標。</p>
-   <p><b>病史詢問（history taking）極為重要</b>——需排除腮腺腫瘤壓迫、萊姆病（蜱蟲叮咬，常合併發燒與肌肉痠痛）等次發性原因。</p></div>
+   <ul class="c-list">
+     <li><span class="term">角膜反射：</span>以濕棉絮輕觸角膜，感覺由三叉神經第一分支（眼支）傳入、動作由顏面神經傳出（<span class="hl">5進7出</span>），反射中樞在橋腦。常用於昏迷患者，且因屬反射動作，患者無法偽裝，為最有效的檢查方式之一。</li>
+     <li><span class="term">嚴重度分級 House-Brackmann scale（I–VI級）：</span>數字越大越嚴重。<span class="hl">須用力才能閉眼約為 III 級，完全無法閉眼為 VI 級</span>，可作為療程前後的客觀追蹤指標。</li>
+     <li><span class="term">病史詢問（history taking）極為重要</span>——需排除腮腺腫瘤壓迫、萊姆病（蜱蟲叮咬，常合併發燒與肌肉痠痛）等次發性原因。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">分型分期</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>一、中樞型（核上性）</b><br>
-   下臉部受影響，<span class="hl">上臉部不受影響，故仍可閉眼、額部皺紋不會消失</span>。病變部位在腦部。因閉眼與皺額之肌肉由兩側大腦半球共同支配，須兩側同時受損才會喪失，臨床少見。</p>
-   <p><b>二、末梢型（核及核下性）</b><br>
-   <span class="hl">上、下臉部皆受影響，無法閉眼、額部皺紋消失</span>。依病變部位再分：</p>
-   <p>・<b>腦內型</b>：病灶在橋腦。常合併其他腦症狀，有對側半身不遂，並可伴或不伴同側 CN6（外旋神經）麻痺。<span class="hl">外旋神經核緊鄰顏面神經核，臨床見 CN6＋CN7 同時麻痺即提示腦內病灶。</span><br>
-   ・<b>腦外型</b>：病灶在末梢神經。單純額紋消失、歪嘴，手腳與眼球運動皆正常，無對側半身不遂。</p>
-   <p><b>分期：</b>急性期（發病1–2週內）／恢復期（2週後）／後遺症期（3個月以上未恢復）。</p></div>
+        <div class="sec-body">
+   <ol class="c-list">
+     <li><span class="term">中樞型（核上性）</span><br>
+   下臉部受影響，<span class="hl">上臉部不受影響，故仍可閉眼、額部皺紋不會消失</span>。病變部位在腦部。因閉眼與皺額之肌肉由兩側大腦半球共同支配，須兩側同時受損才會喪失，臨床少見。</li>
+     <li><span class="term">末梢型（核及核下性）</span><br>
+   <span class="hl">上、下臉部皆受影響，無法閉眼、額部皺紋消失</span>。依病變部位再分：
+       <ul class="c-list">
+         <li><span class="term">腦內型</span>：病灶在橋腦。常合併其他腦症狀，有對側半身不遂，並可伴或不伴同側 CN6（外旋神經）麻痺。<span class="hl">外旋神經核緊鄰顏面神經核，臨床見 CN6＋CN7 同時麻痺即提示腦內病灶。</span></li>
+         <li><span class="term">腦外型</span>：病灶在末梢神經。單純額紋消失、歪嘴，手腳與眼球運動皆正常，無對側半身不遂。</li>
+       </ul>
+     </li>
+   </ol>
+   <p><span class="term">分期：</span>急性期（發病1–2週內）／恢復期（2週後）／後遺症期（3個月以上未恢復）。</p>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">鑑別診斷</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>與中風（中樞性）鑑別為第一要務：</b>顏面神經麻痺通常只影響面部運動；中風則常合併其他身體症狀，如半邊手腳無力、語言不清、突發頭暈與噁心。<span class="hl">最快速的床邊鑑別是看額紋與閉眼——中樞型保留、周邊型消失。</span></p>
-   <p><b>其他需鑑別者：</b></p>
-   <p>・<b>Ramsay Hunt 症候群</b>：耳前灼熱疼痛、外耳道或耳廓皰疹，屬帶狀皰疹病毒，預後較 Bell's palsy 差<br>
-   ・<b>腮腺腫瘤</b>：漸進性、無痛性顏面無力，須影像檢查<br>
-   ・<b>萊姆病</b>：合併發燒、肌肉痠痛，有蜱蟲叮咬史<br>
-   ・<b>顏面痙攣</b>：屬肌肉過度收縮（陽性症狀），與麻痺（陰性症狀）方向相反</p>
-   <div class="warn-box">⚠ 若合併肢體無力、言語不清、複視或意識改變，應<span class="hl">立即轉診神經科</span>排除中樞病灶，避免錯過中風黃金治療時間。</div></div>
+        <div class="sec-body">
+   <p><span class="term">與中風（中樞性）鑑別為第一要務：</span>顏面神經麻痺通常只影響面部運動；中風則常合併其他身體症狀，如半邊手腳無力、語言不清、突發頭暈與噁心。<span class="hl">最快速的床邊鑑別是看額紋與閉眼——中樞型保留、周邊型消失。</span></p>
+   <p class="sub-lead">其他需鑑別者：</p>
+   <ul class="c-list">
+     <li><span class="term">Ramsay Hunt 症候群</span>：耳前灼熱疼痛、外耳道或耳廓皰疹，屬帶狀皰疹病毒，預後較 Bell's palsy 差</li>
+     <li><span class="term">腮腺腫瘤</span>：漸進性、無痛性顏面無力，須影像檢查</li>
+     <li><span class="term">萊姆病</span>：合併發燒、肌肉痠痛，有蜱蟲叮咬史</li>
+     <li><span class="term">顏面痙攣</span>：屬肌肉過度收縮（陽性症狀），與麻痺（陰性症狀）方向相反</li>
+   </ul>
+   <div class="warn-box">⚠ 若合併肢體無力、言語不清、複視或意識改變，應<span class="hl">立即轉診神經科</span>排除中樞病灶，避免錯過中風黃金治療時間。</div>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">常用選穴與操作技巧</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>常用選穴</b><br>
+        <div class="sec-body">
+   <p><span class="term">常用選穴</span><br>
    <a class="pt-tag linked" href="ar.html#pt-st_ditsang" title="在AR學習頁查看 地倉（ST4）">地倉</a><a class="pt-tag linked" href="ar.html#pt-st_jiache" title="在AR學習頁查看 頰車（ST6）">頰車</a><a class="pt-tag linked" href="ar.html#pt-st_xiaguan" title="在AR學習頁查看 下關（ST7）">下關</a><a class="pt-tag linked" href="ar.html#pt-gb_yangbai" title="在AR學習頁查看 陽白（GB14）">陽白</a><a class="pt-tag linked" href="ar.html#pt-st_sibai" title="在AR學習頁查看 四白（ST2）">四白</a><a class="pt-tag linked" href="ar.html#pt-li_yingxiang" title="在AR學習頁查看 迎香（LI20）">迎香</a><a class="pt-tag linked" href="ar.html#pt-si_quanliao" title="在AR學習頁查看 顴髎（SI18）">顴髎</a><a class="pt-tag linked" href="ar.html#pt-bl_zanzhu" title="在AR學習頁查看 攢竹（BL2）">攢竹</a><a class="pt-tag linked" href="ar.html#pt-gb_tongziliao" title="在AR學習頁查看 瞳子髎（GB1）">瞳子髎</a><a class="pt-tag linked" href="ar.html#pt-ex_yuyao" title="在AR學習頁查看 魚腰（EX-HN4）">魚腰</a><a class="pt-tag linked" href="ar.html#pt-st_chengqi" title="在AR學習頁查看 承泣（ST1）">承泣</a><a class="pt-tag linked" href="ar.html#pt-ex_taiyang" title="在AR學習頁查看 太陽穴（EX-HN5）">太陽穴</a><br>
    遠端配合合谷、翳風；恢復期可加足三里以扶正。</p>
-   <p><b>操作技巧</b></p>
-   <p>・<span class="hl">急性期（發病1–2週內）宜淺刺、輕刺激</span>，手法輕柔，避免強刺激加重局部發炎水腫。<br>
-   ・<b>恢復期</b>可透刺加強刺激量：地倉透頰車、陽白透魚腰、<b>魚腰透攢竹或魚腰透絲竹空</b>（魚腰在眉稜骨上，直刺僅能入1–2分，故多採透刺）。<br>
-   ・可配合溫針灸、灸法或電針（疏密波）促進神經功能恢復。<br>
-   ・<span class="hl">口周肌肉（笑肌、顴大肌、顴小肌、口輪匝肌）針刺不可過深</span>，以貼皮下平刺為原則。</p></div>
+   <p class="sub-lead">操作技巧</p>
+   <ul class="c-list">
+     <li><span class="hl">急性期（發病1–2週內）宜淺刺、輕刺激</span>，手法輕柔，避免強刺激加重局部發炎水腫。</li>
+     <li><span class="term">恢復期</span>可透刺加強刺激量：地倉透頰車、陽白透魚腰、魚腰透攢竹或魚腰透絲竹空（魚腰在眉稜骨上，直刺僅能入1–2分，故多採透刺）。</li>
+     <li>可配合溫針灸、灸法或電針（疏密波）促進神經功能恢復。</li>
+     <li><span class="hl">口周肌肉（笑肌、顴大肌、顴小肌、口輪匝肌）針刺不可過深</span>，以貼皮下平刺為原則。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">中藥及其他中醫治療</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>急性期（祛風解痙）：</b>牽正散、銀翹散、桂枝湯、葛根湯。</p>
-   <p><b>體質調理／恢復期（扶正通絡）：</b>補陽還五湯、補中益氣湯。</p>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">急性期（祛風解痙）：</span>牽正散、銀翹散、桂枝湯、葛根湯。</li>
+     <li><span class="term">體質調理／恢復期（扶正通絡）：</span>補陽還五湯、補中益氣湯。</li>
+   </ul>
    <p>對<span class="hl">不喜歡針灸或體質太過虛弱疲累的患者</span>，可以中藥為主要治療手段。</p>
-   <p><b>其他療法：</b>局部熱敷、依臉部肌肉走向的穴位按摩、艾灸、電針。</p></div>
+   <p><span class="term">其他療法：</span>局部熱敷、依臉部肌肉走向的穴位按摩、艾灸、電針。</p>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">西醫治療</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>類固醇：</b>症狀發生的<span class="hl">一週內</span>，西醫通常使用類固醇來減少神經的發炎與腫脹，為證據等級最高的治療。</p>
-   <p><b>抗病毒藥物：</b>懷疑帶狀皰疹病毒感染（Ramsay Hunt）時併用。</p>
-   <p><b>眼部保護：</b>人工淚液、睡前眼藥膏、眼罩。</p>
-   <p><b>肉毒桿菌注射：</b>用於後遺症期頑固性連帶運動。</p>
-   <p>建議患者出現類似症狀時<span class="hl">盡快至神經科評估</span>，由醫師依病情選擇適合的治療方式；類固醇用藥與針灸療程皆須在專業指導下進行。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">類固醇：</span>症狀發生的<span class="hl">一週內</span>，西醫通常使用類固醇來減少神經的發炎與腫脹，為證據等級最高的治療。</li>
+     <li><span class="term">抗病毒藥物：</span>懷疑帶狀皰疹病毒感染（Ramsay Hunt）時併用。</li>
+     <li><span class="term">眼部保護：</span>人工淚液、睡前眼藥膏、眼罩。</li>
+     <li><span class="term">肉毒桿菌注射：</span>用於後遺症期頑固性連帶運動。</li>
+   </ul>
+   <p>建議患者出現類似症狀時<span class="hl">盡快至神經科評估</span>，由醫師依病情選擇適合的治療方式；類固醇用藥與針灸療程皆須在專業指導下進行。</p>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">衛教</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p>①<b>把握黃金治療前2週</b>——愈早介入預後愈佳。</p>
-   <p>②<b>護眼為第一優先</b>：眨眼功能受損易致眼睛乾澀，嚴重可引發<span class="hl">角膜潰瘍</span>。使用人工淚液、睡前眼藥膏、外出配戴護目鏡，並可適度熱敷保濕潤滑。</p>
-   <p>③<b>按摩與熱敷</b>：依臉部肌肉走向，以大拇指對穴位進行適當按壓，配合熱敷幫助臉部血液循環，促進神經恢復。</p>
-   <p>④<b>生活作息</b>：避免溫差過大，尤其天氣寒冷或頻繁進出冷氣房；保持充足睡眠、均衡飲食、避免過度勞累以提高免疫力。</p>
-   <p>⑤<b>選擇專業醫療機構與有經驗的醫師</b>進行評估與治療，確保療程的安全性與有效性。</p></div>
+        <div class="sec-body">
+   <ol class="c-list">
+     <li><span class="term">把握黃金治療前2週</span>——愈早介入預後愈佳。</li>
+     <li><span class="term">護眼為第一優先</span>：眨眼功能受損易致眼睛乾澀，嚴重可引發<span class="hl">角膜潰瘍</span>。使用人工淚液、睡前眼藥膏、外出配戴護目鏡，並可適度熱敷保濕潤滑。</li>
+     <li><span class="term">按摩與熱敷</span>：依臉部肌肉走向，以大拇指對穴位進行適當按壓，配合熱敷幫助臉部血液循環，促進神經恢復。</li>
+     <li><span class="term">生活作息</span>：避免溫差過大，尤其天氣寒冷或頻繁進出冷氣房；保持充足睡眠、均衡飲食、避免過度勞累以提高免疫力。</li>
+     <li><span class="term">選擇專業醫療機構與有經驗的醫師</span>進行評估與治療，確保療程的安全性與有效性。</li>
+   </ol>
+  </div>
       </details>
     </section>
 
@@ -323,80 +391,121 @@
       </div>
       <details class="sec">
         <summary><span class="sec-title">臨床表現</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p>神經支配的同側顏面肌出現<b>不隨意、間歇的、不規則的、強直的或陣攣的收縮</b>。</p>
+        <div class="sec-body">
+   <p>神經支配的同側顏面肌出現不隨意、間歇的、不規則的、強直的或陣攣的收縮。</p>
    <p><span class="hl">最常從眼輪匝肌開始</span>，隨後擴展到臉部其他部分；最常影響眼輪匝肌，其次為口輪匝肌，再其次為顴肌。<span class="hl">下眼瞼較上眼瞼常見。</span></p>
-   <p>可伴同側耳內出現<b>節律性 clicking 聲</b>——鼓膜張肌（tensor tympani）或鐙骨肌（stapedius）收縮所致。</p>
-   <p><b>加重因子：</b>壓迫感、焦慮、神經不安、疲勞、臉部或眼睛運動、光線、閱讀、咀嚼、駕駛。<br>
-   <b>減輕因子：</b>放鬆、飲酒。<br>
+   <p>可伴同側耳內出現節律性 clicking 聲——鼓膜張肌（tensor tympani）或鐙骨肌（stapedius）收縮所致。</p>
+   <p><span class="term">加重因子：</span>壓迫感、焦慮、神經不安、疲勞、臉部或眼睛運動、光線、閱讀、咀嚼、駕駛。<br>
+   減輕因子：放鬆、飲酒。<br>
    <span class="hl">約80%的患者在睡眠中仍會出現痙攣。</span></p>
-   <p>常影響視覺造成閱讀、駕駛困擾，以及社交上的困窘。</p></div>
+   <p>常影響視覺造成閱讀、駕駛困擾，以及社交上的困窘。</p>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">病因、流行病學與預後</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>病因：</b></p>
-   <p>①<b>血管壓迫（最主要）</b>：迷走（aberrant）或擴張的血管壓迫顏面神經的<span class="hl">神經根出口區（root exit zone）</span>——前下小腦動脈與後下小腦動脈不正常扭曲；動靜脈畸形、基底動脈瘤、椎體動脈扭曲等。<br>
-   ②<b>腫瘤（0.3–1.3%）</b>：腦膜瘤、脂肪瘤、表皮瘤、神經鞘瘤（小腦橋腦角腫瘤）。<br>
-   ③<b>顏面神經損傷</b>：異位性刺激源產生逆向傳遞，可導致顏面神經核、中樞和大腦皮質的再組織化。<br>
-   ④<b>貝爾氏麻痺後之連帶運動（5.7%）</b>。⑤<b>伴隨三叉神經痛（5.1%）</b>。</p>
-   <p><b>病理機制：</b>神經纖維受擠壓後髓鞘變薄甚至裸露，與其他軸突形成<b>短回路（short circuit）</b>；並有面神經核的<b>脫抑制（disinhibition）</b>。</p>
-   <p><b>流行病學：</b>中年發病（40–50歲）；女性 14.5人/10萬人，男性 7.4人/10萬人，<span class="hl">女性多於男性</span>；通常單側發病，兩側性約占 0.6–3%。</p></div>
+        <div class="sec-body">
+   <p class="sub-lead">病因：</p>
+   <ol class="c-list">
+     <li><span class="term">血管壓迫（最主要）</span>：迷走（aberrant）或擴張的血管壓迫顏面神經的<span class="hl">神經根出口區（root exit zone）</span>——前下小腦動脈與後下小腦動脈不正常扭曲；動靜脈畸形、基底動脈瘤、椎體動脈扭曲等。</li>
+     <li><span class="term">腫瘤（0.3–1.3%）</span>：腦膜瘤、脂肪瘤、表皮瘤、神經鞘瘤（小腦橋腦角腫瘤）。</li>
+     <li><span class="term">顏面神經損傷</span>：異位性刺激源產生逆向傳遞，可導致顏面神經核、中樞和大腦皮質的再組織化。</li>
+     <li><span class="term">貝爾氏麻痺後之連帶運動（5.7%）</span>。⑤伴隨三叉神經痛（5.1%）。</li>
+   </ol>
+   <ul class="c-list">
+     <li><span class="term">病理機制：</span>神經纖維受擠壓後髓鞘變薄甚至裸露，與其他軸突形成短回路（short circuit）；並有面神經核的脫抑制（disinhibition）。</li>
+     <li><span class="term">流行病學：</span>中年發病（40–50歲）；女性 14.5人/10萬人，男性 7.4人/10萬人，<span class="hl">女性多於男性</span>；通常單側發病，兩側性約占 0.6–3%。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">檢驗與檢查</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>臨床觀察：</b>記錄抽搐起始部位（多為眼輪匝肌）、擴散範圍、發作頻率與持續時間、誘發與緩解因子，以及睡眠中是否持續。</p>
-   <p><b>影像檢查：</b>腦部 MRI／MRA 評估小腦橋腦角是否有血管壓迫或腫瘤，為排除次發性病因的關鍵。</p>
-   <p><b>電生理檢查：</b>肌電圖可見異常肌肉反應（abnormal muscle response, AMR）。</p>
-   <p><b>耳部評估：</b>若合併聽力障礙或耳鳴，須進一步排除小腦橋腦角腫瘤。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">臨床觀察：</span>記錄抽搐起始部位（多為眼輪匝肌）、擴散範圍、發作頻率與持續時間、誘發與緩解因子，以及睡眠中是否持續。</li>
+     <li><span class="term">影像檢查：</span>腦部 MRI／MRA 評估小腦橋腦角是否有血管壓迫或腫瘤，為排除次發性病因的關鍵。</li>
+     <li><span class="term">電生理檢查：</span>肌電圖可見異常肌肉反應（abnormal muscle response, AMR）。</li>
+     <li><span class="term">耳部評估：</span>若合併聽力障礙或耳鳴，須進一步排除小腦橋腦角腫瘤。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">分型分期</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>依病因分：</b>原發性（血管壓迫，最多）／次發性（腫瘤、外傷、貝爾氏麻痺後連帶運動）。</p>
-   <p><b>依短路型態分（病理機制）：</b></p>
-   <p>・<b>Emphatic transmission</b>（cross talk）<br>
-   ・<b>Efferent to efferent</b>：貝爾氏麻痺後非重複性的連帶運動型<br>
-   ・<b>Afferent to efferent</b>：半面痙攣之重複性抽搐</p>
-   <p><b>中醫辨證：</b>肝陽化風（陽太亢）／熱極生風（陽太亢）／血虛生風（陰太弱）。</p></div>
+        <div class="sec-body">
+   <p><span class="term">依病因分：</span>原發性（血管壓迫，最多）／次發性（腫瘤、外傷、貝爾氏麻痺後連帶運動）。</p>
+   <p class="sub-lead">依短路型態分（病理機制）：</p>
+   <ul class="c-list">
+     <li><span class="term">Emphatic transmission</span>（cross talk）</li>
+     <li><span class="term">Efferent to efferent</span>：貝爾氏麻痺後非重複性的連帶運動型</li>
+     <li><span class="term">Afferent to efferent</span>：半面痙攣之重複性抽搐</li>
+   </ul>
+   <p><span class="term">中醫辨證：</span>肝陽化風（陽太亢）／熱極生風（陽太亢）／血虛生風（陰太弱）。</p>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">鑑別診斷</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>眼瞼痙攣（Blepharospasm）：</b><span class="hl">半面痙攣通常造成單側眨眼；雙側強烈眨眼通常為眼瞼痙攣的病徵</span>，此為最重要的鑑別點。</p>
-   <p><b>顏面神經麻痺：</b>方向相反——麻痺為肌肉無力（陰性），痙攣為過度收縮（陽性）。</p>
-   <p><b>抽動症（tic）／肌陣攣：</b>可短暫由意志抑制，睡眠中消失。</p>
-   <p><b>小腦橋腦角腫瘤：</b>症狀進行性加重、合併聽力障礙或其他腦神經症狀時須高度懷疑。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">眼瞼痙攣（Blepharospasm）：</span><span class="hl">半面痙攣通常造成單側眨眼；雙側強烈眨眼通常為眼瞼痙攣的病徵</span>，此為最重要的鑑別點。</li>
+     <li><span class="term">顏面神經麻痺：</span>方向相反——麻痺為肌肉無力（陰性），痙攣為過度收縮（陽性）。</li>
+     <li><span class="term">抽動症（tic）／肌陣攣：</span>可短暫由意志抑制，睡眠中消失。</li>
+     <li><span class="term">小腦橋腦角腫瘤：</span>症狀進行性加重、合併聽力障礙或其他腦神經症狀時須高度懷疑。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">常用選穴與操作技巧</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>常用選穴</b><br>
+        <div class="sec-body">
+   <p><span class="term">常用選穴</span><br>
    局部：<a class="pt-tag linked" href="ar.html#pt-bl_zanzhu" title="在AR學習頁查看 攢竹（BL2）">攢竹</a><a class="pt-tag linked" href="ar.html#pt-sj_sizhukong" title="在AR學習頁查看 絲竹空（SJ23）">絲竹空</a><a class="pt-tag linked" href="ar.html#pt-gb_yangbai" title="在AR學習頁查看 陽白（GB14）">陽白</a><a class="pt-tag linked" href="ar.html#pt-st_sibai" title="在AR學習頁查看 四白（ST2）">四白</a><a class="pt-tag linked" href="ar.html#pt-si_quanliao" title="在AR學習頁查看 顴髎（SI18）">顴髎</a><a class="pt-tag linked" href="ar.html#pt-st_ditsang" title="在AR學習頁查看 地倉（ST4）">地倉</a><a class="pt-tag linked" href="ar.html#pt-st_jiache" title="在AR學習頁查看 頰車（ST6）">頰車</a><a class="pt-tag linked" href="ar.html#pt-ex_taiyang" title="在AR學習頁查看 太陽穴（EX-HN5）">太陽穴</a><br>
    遠端：合谷、太衝、風池、三陰交（平肝熄風、養血柔筋）。</p>
-   <p><b>操作技巧</b></p>
-   <p>・局部宜<span class="hl">輕刺激、淺刺、少捻轉</span>，避免強刺激誘發或加重抽搐。<br>
-   ・治療應以<b>遠端平肝熄風穴位為主導</b>，局部僅作輔助。<br>
-   ・可配合鬆解顳肌、眼輪匝肌周邊張力。<br>
-   ・恐慌、焦慮明顯者，臨床有針膽經配合顳肌、眼輪匝肌，再加服中藥的作法。</p></div>
+   <p class="sub-lead">操作技巧</p>
+   <ul class="c-list">
+     <li>局部宜<span class="hl">輕刺激、淺刺、少捻轉</span>，避免強刺激誘發或加重抽搐。</li>
+     <li>治療應以遠端平肝熄風穴位為主導，局部僅作輔助。</li>
+     <li>可配合鬆解顳肌、眼輪匝肌周邊張力。</li>
+     <li>恐慌、焦慮明顯者，臨床有針膽經配合顳肌、眼輪匝肌，再加服中藥的作法。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">中藥及其他中醫治療</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>肝陽上亢／肝風內動：</b><span class="hl">天麻鉤藤飲</span>為常用方——鉤藤可放鬆肌肉、收縮血管以減緩神經壓迫。臨床案例顯示對顏面抽搐有明顯療效。</p>
-   <p><b>陽虛筋失所養（肉瞤筋惕）：</b>古籍論發汗過多、津液枯少、陽氣大虛、筋肉失養而惕惕跳動，急宜溫經益陽，<span class="hl">真武湯</span>主之（《葉氏醫效秘傳》《傷寒瘟疫條辨》《醫學心悟》皆有記載）。凡傷寒惕瞤兼肢冷者，真武湯。</p>
-   <p><b>中西醫結合觀點：</b>陽過剩（肝陽亢進）↔ 興奮性增加；陰過虛（陰虛、血虛）↔ 抑制性降低；肝風內動 ↔ 發作性疾病；平肝熄風、鎮肝熄風 ↔ 抑制神經放電與過度興奮。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">肝陽上亢／肝風內動：</span><span class="hl">天麻鉤藤飲</span>為常用方——鉤藤可放鬆肌肉、收縮血管以減緩神經壓迫。臨床案例顯示對顏面抽搐有明顯療效。</li>
+     <li><span class="term">陽虛筋失所養（肉瞤筋惕）：</span>古籍論發汗過多、津液枯少、陽氣大虛、筋肉失養而惕惕跳動，急宜溫經益陽，<span class="hl">真武湯</span>主之（《葉氏醫效秘傳》《傷寒瘟疫條辨》《醫學心悟》皆有記載）。凡傷寒惕瞤兼肢冷者，真武湯。</li>
+     <li><span class="term">中西醫結合觀點：</span>陽過剩（肝陽亢進）↔ 興奮性增加；陰過虛（陰虛、血虛）↔ 抑制性降低；肝風內動 ↔ 發作性疾病；平肝熄風、鎮肝熄風 ↔ 抑制神經放電與過度興奮。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">西醫治療</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>外科手術：</b></p>
-   <p>・<b>顯微血管減壓術（Microvascular decompression of Jannetta）</b>——根本治療。<span class="hl">因顏面神經與第八對腦神經相近，手術進行不易，術後可能產生耳聾、重聽等後遺症。</span><br>
-   ・酒精顏面神經阻斷（facial nerve block with alcohol）<br>
-   ・顏面神經或其分枝切除</p>
-   <p><b>肉毒桿菌素A注射：</b><span class="hl">有效率90–95%</span>，平均3–6個月施打一次；副作用為眼皮下垂、兔眼、全身無力等。</p>
-   <p><b>內科藥物：</b>效果不佳——Carbamazepine、Baclofen、Clonazepam、Felbamate、Gabapentin。</p></div>
+        <div class="sec-body">
+   <p class="sub-lead">外科手術：</p>
+   <ul class="c-list">
+     <li>顯微血管減壓術（Microvascular decompression of Jannetta）——根本治療。<span class="hl">因顏面神經與第八對腦神經相近，手術進行不易，術後可能產生耳聾、重聽等後遺症。</span></li>
+     <li>酒精顏面神經阻斷（facial nerve block with alcohol）</li>
+     <li>顏面神經或其分枝切除</li>
+   
+     <li><span class="term">肉毒桿菌素A注射：</span><span class="hl">有效率90–95%</span>，平均3–6個月施打一次；副作用為眼皮下垂、兔眼、全身無力等。</li>
+     <li><span class="term">內科藥物：</span>效果不佳——Carbamazepine、Baclofen、Clonazepam、Felbamate、Gabapentin。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">衛教</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p>・辨識並盡量避開加重因子：過度疲勞、精神壓力、焦慮、強光、長時間閱讀或駕駛。</p>
-   <p>・說明本病<span class="hl">不會危及生命</span>，但可能持續存在並影響社交，減輕患者焦慮有助改善症狀。</p>
-   <p>・充足睡眠與規律作息；注意本病<span class="hl">睡眠中仍可能發作</span>，非「休息就會好」。</p>
-   <p>・症狀進行性加重、合併聽力障礙或其他腦神經症狀時，應主動回診安排影像檢查。</p>
-   <p>・接受肉毒桿菌注射者，需理解療效約維持3–6個月、需重複施打，並知悉眼瞼下垂等暫時性副作用。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li>辨識並盡量避開加重因子：過度疲勞、精神壓力、焦慮、強光、長時間閱讀或駕駛。</li>
+   
+     <li>說明本病<span class="hl">不會危及生命</span>，但可能持續存在並影響社交，減輕患者焦慮有助改善症狀。</li>
+   
+     <li>充足睡眠與規律作息；注意本病<span class="hl">睡眠中仍可能發作</span>，非「休息就會好」。</li>
+   
+     <li>症狀進行性加重、合併聽力障礙或其他腦神經症狀時，應主動回診安排影像檢查。</li>
+   
+     <li>接受肉毒桿菌注射者，需理解療效約維持3–6個月、需重複施打，並知悉眼瞼下垂等暫時性副作用。</li>
+   </ul>
+  </div>
       </details>
     </section>
 
@@ -408,87 +517,132 @@
       </div>
       <details class="sec">
         <summary><span class="sec-title">臨床表現</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>疼痛性質：</b>類似<span class="hl">針刺、燒灼、爆炸</span>，持續數秒到數分鐘，<span class="hl">疼痛後有幾分鐘的不反應期</span>。</p>
-   <p><b>疼痛部位：</b>患側耳朵、眼睛、嘴唇、鼻子、頭皮、前額、臉頰、牙齒和頷等部位。</p>
-   <p><b>發作感傳有兩類：</b>嘴巴到耳朵、鼻子到眼眶。</p>
-   <p><b>扳機點（trigger point）：</b>為觸發敏感位置點。可自然發病，或由顏面刺激扳機點誘發——<span class="hl">說話、洗臉、飲食、刷牙、刮鬍子、打噴嚏和吹電風扇</span>等會誘發疼痛。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">疼痛性質：</span>類似<span class="hl">針刺、燒灼、爆炸</span>，持續數秒到數分鐘，<span class="hl">疼痛後有幾分鐘的不反應期</span>。</li>
+     <li><span class="term">疼痛部位：</span>患側耳朵、眼睛、嘴唇、鼻子、頭皮、前額、臉頰、牙齒和頷等部位。</li>
+     <li><span class="term">發作感傳有兩類：</span>嘴巴到耳朵、鼻子到眼眶。</li>
+     <li><span class="term">扳機點（trigger point）：</span>為觸發敏感位置點。可自然發病，或由顏面刺激扳機點誘發——<span class="hl">說話、洗臉、飲食、刷牙、刮鬍子、打噴嚏和吹電風扇</span>等會誘發疼痛。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">病因、流行病學與預後</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>病位：</b>位於從中樞性髓鞘和移行於末稍性髓鞘的部位，即<span class="hl">接合部（junction zone）</span>。</p>
-   <p><b>機轉：</b>①血管或腫瘤持續性壓迫神經、造成脫髓鞘，使感覺神經和痛覺神經之間的活動電流<b>形成短路</b>而產生疼痛。②三叉神經核中對於傳入性活動之<b>抑制性功能降低</b>。</p>
-   <p><b>中醫病因：</b>足陽明經絡受風毒，傳入經絡，<span class="hl">血凝而不行</span>。患部位於前頭面部，屬足陽明胃經循經部位（環唇挾舌、起於鼻、合頞中、循頰車、上耳前、過客主人、循髮際至頭顱）。亦與肝風內動之發作性疾病相應。</p>
-   <p><b>流行病學：</b>約每1萬5千～2萬人中有1人罹患；<span class="hl">女性多於男性</span>；發病年齡大於50歲；主要發生於 <span class="hl">V2（上頷支）和 V3（下頷支）</span>；通常單側發病，兩側性臨床約占10–12%。</p>
-   <p><b>預後：</b>屬慢性反覆發作性疾病，可自然緩解一段時間後再發；手術後亦可能復發（臨床案例：術後疼痛消失約半年後再發，經中藥治療再度減輕）。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">病位：</span>位於從中樞性髓鞘和移行於末稍性髓鞘的部位，即<span class="hl">接合部（junction zone）</span>。</li>
+     <li><span class="term">機轉：</span>①血管或腫瘤持續性壓迫神經、造成脫髓鞘，使感覺神經和痛覺神經之間的活動電流形成短路而產生疼痛。②三叉神經核中對於傳入性活動之抑制性功能降低。</li>
+     <li><span class="term">中醫病因：</span>足陽明經絡受風毒，傳入經絡，<span class="hl">血凝而不行</span>。患部位於前頭面部，屬足陽明胃經循經部位（環唇挾舌、起於鼻、合頞中、循頰車、上耳前、過客主人、循髮際至頭顱）。亦與肝風內動之發作性疾病相應。</li>
+     <li><span class="term">流行病學：</span>約每1萬5千～2萬人中有1人罹患；<span class="hl">女性多於男性</span>；發病年齡大於50歲；主要發生於 <span class="hl">V2（上頷支）和 V3（下頷支）</span>；通常單側發病，兩側性臨床約占10–12%。</li>
+     <li><span class="term">預後：</span>屬慢性反覆發作性疾病，可自然緩解一段時間後再發；手術後亦可能復發（臨床案例：術後疼痛消失約半年後再發，經中藥治療再度減輕）。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">檢驗與檢查</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>感覺檢查：</b><span class="hl">一定要利用左右兩邊做比較，兩邊不一樣一定有問題。</span></p>
-   <p>・痛覺：用針刺整個臉部（切忌針不能太尖）<br>
-   ・溫度覺：用冰冷或熱的物體、試管輕觸整個臉部<br>
-   ・觸覺：用棉花或毛筆輕觸整個臉部</p>
-   <p><b>角膜反射：</b>濕棉絮輕觸角膜，感覺傳入為三叉神經第一分支（眼支），動作由顏面神經傳出（<span class="hl">5進7出</span>），反射中樞是橋腦。</p>
-   <p><b>運動檢查：</b>觀察肌肉無力或萎縮；讓患者咬緊上下顎，觸摸顳肌與咀嚼肌是否凸起；<span class="hl">翼狀肌無力時，張口會偏向無力的一邊</span>。</p>
-   <p><b>頷反射：</b>囑病人頭低，敲擊下巴；傳入與傳出皆為三叉神經第三分支，反射中樞為橋腦。正常為沒有或輕微反射，<span class="hl">上運動神經元病變時反射變強</span>。</p>
-   <p><b>影像：</b>MRI 排除血管壓迫、腫瘤與多發性硬化症。</p></div>
+        <div class="sec-body">
+   <p><span class="term">感覺檢查：</span><span class="hl">一定要利用左右兩邊做比較，兩邊不一樣一定有問題。</span></p>
+   <ul class="c-list">
+     <li>痛覺：用針刺整個臉部（切忌針不能太尖）</li>
+     <li>溫度覺：用冰冷或熱的物體、試管輕觸整個臉部</li>
+     <li>觸覺：用棉花或毛筆輕觸整個臉部</li>
+   
+     <li><span class="term">角膜反射：</span>濕棉絮輕觸角膜，感覺傳入為三叉神經第一分支（眼支），動作由顏面神經傳出（<span class="hl">5進7出</span>），反射中樞是橋腦。</li>
+     <li><span class="term">運動檢查：</span>觀察肌肉無力或萎縮；讓患者咬緊上下顎，觸摸顳肌與咀嚼肌是否凸起；<span class="hl">翼狀肌無力時，張口會偏向無力的一邊</span>。</li>
+     <li><span class="term">頷反射：</span>囑病人頭低，敲擊下巴；傳入與傳出皆為三叉神經第三分支，反射中樞為橋腦。正常為沒有或輕微反射，<span class="hl">上運動神經元病變時反射變強</span>。</li>
+     <li><span class="term">影像：</span>MRI 排除血管壓迫、腫瘤與多發性硬化症。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">分型分期</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>依神經分支分：</b></p>
-   <p>・<b>V1 眼支（Ophthalmic branch）</b>：前額、眼眶周圍<br>
-   ・<b>V2 上頷支（Maxillary branch）</b>：面頰、上唇、上齒——<span class="hl">好發</span><br>
-   ・<b>V3 下頷支（Mandibular branch）</b>：下頷、下唇、下齒——<span class="hl">好發</span></p>
+        <div class="sec-body">
+   <p class="sub-lead">依神經分支分：</p>
+   <ul class="c-list">
+     <li><span class="term">V1 眼支（Ophthalmic branch）</span>：前額、眼眶周圍</li>
+     <li><span class="term">V2 上頷支（Maxillary branch）</span>：面頰、上唇、上齒——<span class="hl">好發</span></li>
+     <li><span class="term">V3 下頷支（Mandibular branch）</span>：下頷、下唇、下齒——<span class="hl">好發</span></li>
+   </ul>
    <p>三分支之出顱孔（眶上孔／眶下孔／頦孔）約略在同一垂直線上，可對照AR學習頁「重要解剖結構—神經」觀察。</p>
-   <p><b>依病因分：</b>典型（原發性，血管壓迫）／次發性（腫瘤、多發性硬化症）。</p>
-   <p><b>依病程分：</b>發作期（扳機點高度敏感）／緩解期。</p></div>
+   <ul class="c-list">
+     <li><span class="term">依病因分：</span>典型（原發性，血管壓迫）／次發性（腫瘤、多發性硬化症）。</li>
+     <li><span class="term">依病程分：</span>發作期（扳機點高度敏感）／緩解期。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">鑑別診斷</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>牙源性疼痛：</b>持續性鈍痛、有明確牙齒病灶，不具數秒至數分鐘的發作與不反應期特徵。</p>
-   <p><b>顳頜關節障礙：</b>疼痛與張口、咀嚼動作相關，可觸及關節彈響與咀嚼肌壓痛。</p>
-   <p><b>叢發性頭痛：</b>眼眶周圍劇痛，伴流淚、鼻塞、結膜充血，發作持續15–180分鐘。</p>
-   <p><b>帶狀皰疹後神經痛：</b>有皰疹病史，疼痛持續而非陣發。</p>
-   <p><b>次發性三叉神經痛：</b>合併固定性感覺缺損、角膜反射消失或其他腦神經異常者，須影像排除腫瘤、多發性硬化症。</p>
-   <div class="warn-box">⚠ 首次發作、雙側發作、年輕發病或合併神經學缺損者，<span class="hl">必須安排影像檢查</span>，不可逕以原發性處理。</div></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">牙源性疼痛：</span>持續性鈍痛、有明確牙齒病灶，不具數秒至數分鐘的發作與不反應期特徵。</li>
+     <li><span class="term">顳頜關節障礙：</span>疼痛與張口、咀嚼動作相關，可觸及關節彈響與咀嚼肌壓痛。</li>
+     <li><span class="term">叢發性頭痛：</span>眼眶周圍劇痛，伴流淚、鼻塞、結膜充血，發作持續15–180分鐘。</li>
+     <li><span class="term">帶狀皰疹後神經痛：</span>有皰疹病史，疼痛持續而非陣發。</li>
+     <li><span class="term">次發性三叉神經痛：</span>合併固定性感覺缺損、角膜反射消失或其他腦神經異常者，須影像排除腫瘤、多發性硬化症。</li>
+   </ul>
+   <div class="warn-box">⚠ 首次發作、雙側發作、年輕發病或合併神經學缺損者，<span class="hl">必須安排影像檢查</span>，不可逕以原發性處理。</div>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">常用選穴與操作技巧</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>依分支選穴</b><br>
+        <div class="sec-body">
+   <p><span class="term">依分支選穴</span><br>
    V1區：<a class="pt-tag linked" href="ar.html#pt-bl_zanzhu" title="在AR學習頁查看 攢竹（BL2）">攢竹</a><a class="pt-tag linked" href="ar.html#pt-ex_yuyao" title="在AR學習頁查看 魚腰（EX-HN4）">魚腰</a><a class="pt-tag linked" href="ar.html#pt-gb_yangbai" title="在AR學習頁查看 陽白（GB14）">陽白</a><br>
    V2區：<a class="pt-tag linked" href="ar.html#pt-st_sibai" title="在AR學習頁查看 四白（ST2）">四白</a><a class="pt-tag linked" href="ar.html#pt-st_juliao" title="在AR學習頁查看 巨髎（ST3）">巨髎</a><a class="pt-tag linked" href="ar.html#pt-li_yingxiang" title="在AR學習頁查看 迎香（LI20）">迎香</a><br>
    V3區：<a class="pt-tag linked" href="ar.html#pt-st_jiache" title="在AR學習頁查看 頰車（ST6）">頰車</a><a class="pt-tag linked" href="ar.html#pt-st_xiaguan" title="在AR學習頁查看 下關（ST7）">下關</a><a class="pt-tag linked" href="ar.html#pt-st_daying" title="在AR學習頁查看 大迎（ST5）">大迎</a><br>
    遠端配合合谷、內庭、太衝疏經止痛。</p>
-   <p><b>操作技巧</b></p>
-   <p>・<span class="hl">發作期避免直接針刺扳機點</span>以免誘發劇痛，宜先取遠端穴位緩解後再輕刺局部。<br>
-   ・緩解期可用淺刺、平補平瀉手法，療程中密切觀察疼痛誘發情形。<br>
-   ・久病、頑固型可考慮配合電針、耳針，或轉介神經內外科評估。<br>
-   ・循經取穴觀念：辨明屬陽明（合谷、足三里）或少陽（外關、陽陵泉），配合遠近取穴。</p></div>
+   <p class="sub-lead">操作技巧</p>
+   <ul class="c-list">
+     <li><span class="hl">發作期避免直接針刺扳機點</span>以免誘發劇痛，宜先取遠端穴位緩解後再輕刺局部。</li>
+     <li>緩解期可用淺刺、平補平瀉手法，療程中密切觀察疼痛誘發情形。</li>
+     <li>久病、頑固型可考慮配合電針、耳針，或轉介神經內外科評估。</li>
+     <li>循經取穴觀念：辨明屬陽明（合谷、足三里）或少陽（外關、陽陵泉），配合遠近取穴。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">中藥及其他中醫治療</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>古方（《證治準繩》面痛）：</b><span class="hl">犀角升麻湯</span>——以犀角為主解飲食之毒，升麻、黃芩專入胃經引藥上行，餘藥滌除風熱。用於足陽明經絡受風毒、血凝不行者。</p>
-   <p><b>虛證：</b>老年、勞倦、多言傷氣、不寐傷神而大發者，古籍改以參、白朮、川芎、當歸、升麻、柴胡、甘草、桔梗之類，稍佐黃芩、梔子、連翹、牛蒡，空腹進之，食遠服加減甘露飲。<span class="hl">用藥不可執一。</span></p>
-   <p><b>肝風內動：</b><span class="hl">天麻鉤藤飲</span>平肝熄風。臨床案例：51歲女性左側臉部陣發抽痛，服用 Tegretol 無效且副作用難耐，改服天麻鉤藤飲後疼痛減輕。</p>
-   <p><b>厥逆頭痛（大寒犯腦，頭痛齒亦痛）：</b>吳茱萸湯（吳茱萸、人參、生薑、大棗；溫中補虛、降逆止嘔）。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">古方（《證治準繩》面痛）：</span><span class="hl">犀角升麻湯</span>——以犀角為主解飲食之毒，升麻、黃芩專入胃經引藥上行，餘藥滌除風熱。用於足陽明經絡受風毒、血凝不行者。</li>
+     <li><span class="term">虛證：</span>老年、勞倦、多言傷氣、不寐傷神而大發者，古籍改以參、白朮、川芎、當歸、升麻、柴胡、甘草、桔梗之類，稍佐黃芩、梔子、連翹、牛蒡，空腹進之，食遠服加減甘露飲。<span class="hl">用藥不可執一。</span></li>
+     <li><span class="term">肝風內動：</span><span class="hl">天麻鉤藤飲</span>平肝熄風。臨床案例：51歲女性左側臉部陣發抽痛，服用 Tegretol 無效且副作用難耐，改服天麻鉤藤飲後疼痛減輕。</li>
+     <li><span class="term">厥逆頭痛（大寒犯腦，頭痛齒亦痛）：</span>吳茱萸湯（吳茱萸、人參、生薑、大棗；溫中補虛、降逆止嘔）。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">西醫治療</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>內科治療</b></p>
-   <p>・<b>抗癲癇藥第一線：Carbamazepine</b>——西醫常用藥，但<span class="hl">患者若有特定基因缺失將造成嚴重過敏反應</span>，此類患者可改由中醫治療。<br>
-   ・第二線：Baclofen、Lamotrigine、Oxcarbazepine、Phenytoin、Gabapentin、Depakene（Valproate）等<br>
-   ・抗憂鬱藥：amitriptyline</p>
-   <p><b>外科治療</b></p>
-   <p>・<b>減壓手術（microvascular decompression）</b>——<span class="hl">目前最佳西醫治療方式</span><br>
-   ・經皮射頻熱凝術（percutaneous radiofrequency thermal rhizotomy）<br>
-   ・加馬刀放射手術（gamma knife radiosurgery）</p></div>
+        <div class="sec-body">
+   <p class="sub-lead">內科治療</p>
+   <ul class="c-list">
+     <li><span class="term">抗癲癇藥第一線：Carbamazepine</span>——西醫常用藥，但<span class="hl">患者若有特定基因缺失將造成嚴重過敏反應</span>，此類患者可改由中醫治療。</li>
+     <li>第二線：Baclofen、Lamotrigine、Oxcarbazepine、Phenytoin、Gabapentin、Depakene（Valproate）等</li>
+     <li>抗憂鬱藥：amitriptyline</li>
+   </ul>
+   <p class="sub-lead">外科治療</p>
+   <ul class="c-list">
+     <li><span class="term">減壓手術（microvascular decompression）</span>——<span class="hl">目前最佳西醫治療方式</span></li>
+     <li>經皮射頻熱凝術（percutaneous radiofrequency thermal rhizotomy）</li>
+     <li>加馬刀放射手術（gamma knife radiosurgery）</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">衛教</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p>・辨識個人扳機點並設法避開：以溫水洗臉、改用軟毛牙刷、避免正對電風扇或冷氣出風口、進食避開患側。</p>
-   <p>・發作時勿按壓或摩擦患處，以免誘發連續發作。</p>
-   <p>・規律服藥、不自行停藥；服用 Carbamazepine 者出現皮疹須<span class="hl">立即停藥就醫</span>。</p>
-   <p>・保持規律作息、避免過勞與情緒波動；中醫觀點認為情志不遂、鬱結會加重病情。</p>
-   <p>・說明本病病程反覆、治療需時，避免因短期未癒而頻繁更換療法。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li>辨識個人扳機點並設法避開：以溫水洗臉、改用軟毛牙刷、避免正對電風扇或冷氣出風口、進食避開患側。</li>
+   
+     <li>發作時勿按壓或摩擦患處，以免誘發連續發作。</li>
+   
+     <li>規律服藥、不自行停藥；服用 Carbamazepine 者出現皮疹須<span class="hl">立即停藥就醫</span>。</li>
+   
+     <li>保持規律作息、避免過勞與情緒波動；中醫觀點認為情志不遂、鬱結會加重病情。</li>
+   
+     <li>說明本病病程反覆、治療需時，避免因短期未癒而頻繁更換療法。</li>
+   </ul>
+  </div>
       </details>
     </section>
 
@@ -501,73 +655,110 @@
       <div class="warn-box top-warn">⚠ 極劇烈之偏頭痛雖有<b>太陽穴淺刺放血</b>之傳統操作（董氏奇穴對太陽穴放血尤有心得，惟其手法放血量甚大），但太陽穴區有<span class="hl">顳淺動脈額支</span>通過，放血或深刺易致出血與血腫。<span class="hl">務必在療效與安全之間審慎拿捏</span>，控制放血量並確實壓迫止血；凝血功能異常或服用抗凝血劑者不宜。</div>
       <details class="sec">
         <summary><span class="sec-title">臨床表現</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p>疼痛位於顳側（太陽穴一帶），可為搏動性或緊繃感，範圍大致對應<b>顳肌</b>分布。</p>
+        <div class="sec-body">
+   <p>疼痛位於顳側（太陽穴一帶），可為搏動性或緊繃感，範圍大致對應顳肌分布。</p>
    <p>偏頭痛者常伴畏光、畏聲、噁心嘔吐，活動後加重；顳側頭痛則多與肌肉張力、姿勢、壓力相關。</p>
-   <p>觸診常可發現<span class="hl">一側顳肌緊繃或萎縮</span>、壓痛明顯；顳肌被筋膜包圍，部分人可摸到兩條界線（年紀越大越明顯）。</p></div>
+   <p>觸診常可發現<span class="hl">一側顳肌緊繃或萎縮</span>、壓痛明顯；顳肌被筋膜包圍，部分人可摸到兩條界線（年紀越大越明顯）。</p>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">病因、流行病學與預後</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>西醫：</b>偏頭痛與三叉神經血管系統活化、皮質擴散性抑制相關；顳側頭痛則多為肌肉緊張、顳頜關節功能異常、姿勢不良所致。</p>
-   <p><b>中醫：</b>屬少陽經（膽經、三焦經）循行部位；若偏前額則屬陽明。高血壓、肝陽上亢亦可引起頭痛。</p>
-   <p><b>誘發因子：</b>壓力、睡眠不足、月經週期、特定食物、頸肩前傾姿勢、單側咀嚼。</p>
-   <p><b>預後：</b>多為慢性反覆發作，可透過誘因控制與規律治療顯著減少發作頻率。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">西醫：</span>偏頭痛與三叉神經血管系統活化、皮質擴散性抑制相關；顳側頭痛則多為肌肉緊張、顳頜關節功能異常、姿勢不良所致。</li>
+     <li><span class="term">中醫：</span>屬少陽經（膽經、三焦經）循行部位；若偏前額則屬陽明。高血壓、肝陽上亢亦可引起頭痛。</li>
+     <li><span class="term">誘發因子：</span>壓力、睡眠不足、月經週期、特定食物、頸肩前傾姿勢、單側咀嚼。</li>
+     <li><span class="term">預後：</span>多為慢性反覆發作，可透過誘因控制與規律治療顯著減少發作頻率。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">檢驗與檢查</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>觸診：</b>囑患者咬緊上下顎，觸摸顳肌與咬肌是否對稱隆起；沿顳肌前後緣尋找壓痛點與轉折點。</p>
-   <p><b>顳頜關節評估：</b>檢查張口幅度、關節彈響、是否偏移，以排除合併顳頜關節障礙。</p>
-   <p><b>血壓測量：</b>高血壓引起之頭痛需另行處理。</p>
-   <p><b>影像：</b>頭痛型態改變、突發劇烈頭痛（thunderclap）、合併神經學異常或年齡50歲後新發者，須安排腦部影像。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">觸診：</span>囑患者咬緊上下顎，觸摸顳肌與咬肌是否對稱隆起；沿顳肌前後緣尋找壓痛點與轉折點。</li>
+     <li><span class="term">顳頜關節評估：</span>檢查張口幅度、關節彈響、是否偏移，以排除合併顳頜關節障礙。</li>
+     <li><span class="term">血壓測量：</span>高血壓引起之頭痛需另行處理。</li>
+     <li><span class="term">影像：</span>頭痛型態改變、突發劇烈頭痛（thunderclap）、合併神經學異常或年齡50歲後新發者，須安排腦部影像。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">分型分期</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>西醫分類：</b>偏頭痛（有／無預兆）／緊縮型頭痛／叢發性頭痛。<span class="hl">偏頭痛須符合一定的頻率、性質和程度標準，否則只能算顳側頭痛。</span></p>
-   <p><b>中醫循經分型：</b></p>
-   <p>・<b>少陽頭痛</b>（顳側）：局部取率谷、角孫、瞳子髎、太陽；遠端取外關、陽陵泉<br>
-   ・<b>陽明頭痛</b>（前額）：局部取頭維；遠端取合谷、足三里<br>
-   ・<b>厥陰／巔頂頭痛</b>：百會加四神聰</p>
-   <p><span class="hl">從西醫角度看率谷或角孫都是顳肌，但中醫視之為少陽經</span>；遠道取穴時再細緻辨別屬少陽或胃經，此為比局部取穴進階的循經、遠近取穴。</p></div>
+        <div class="sec-body">
+   <p><span class="term">西醫分類：</span>偏頭痛（有／無預兆）／緊縮型頭痛／叢發性頭痛。<span class="hl">偏頭痛須符合一定的頻率、性質和程度標準，否則只能算顳側頭痛。</span></p>
+   <p class="sub-lead">中醫循經分型：</p>
+   <ul class="c-list">
+     <li><span class="term">少陽頭痛</span>（顳側）：局部取率谷、角孫、瞳子髎、太陽；遠端取外關、陽陵泉</li>
+     <li><span class="term">陽明頭痛</span>（前額）：局部取頭維；遠端取合谷、足三里</li>
+     <li><span class="term">厥陰／巔頂頭痛</span>：百會加四神聰</li>
+   </ul>
+   <p><span class="hl">從西醫角度看率谷或角孫都是顳肌，但中醫視之為少陽經</span>；遠道取穴時再細緻辨別屬少陽或胃經，此為比局部取穴進階的循經、遠近取穴。</p>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">鑑別診斷</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>顳動脈炎（巨細胞動脈炎）：</b>50歲以上、顳動脈壓痛或搏動減弱、咀嚼跛行、發炎指標上升，<span class="hl">可致失明，須緊急處理</span>。</p>
-   <p><b>顳頜關節障礙：</b>疼痛與張口咀嚼直接相關，有關節彈響。</p>
-   <p><b>三叉神經痛：</b>電擊樣、數秒至數分鐘的陣發痛，有扳機點。</p>
-   <p><b>次發性頭痛：</b>顱內病灶、高血壓危象、青光眼急性發作（伴眼痛、視力模糊、角膜霧化）。</p>
-   <div class="warn-box">⚠ 突發如雷擊般的劇烈頭痛、合併發燒頸僵、意識改變或神經學缺損者，應<span class="hl">立即轉診急診</span>。</div></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">顳動脈炎（巨細胞動脈炎）：</span>50歲以上、顳動脈壓痛或搏動減弱、咀嚼跛行、發炎指標上升，<span class="hl">可致失明，須緊急處理</span>。</li>
+     <li><span class="term">顳頜關節障礙：</span>疼痛與張口咀嚼直接相關，有關節彈響。</li>
+     <li><span class="term">三叉神經痛：</span>電擊樣、數秒至數分鐘的陣發痛，有扳機點。</li>
+     <li><span class="term">次發性頭痛：</span>顱內病灶、高血壓危象、青光眼急性發作（伴眼痛、視力模糊、角膜霧化）。</li>
+   </ul>
+   <div class="warn-box">⚠ 突發如雷擊般的劇烈頭痛、合併發燒頸僵、意識改變或神經學缺損者，應<span class="hl">立即轉診急診</span>。</div>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">常用選穴與操作技巧</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>常用選穴（遠近配穴）</b><br>
+        <div class="sec-body">
+   <p><span class="term">常用選穴（遠近配穴）</span><br>
    局部：<a class="pt-tag linked" href="ar.html#pt-ex_taiyang" title="在AR學習頁查看 太陽穴（EX-HN5）">太陽穴</a>、率谷、角孫、<a class="pt-tag linked" href="ar.html#pt-gb_tongziliao" title="在AR學習頁查看 瞳子髎（GB1）">瞳子髎</a>、頭維<br>
    遠端：外關（三焦經）、陽陵泉（膽經）；屬陽明者取合谷、足三里。<br>
    巔頂痛：百會加四神聰；高血壓引起之頭痛可搭配風池、太衝、四神聰。</p>
    <p><span class="hl">瞳子髎（膽經）位於目外眥旁五分，距太陽穴很近且屬正經穴，臨床常直接取之。</span></p>
-   <p><b>顳肌操作要點</b></p>
-   <p>・顳肌被筋膜包圍，<b>偏頭痛的人容易有一邊顳肌萎縮，前後都要針</b>。<br>
-   ・<span class="hl">顳肌前半部比較肥厚、後半部比較薄</span>；找顳肌時要找轉折點分前後，前半部針尖朝上。<br>
-   ・<span class="hl">顳肌前半部一定要針到且針數要密集一點（8～10針）</span>，顳肌的力量出來其他才會有效果；最前面一路到眼角的位置為定位參考。</p>
-   <p><b>太陽穴：</b>針刺通過皮膚、皮下組織、顳肌；可疏風散熱、清頭目。配肝俞、風池治視神經萎縮、視網膜出血；配風池、頭維治偏頭痛；配下關、地倉治顏面神經麻痺。</p></div>
+   <p class="sub-lead">顳肌操作要點</p>
+   <ul class="c-list">
+     <li>顳肌被筋膜包圍，偏頭痛的人容易有一邊顳肌萎縮，前後都要針。</li>
+     <li><span class="hl">顳肌前半部比較肥厚、後半部比較薄</span>；找顳肌時要找轉折點分前後，前半部針尖朝上。</li>
+     <li><span class="hl">顳肌前半部一定要針到且針數要密集一點（8～10針）</span>，顳肌的力量出來其他才會有效果；最前面一路到眼角的位置為定位參考。</li>
+   </ul>
+   <p><span class="term">太陽穴：</span>針刺通過皮膚、皮下組織、顳肌；可疏風散熱、清頭目。配肝俞、風池治視神經萎縮、視網膜出血；配風池、頭維治偏頭痛；配下關、地倉治顏面神經麻痺。</p>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">中藥及其他中醫治療</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>肝陽上亢：</b>天麻鉤藤飲平肝潛陽。</p>
-   <p><b>少陽鬱熱：</b>小柴胡湯加減；<b>風熱</b>：羌活湯、鉤藤散。</p>
-   <p><b>血虛：</b>四物湯加減；<b>痰濁</b>：半夏白朮天麻湯。</p>
-   <p><b>其他療法：</b>局部溫灸、耳針、放鬆顳肌與頸肩肌群之手法治療。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">肝陽上亢：</span>天麻鉤藤飲平肝潛陽。</li>
+     <li><span class="term">少陽鬱熱：</span>小柴胡湯加減；風熱：羌活湯、鉤藤散。</li>
+     <li><span class="term">血虛：</span>四物湯加減；痰濁：半夏白朮天麻湯。</li>
+     <li><span class="term">其他療法：</span>局部溫灸、耳針、放鬆顳肌與頸肩肌群之手法治療。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">西醫治療</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>急性期：</b>NSAIDs、乙醯胺酚；偏頭痛可用 triptan 類。</p>
-   <p><b>預防性用藥：</b>乙型阻斷劑、鈣離子通道阻斷劑、抗癲癇藥（topiramate、valproate）、三環抗憂鬱劑；近年另有 CGRP 相關製劑。</p>
-   <p><b>顳動脈炎：</b>高劑量類固醇為緊急處置。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">急性期：</span>NSAIDs、乙醯胺酚；偏頭痛可用 triptan 類。</li>
+     <li><span class="term">預防性用藥：</span>乙型阻斷劑、鈣離子通道阻斷劑、抗癲癇藥（topiramate、valproate）、三環抗憂鬱劑；近年另有 CGRP 相關製劑。</li>
+     <li><span class="term">顳動脈炎：</span>高劑量類固醇為緊急處置。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">衛教</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p>・記錄頭痛日誌，找出個人誘發因子（睡眠、飲食、月經週期、壓力）。</p>
-   <p>・避免單側咀嚼、嚼硬物、長時間低頭；調整螢幕高度與坐姿以減少頸肩前傾。</p>
-   <p>・規律運動、充足睡眠、避免咖啡因與止痛藥過度使用（可致藥物過度使用性頭痛）。</p>
-   <p>・說明放血療法之風險（見下方注意事項），勿自行操作。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li>記錄頭痛日誌，找出個人誘發因子（睡眠、飲食、月經週期、壓力）。</li>
+   
+     <li>避免單側咀嚼、嚼硬物、長時間低頭；調整螢幕高度與坐姿以減少頸肩前傾。</li>
+   
+     <li>規律運動、充足睡眠、避免咖啡因與止痛藥過度使用（可致藥物過度使用性頭痛）。</li>
+   
+     <li>說明放血療法之風險（見下方注意事項），勿自行操作。</li>
+   </ul>
+  </div>
       </details>
     </section>
 
@@ -580,75 +771,116 @@
       <div class="warn-box top-warn">⚠ <span class="hl">咬肌區務必避開腮腺（耳下腺）與腮腺管開口</span>——「耳下腺一定要避開，咬肌針灸的時候要注意方向」。該區另有顏面動脈、橫顏面動脈與顏面神經頰支通過。下關深面為翼外肌、下頷角深面為翼內肌，<span class="hl">進針過深可能傷及深部翼靜脈叢或上頷動脈分支，造成大範圍血腫</span>。</div>
       <details class="sec">
         <summary><span class="sec-title">臨床表現</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>三大主症：</b>張口受限、關節區疼痛、關節彈響（clicking／crepitus）。</p>
+        <div class="sec-body">
+   <p><span class="term">三大主症：</span>張口受限、關節區疼痛、關節彈響（clicking／crepitus）。</p>
    <p>可伴咀嚼肌痠痛、耳前疼痛、頭痛（尤其顳側）、咬合不適感。</p>
-   <p>症狀常於晨起或咀嚼硬物後加重；壓力大、夜間磨牙者更明顯。</p></div>
+   <p>症狀常於晨起或咀嚼硬物後加重；壓力大、夜間磨牙者更明顯。</p>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">病因、流行病學與預後</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>局部因素：</b>關節盤移位、關節退化、咀嚼肌群過度緊張、咬合不正。</p>
-   <p><b>行為因素：</b>單側咀嚼、嚼硬物、過度張口（打哈欠）、夜間磨牙、緊咬牙關。</p>
-   <p><b>全身因素：</b>壓力、焦慮、姿勢不良（頸肩前傾）。</p>
-   <p><b>預後：</b>多數為功能性問題，透過肌群鬆解、行為調整可明顯改善；結構性關節盤移位或退化者需較長療程或牙科／口腔外科介入。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">局部因素：</span>關節盤移位、關節退化、咀嚼肌群過度緊張、咬合不正。</li>
+     <li><span class="term">行為因素：</span>單側咀嚼、嚼硬物、過度張口（打哈欠）、夜間磨牙、緊咬牙關。</li>
+     <li><span class="term">全身因素：</span>壓力、焦慮、姿勢不良（頸肩前傾）。</li>
+     <li><span class="term">預後：</span>多數為功能性問題，透過肌群鬆解、行為調整可明顯改善；結構性關節盤移位或退化者需較長療程或牙科／口腔外科介入。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">檢驗與檢查</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>觸診：</b>囑患者咬緊上下顎，觸摸<b>顳肌</b>與<b>咬肌</b>是否對稱隆起、有無壓痛。</p>
-   <p><b>張口檢查：</b>正常張口約可容納三指；<span class="hl">翼狀肌無力時，張口會偏向無力的一邊</span>。</p>
-   <p><b>關節動態評估：</b>手指置於耳屏前，感受開闔口時的彈響、摩擦音與運動軌跡是否對稱。</p>
-   <p><b>影像：</b>症狀頑固或懷疑結構性病變時，安排全景X光或關節 MRI。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">觸診：</span>囑患者咬緊上下顎，觸摸顳肌與咬肌是否對稱隆起、有無壓痛。</li>
+     <li><span class="term">張口檢查：</span>正常張口約可容納三指；<span class="hl">翼狀肌無力時，張口會偏向無力的一邊</span>。</li>
+     <li><span class="term">關節動態評估：</span>手指置於耳屏前，感受開闔口時的彈響、摩擦音與運動軌跡是否對稱。</li>
+     <li><span class="term">影像：</span>症狀頑固或懷疑結構性病變時，安排全景X光或關節 MRI。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">分型分期</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>依組織來源分：</b></p>
-   <p>・<b>肌源性</b>：咀嚼肌群（咬肌、顳肌、翼內肌、翼外肌）緊張或激痛點——針灸療效最佳<br>
-   ・<b>關節源性</b>：關節盤移位（可復位／不可復位）、關節退化</p>
-   <p><b>依病程分：</b>急性（疼痛與腫脹明顯，宜輕手法）／慢性（以肌群鬆解與行為矯正為主）。</p>
-   <p><b>解剖分層提示：</b>咬肌有<b>內、外兩層</b>；翼外肌自內側延伸到外側，為臉部延伸的重要肌肉。</p></div>
+        <div class="sec-body">
+   <p class="sub-lead">依組織來源分：</p>
+   <ul class="c-list">
+     <li><span class="term">肌源性</span>：咀嚼肌群（咬肌、顳肌、翼內肌、翼外肌）緊張或激痛點——針灸療效最佳</li>
+     <li><span class="term">關節源性</span>：關節盤移位（可復位／不可復位）、關節退化</li>
+   
+     <li><span class="term">依病程分：</span>急性（疼痛與腫脹明顯，宜輕手法）／慢性（以肌群鬆解與行為矯正為主）。</li>
+     <li><span class="term">解剖分層提示：</span>咬肌有內、外兩層；翼外肌自內側延伸到外側，為臉部延伸的重要肌肉。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">鑑別診斷</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>三叉神經痛（V3）：</b>電擊樣陣發痛，有扳機點，與張口動作非直接相關。</p>
-   <p><b>中耳炎／外耳道疾患：</b>耳痛合併聽力改變、耳漏。</p>
-   <p><b>顳動脈炎：</b>50歲以上、咀嚼跛行、顳動脈壓痛。</p>
-   <p><b>牙源性疼痛：</b>有明確牙齒病灶、叩診痛。</p>
-   <p><b>腮腺疾患：</b>耳下腺腫脹、進食時疼痛加劇。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">三叉神經痛（V3）：</span>電擊樣陣發痛，有扳機點，與張口動作非直接相關。</li>
+     <li><span class="term">中耳炎／外耳道疾患：</span>耳痛合併聽力改變、耳漏。</li>
+     <li><span class="term">顳動脈炎：</span>50歲以上、咀嚼跛行、顳動脈壓痛。</li>
+     <li><span class="term">牙源性疼痛：</span>有明確牙齒病灶、叩診痛。</li>
+     <li><span class="term">腮腺疾患：</span>耳下腺腫脹、進食時疼痛加劇。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">常用選穴與操作技巧</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>常用選穴</b><br>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">常用選穴</span><br>
    <a class="pt-tag linked" href="ar.html#pt-st_xiaguan" title="在AR學習頁查看 下關（ST7）">下關</a><a class="pt-tag linked" href="ar.html#pt-st_jiache" title="在AR學習頁查看 頰車（ST6）">頰車</a><a class="pt-tag linked" href="ar.html#pt-gb_shangguan" title="在AR學習頁查看 上關（GB3）">上關</a><a class="pt-tag linked" href="ar.html#pt-ex_taiyang" title="在AR學習頁查看 太陽穴（EX-HN5）">太陽穴</a>、聽宮（SI19）<br>
-   局部圍刺配合合谷、外關遠端取穴。</p>
-   <p><b>取穴要點</b><br>
-   <span class="hl">下關穴須囑患者張口取穴、閉口進針</span>，避免針刺於關節活動中造成滯針。</p>
-   <p><b>分層肌肉操作</b></p>
-   <p>・<b>翼外肌</b>：以下關穴為進針點，<span class="hl">略呈水平朝人中方向進針</span>；針畢用一點力按壓該肌肉，並扶持對側臉頰以減輕痠脹感。<br>
-   ・<b>翼內肌</b>：於下頷角前方可觸得之凹窩<span class="hl">垂直進針，針尖稍微朝外向耳朵一點</span>以免撞到骨頭；以左手撐出一個平面後再進針，針後按壓同側頭頂舒緩（右手向上頂、左手向下壓）。<br>
-   ・<b>咬肌</b>：從頭骨到下巴，<b>有內、外兩層</b>；<span class="hl">貼著皮膚面針淺層</span>，針完整體應呈上窄下寬的<b>梯形</b>樣態。先摸下頷角，再往上推到顴骨，以另一側食指推觸確認邊緣；<span class="hl">外緣針數要比較多、比較密集</span>。<br>
-   ・<b>顳肌</b>：詳見「顳側頭痛」段落——前半部肥厚須密集下針且針尖朝上，後半部較薄。</p>
-   <p>可配合局部溫灸、按摩鬆解咬肌與翼外肌張力。</p></div>
+   局部圍刺配合合谷、外關遠端取穴。</li>
+     <li><span class="term">取穴要點</span><br>
+   <span class="hl">下關穴須囑患者張口取穴、閉口進針</span>，避免針刺於關節活動中造成滯針。</li>
+   </ul>
+   <p class="sub-lead">分層肌肉操作</p>
+   <ul class="c-list">
+     <li><span class="term">翼外肌</span>：以下關穴為進針點，<span class="hl">略呈水平朝人中方向進針</span>；針畢用一點力按壓該肌肉，並扶持對側臉頰以減輕痠脹感。</li>
+     <li><span class="term">翼內肌</span>：於下頷角前方可觸得之凹窩<span class="hl">垂直進針，針尖稍微朝外向耳朵一點</span>以免撞到骨頭；以左手撐出一個平面後再進針，針後按壓同側頭頂舒緩（右手向上頂、左手向下壓）。</li>
+     <li><span class="term">咬肌</span>：從頭骨到下巴，有內、外兩層；<span class="hl">貼著皮膚面針淺層</span>，針完整體應呈上窄下寬的梯形樣態。先摸下頷角，再往上推到顴骨，以另一側食指推觸確認邊緣；<span class="hl">外緣針數要比較多、比較密集</span>。</li>
+     <li><span class="term">顳肌</span>：詳見「顳側頭痛」段落——前半部肥厚須密集下針且針尖朝上，後半部較薄。</li>
+   </ul>
+   <p>可配合局部溫灸、按摩鬆解咬肌與翼外肌張力。</p>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">中藥及其他中醫治療</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>氣滯血瘀（外傷、慢性勞損）：</b>活血化瘀通絡，可用桃紅四物湯加減。</p>
-   <p><b>肝鬱氣滯（壓力誘發、夜間磨牙）：</b>疏肝解鬱，逍遙散、柴胡疏肝散加減。</p>
-   <p><b>風寒濕痹：</b>祛風散寒除濕，蠲痹湯、羌活勝濕湯加減。</p>
-   <p><b>其他療法：</b>局部溫灸、推拿手法鬆解咀嚼肌群、耳穴貼壓（顳頜關節、神門）。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">氣滯血瘀（外傷、慢性勞損）：</span>活血化瘀通絡，可用桃紅四物湯加減。</li>
+     <li><span class="term">肝鬱氣滯（壓力誘發、夜間磨牙）：</span>疏肝解鬱，逍遙散、柴胡疏肝散加減。</li>
+     <li><span class="term">風寒濕痹：</span>祛風散寒除濕，蠲痹湯、羌活勝濕湯加減。</li>
+     <li><span class="term">其他療法：</span>局部溫灸、推拿手法鬆解咀嚼肌群、耳穴貼壓（顳頜關節、神門）。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">西醫治療</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>藥物：</b>NSAIDs 止痛消炎、肌肉鬆弛劑；急性期短期使用。</p>
-   <p><b>咬合板（occlusal splint）：</b>牙科製作，用於夜間磨牙與關節減壓。</p>
-   <p><b>物理治療：</b>熱敷、超音波、關節鬆動術、張口訓練。</p>
-   <p><b>侵入性治療：</b>關節腔沖洗、玻尿酸注射；結構性病變嚴重者由口腔外科評估手術。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">藥物：</span>NSAIDs 止痛消炎、肌肉鬆弛劑；急性期短期使用。</li>
+     <li><span class="term">咬合板（occlusal splint）：</span>牙科製作，用於夜間磨牙與關節減壓。</li>
+     <li><span class="term">物理治療：</span>熱敷、超音波、關節鬆動術、張口訓練。</li>
+     <li><span class="term">侵入性治療：</span>關節腔沖洗、玻尿酸注射；結構性病變嚴重者由口腔外科評估手術。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">衛教</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p>・<span class="hl">避免單側咀嚼、嚼硬物（如冰塊、堅果、口香糖）</span>。</p>
-   <p>・避免過度張口——打哈欠時可用手托住下巴限制張口幅度。</p>
-   <p>・避免緊咬牙關；日間可自我提醒讓上下齒微微分開、舌尖輕抵上顎。</p>
-   <p>・局部熱敷與自我按摩咬肌、顳肌；睡眠充足、減輕壓力。</p>
-   <p>・夜間磨牙明顯者建議至牙科評估咬合板。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="hl">避免單側咀嚼、嚼硬物（如冰塊、堅果、口香糖）</span>。</li>
+   
+     <li>避免過度張口——打哈欠時可用手托住下巴限制張口幅度。</li>
+   
+     <li>避免緊咬牙關；日間可自我提醒讓上下齒微微分開、舌尖輕抵上顎。</li>
+   
+     <li>局部熱敷與自我按摩咬肌、顳肌；睡眠充足、減輕壓力。</li>
+   
+     <li>夜間磨牙明顯者建議至牙科評估咬合板。</li>
+   </ul>
+  </div>
       </details>
     </section>
 
@@ -660,79 +892,119 @@
       </div>
       <details class="sec">
         <summary><span class="sec-title">臨床表現</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>典型四大症狀：</b>陣發性噴嚏、清水樣鼻涕、鼻塞、鼻癢。</p>
+        <div class="sec-body">
+   <p><span class="term">典型四大症狀：</span>陣發性噴嚏、清水樣鼻涕、鼻塞、鼻癢。</p>
    <p>可伴眼癢、流淚、結膜充血（過敏性結膜炎）、鼻後滴流、慢性咳嗽。</p>
-   <p><b>嗅覺障礙：</b>鼻塞使氣體分子無法到達上鼻道之嗅覺受器，形成<span class="hl">呼吸性嗅覺障礙</span>。</p>
-   <p>兒童可見黑眼圈（allergic shiner）、揉鼻動作（allergic salute）與鼻橫紋。</p></div>
+   <p><span class="term">嗅覺障礙：</span>鼻塞使氣體分子無法到達上鼻道之嗅覺受器，形成<span class="hl">呼吸性嗅覺障礙</span>。</p>
+   <p>兒童可見黑眼圈（allergic shiner）、揉鼻動作（allergic salute）與鼻橫紋。</p>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">病因、流行病學與預後</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>西醫：</b>IgE 介導的第一型過敏反應；常見過敏原為塵蟎、花粉、動物皮屑、黴菌。</p>
-   <p><b>中醫：</b>肺脾氣虛、衛表不固，風寒外襲，鼻竅失於溫煦；久病及腎則反覆難癒。</p>
-   <p><b>誘發因子：</b>季節變換、溫差變化、空氣汙染、冰冷飲食。</p>
-   <p><b>預後：</b>屬慢性反覆性疾病，難以根治但可良好控制；<span class="hl">體質調理與節氣療法有助降低發作頻率</span>。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">西醫：</span>IgE 介導的第一型過敏反應；常見過敏原為塵蟎、花粉、動物皮屑、黴菌。</li>
+     <li><span class="term">中醫：</span>肺脾氣虛、衛表不固，風寒外襲，鼻竅失於溫煦；久病及腎則反覆難癒。</li>
+     <li><span class="term">誘發因子：</span>季節變換、溫差變化、空氣汙染、冰冷飲食。</li>
+     <li><span class="term">預後：</span>屬慢性反覆性疾病，難以根治但可良好控制；<span class="hl">體質調理與節氣療法有助降低發作頻率</span>。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">檢驗與檢查</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>鼻腔視診：</b>鼻黏膜蒼白水腫、下鼻甲肥厚、清澈分泌物。</p>
-   <p><b>嗅覺檢查：</b>一側鼻孔壓住、對側鼻孔給予刺激；<span class="hl">使用患者熟悉的味道（咖啡、香菸、香皂），不可使用氨等強烈刺激物</span>（會造成流鼻涕或鼻塞而影響結果）。臨床上單側檢查、兩側比較才有意義。</p>
-   <p><b>過敏原檢測：</b>血清特異性 IgE 或皮膚點刺試驗。</p>
-   <p><b>鑑別性檢查：</b>鼻竇X光或內視鏡，排除鼻竇炎、鼻息肉、鼻中膈彎曲。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">鼻腔視診：</span>鼻黏膜蒼白水腫、下鼻甲肥厚、清澈分泌物。</li>
+     <li><span class="term">嗅覺檢查：</span>一側鼻孔壓住、對側鼻孔給予刺激；<span class="hl">使用患者熟悉的味道（咖啡、香菸、香皂），不可使用氨等強烈刺激物</span>（會造成流鼻涕或鼻塞而影響結果）。臨床上單側檢查、兩側比較才有意義。</li>
+     <li><span class="term">過敏原檢測：</span>血清特異性 IgE 或皮膚點刺試驗。</li>
+     <li><span class="term">鑑別性檢查：</span>鼻竇X光或內視鏡，排除鼻竇炎、鼻息肉、鼻中膈彎曲。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">分型分期</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>西醫分型：</b>間歇性／持續性；輕度／中重度（依症狀對睡眠與日常活動的影響）。</p>
-   <p><b>中醫辨證分型：</b></p>
-   <p>・<b>肺氣虛寒</b>：噴嚏連連、清涕如水、遇冷即發、畏風自汗<br>
-   ・<b>脾氣虛弱</b>：鼻塞鼻脹較重、納差便溏、四肢困倦<br>
-   ・<b>腎陽不足</b>：病程日久、遇寒加重、腰膝痠軟、夜尿頻多<br>
-   ・<b>肺經鬱熱</b>：鼻癢噴嚏、涕黃黏稠、口乾咽燥</p>
-   <p><b>嗅覺障礙分型：</b>呼吸性（鼻腔阻塞）／末梢性（嗅上皮、嗅覺細胞損傷）／中樞性。</p></div>
+        <div class="sec-body">
+   <p><span class="term">西醫分型：</span>間歇性／持續性；輕度／中重度（依症狀對睡眠與日常活動的影響）。</p>
+   <p class="sub-lead">中醫辨證分型：</p>
+   <ul class="c-list">
+     <li><span class="term">肺氣虛寒</span>：噴嚏連連、清涕如水、遇冷即發、畏風自汗</li>
+     <li><span class="term">脾氣虛弱</span>：鼻塞鼻脹較重、納差便溏、四肢困倦</li>
+     <li><span class="term">腎陽不足</span>：病程日久、遇寒加重、腰膝痠軟、夜尿頻多</li>
+     <li><span class="term">肺經鬱熱</span>：鼻癢噴嚏、涕黃黏稠、口乾咽燥</li>
+   </ul>
+   <p><span class="term">嗅覺障礙分型：</span>呼吸性（鼻腔阻塞）／末梢性（嗅上皮、嗅覺細胞損傷）／中樞性。</p>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">鑑別診斷</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>血管運動性鼻炎：</b>無過敏原證據，因溫差、氣味誘發。</p>
-   <p><b>急慢性鼻竇炎：</b>膿性鼻涕、顏面脹痛、嗅覺減退，X光或內視鏡可鑑別。</p>
-   <p><b>鼻息肉：</b>持續性鼻塞、嗅覺喪失。</p>
-   <p><b>藥物性鼻炎：</b>長期使用鼻黏膜血管收縮劑所致的反彈性鼻塞。</p>
-   <p><b>感冒（上呼吸道感染）：</b>病程自限、常伴發燒與喉痛，鼻涕由清轉黃。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">血管運動性鼻炎：</span>無過敏原證據，因溫差、氣味誘發。</li>
+     <li><span class="term">急慢性鼻竇炎：</span>膿性鼻涕、顏面脹痛、嗅覺減退，X光或內視鏡可鑑別。</li>
+     <li><span class="term">鼻息肉：</span>持續性鼻塞、嗅覺喪失。</li>
+     <li><span class="term">藥物性鼻炎：</span>長期使用鼻黏膜血管收縮劑所致的反彈性鼻塞。</li>
+     <li><span class="term">感冒（上呼吸道感染）：</span>病程自限、常伴發燒與喉痛，鼻涕由清轉黃。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">常用選穴與操作技巧</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>常用選穴</b><br>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">常用選穴</span><br>
    <a class="pt-tag linked" href="ar.html#pt-li_yingxiang" title="在AR學習頁查看 迎香（LI20）">迎香</a>、上迎香（鼻通，EX-HN8）、<a class="pt-tag linked" href="ar.html#pt-ex_yintang" title="在AR學習頁查看 印堂（EX-HN3）">印堂</a><a class="pt-tag linked" href="ar.html#pt-du_suliao" title="在AR學習頁查看 素髎（DU25）">素髎</a><a class="pt-tag linked" href="ar.html#pt-li_hejiao" title="在AR學習頁查看 口禾髎（LI19）">口禾髎</a><br>
-   配合遠端合谷、風池、肺俞、足三里健脾益肺。</p>
-   <p><b>上迎香（EX-HN8，又名鼻通）：</b>位於鼻翼軟骨與鼻甲的交界處，近鼻唇溝上端。主治頭痛、傷風、鼻塞。</p>
-   <p><b>印堂（EX-HN3）：</b>兩眉之間中點、正對鼻尖。針0.3–0.5吋，可向素髎方向刺入或向眉頭方向橫刺，亦可速刺出血；灸3–5壯或5–10分鐘。<span class="hl">用途廣泛——調整自律神經、治驚風癲癇抽筋痙攣，對腦部不正常放電有抑制作用</span>；治過敏性鼻炎、鼻淵、鼻竇炎可搭配上星、迎香、百會。董氏奇穴稱之為「鎮靜穴」。</p>
-   <p><b>操作技巧</b></p>
-   <p>・迎香可向上斜刺或平刺透鼻通穴；<span class="hl">以1.5吋針自迎香透刺至鼻根，效果較迎香與上迎香各扎兩針為佳</span>，適用鼻塞與嗅覺不靈敏。<br>
-   ・急性發作期以瀉法疏風通竅為主。<br>
-   ・慢性反覆發作者宜配合體質調理、<b>三伏貼／三九貼</b>等節氣療法鞏固療效。<br>
-   ・配合溫和灸法效果佳。</p></div>
+   配合遠端合谷、風池、肺俞、足三里健脾益肺。</li>
+     <li><span class="term">上迎香（EX-HN8，又名鼻通）：</span>位於鼻翼軟骨與鼻甲的交界處，近鼻唇溝上端。主治頭痛、傷風、鼻塞。</li>
+     <li><span class="term">印堂（EX-HN3）：</span>兩眉之間中點、正對鼻尖。針0.3–0.5吋，可向素髎方向刺入或向眉頭方向橫刺，亦可速刺出血；灸3–5壯或5–10分鐘。<span class="hl">用途廣泛——調整自律神經、治驚風癲癇抽筋痙攣，對腦部不正常放電有抑制作用</span>；治過敏性鼻炎、鼻淵、鼻竇炎可搭配上星、迎香、百會。董氏奇穴稱之為「鎮靜穴」。</li>
+   </ul>
+   <p class="sub-lead">操作技巧</p>
+   <ul class="c-list">
+     <li>迎香可向上斜刺或平刺透鼻通穴；<span class="hl">以1.5吋針自迎香透刺至鼻根，效果較迎香與上迎香各扎兩針為佳</span>，適用鼻塞與嗅覺不靈敏。</li>
+     <li>急性發作期以瀉法疏風通竅為主。</li>
+     <li>慢性反覆發作者宜配合體質調理、三伏貼／三九貼等節氣療法鞏固療效。</li>
+     <li>配合溫和灸法效果佳。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">中藥及其他中醫治療</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>肺氣虛寒：</b>溫肺散寒——小青龍湯、辛夷散、蒼耳子散。</p>
-   <p><b>脾氣虛弱：</b>健脾益氣——補中益氣湯、參苓白朮散。</p>
-   <p><b>腎陽不足：</b>溫補腎陽——金匱腎氣丸、右歸丸。</p>
-   <p><b>肺經鬱熱：</b>清宣肺熱——辛夷清肺飲。</p>
-   <p><b>其他療法：</b>三伏貼／三九貼、艾灸（肺俞、足三里）、耳穴貼壓（內鼻、肺、腎上腺）。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">肺氣虛寒：</span>溫肺散寒——小青龍湯、辛夷散、蒼耳子散。</li>
+     <li><span class="term">脾氣虛弱：</span>健脾益氣——補中益氣湯、參苓白朮散。</li>
+     <li><span class="term">腎陽不足：</span>溫補腎陽——金匱腎氣丸、右歸丸。</li>
+     <li><span class="term">肺經鬱熱：</span>清宣肺熱——辛夷清肺飲。</li>
+     <li><span class="term">其他療法：</span>三伏貼／三九貼、艾灸（肺俞、足三里）、耳穴貼壓（內鼻、肺、腎上腺）。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">西醫治療</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>鼻用類固醇噴劑：</b>中重度持續性鼻炎的第一線用藥。</p>
-   <p><b>抗組織胺：</b>口服或鼻噴劑，針對噴嚏、鼻癢、流涕。</p>
-   <p><b>白三烯素受體拮抗劑</b>（如 montelukast）：合併氣喘者尤適用。</p>
-   <p><b>減敏治療：</b>皮下或舌下免疫療法，適用於明確單一過敏原者。</p>
-   <p><b>手術：</b>下鼻甲肥厚或鼻中膈彎曲嚴重者。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">鼻用類固醇噴劑：</span>中重度持續性鼻炎的第一線用藥。</li>
+     <li><span class="term">抗組織胺：</span>口服或鼻噴劑，針對噴嚏、鼻癢、流涕。</li>
+     <li><span class="term">白三烯素受體拮抗劑</span>（如 montelukast）：合併氣喘者尤適用。</li>
+     <li><span class="term">減敏治療：</span>皮下或舌下免疫療法，適用於明確單一過敏原者。</li>
+     <li><span class="term">手術：</span>下鼻甲肥厚或鼻中膈彎曲嚴重者。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">衛教</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p>・<b>環境控制</b>：定期清洗寢具（55℃以上熱水）、使用防蟎套、控制室內濕度50%以下、減少地毯與絨毛玩具。</p>
-   <p>・<b>溫差防護</b>：外出戴口罩、避免驟然進出冷氣房、早晨起床先於被窩活動再下床。</p>
-   <p>・<b>飲食</b>：減少冰冷、生食與甜膩之品；中醫觀點認為過食生冷傷脾陽而助濕。</p>
-   <p>・規律運動、充足睡眠以固衛表。</p>
-   <p>・鼻腔生理食鹽水沖洗有助清除過敏原與分泌物。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">環境控制</span>：定期清洗寢具（55℃以上熱水）、使用防蟎套、控制室內濕度50%以下、減少地毯與絨毛玩具。</li>
+   
+     <li><span class="term">溫差防護</span>：外出戴口罩、避免驟然進出冷氣房、早晨起床先於被窩活動再下床。</li>
+   
+     <li><span class="term">飲食</span>：減少冰冷、生食與甜膩之品；中醫觀點認為過食生冷傷脾陽而助濕。</li>
+   
+     <li>規律運動、充足睡眠以固衛表。</li>
+   
+     <li>鼻腔生理食鹽水沖洗有助清除過敏原與分泌物。</li>
+   </ul>
+  </div>
       </details>
     </section>
 
@@ -745,78 +1017,120 @@
       <div class="warn-box top-warn">⚠ <b>球後穴（EX-HN7）</b>位於眶下緣外1/4與內3/4交界，須以執筆式持針沿眶腔下壁直刺1–1.5吋，針感多為眼球痠脹或突出感。<span class="hl">此穴風險高，且刺破血管是常見的事</span>——成為熊貓眼就算了，若血往眼球流便會造成角膜或結膜下充血。<span class="hl">不必為了療效未定的穴位而冒險。</span>所有眼周穴位（睛明、承泣、球後）出針後皆須立即以棉球加壓止血、勿揉按。</div>
       <details class="sec">
         <summary><span class="sec-title">臨床表現</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>目赤腫痛：</b>結膜充血、畏光流淚、異物感、分泌物增多。</p>
-   <p><b>麥粒腫（針眼）：</b>眼瞼局部紅腫熱痛、可觸及硬結。</p>
-   <p><b>視疲勞：</b>久視後眼脹、乾澀、視物模糊、伴頭痛與頸肩緊繃。</p>
-   <p><b>視神經病變：</b>視力減退、視野缺損、色覺異常。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">目赤腫痛：</span>結膜充血、畏光流淚、異物感、分泌物增多。</li>
+     <li><span class="term">麥粒腫（針眼）：</span>眼瞼局部紅腫熱痛、可觸及硬結。</li>
+     <li><span class="term">視疲勞：</span>久視後眼脹、乾澀、視物模糊、伴頭痛與頸肩緊繃。</li>
+     <li><span class="term">視神經病變：</span>視力減退、視野缺損、色覺異常。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">病因、流行病學與預後</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>西醫：</b>感染（病毒、細菌）、過敏、眼瞼腺體阻塞、長時間近距離用眼、屈光不正未矯正。</p>
-   <p><b>中醫：</b>肝開竅於目；風熱上攻、肝火上炎則目赤腫痛；肝血不足、肝腎陰虛則視物昏花、眼乾澀。</p>
-   <p><b>解剖基礎：</b>五臟六腑之精氣皆上注於目；筋骨氣血之精與脈並繫於目、上屬於腦。</p>
-   <p><b>預後：</b>急性結膜炎與麥粒腫多可短期痊癒；視神經萎縮預後較差，針灸多為輔助。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">西醫：</span>感染（病毒、細菌）、過敏、眼瞼腺體阻塞、長時間近距離用眼、屈光不正未矯正。</li>
+     <li><span class="term">中醫：</span>肝開竅於目；風熱上攻、肝火上炎則目赤腫痛；肝血不足、肝腎陰虛則視物昏花、眼乾澀。</li>
+     <li><span class="term">解剖基礎：</span>五臟六腑之精氣皆上注於目；筋骨氣血之精與脈並繫於目、上屬於腦。</li>
+     <li><span class="term">預後：</span>急性結膜炎與麥粒腫多可短期痊癒；視神經萎縮預後較差，針灸多為輔助。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">檢驗與檢查</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>視力與視野檢查</b>為基本評估。</p>
-   <p><b>眼瞼與結膜視診：</b>區分結膜充血（周邊為主）與睫狀充血（角膜緣為主，提示較嚴重的角膜或虹膜病變）。</p>
-   <p><b>角膜反射：</b>感覺經三叉神經 V1 傳入、顏面神經傳出（5進7出）。</p>
-   <p><b>眼球運動（EOM）：</b>評估 CN3、CN4、CN6。</p>
-   <p><b>眼底檢查：</b>視神經萎縮、視網膜出血之評估。</p>
-   <div class="warn-box">⚠ 突發視力下降、眼球劇痛合併頭痛噁心（急性青光眼）、外傷後視力改變者，應<span class="hl">立即轉診眼科</span>。</div></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">視力與視野檢查</span>為基本評估。</li>
+     <li><span class="term">眼瞼與結膜視診：</span>區分結膜充血（周邊為主）與睫狀充血（角膜緣為主，提示較嚴重的角膜或虹膜病變）。</li>
+     <li><span class="term">角膜反射：</span>感覺經三叉神經 V1 傳入、顏面神經傳出（5進7出）。</li>
+     <li><span class="term">眼球運動（EOM）：</span>評估 CN3、CN4、CN6。</li>
+     <li><span class="term">眼底檢查：</span>視神經萎縮、視網膜出血之評估。</li>
+   </ul>
+   <div class="warn-box">⚠ 突發視力下降、眼球劇痛合併頭痛噁心（急性青光眼）、外傷後視力改變者，應<span class="hl">立即轉診眼科</span>。</div>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">分型分期</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>依病位分：</b>眼瞼（麥粒腫、眼瞼炎）／結膜（結膜炎）／角膜（角膜炎、潰瘍）／眼內（青光眼、白內障）／視神經（視神經炎、萎縮）。</p>
-   <p><b>中醫辨證分型：</b></p>
-   <p>・<b>風熱外襲</b>：目赤癢痛、羞明流淚、發病急<br>
-   ・<b>肝火上炎</b>：目赤腫痛劇烈、口苦咽乾、煩躁易怒<br>
-   ・<b>肝腎陰虛</b>：眼乾澀、視物昏花、腰膝痠軟<br>
-   ・<b>氣血不足</b>：久視疲勞、視物模糊、面色少華</p></div>
+        <div class="sec-body">
+   <p><span class="term">依病位分：</span>眼瞼（麥粒腫、眼瞼炎）／結膜（結膜炎）／角膜（角膜炎、潰瘍）／眼內（青光眼、白內障）／視神經（視神經炎、萎縮）。</p>
+   <p class="sub-lead">中醫辨證分型：</p>
+   <ul class="c-list">
+     <li><span class="term">風熱外襲</span>：目赤癢痛、羞明流淚、發病急</li>
+     <li><span class="term">肝火上炎</span>：目赤腫痛劇烈、口苦咽乾、煩躁易怒</li>
+     <li><span class="term">肝腎陰虛</span>：眼乾澀、視物昏花、腰膝痠軟</li>
+     <li><span class="term">氣血不足</span>：久視疲勞、視物模糊、面色少華</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">鑑別診斷</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>急性結膜炎 vs 急性青光眼：</b>後者<span class="hl">眼球劇痛、視力急劇下降、角膜霧化、瞳孔中度散大固定、合併頭痛噁心嘔吐</span>，屬眼科急症。</p>
-   <p><b>麥粒腫 vs 霰粒腫：</b>前者急性紅腫熱痛，後者為無痛性慢性硬結。</p>
-   <p><b>結膜炎 vs 角膜炎：</b>後者有明顯畏光、視力受影響、睫狀充血。</p>
-   <p><b>視疲勞 vs 乾眼症：</b>後者有明確淚液分泌不足或蒸發過強之證據。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">急性結膜炎 vs 急性青光眼：</span>後者<span class="hl">眼球劇痛、視力急劇下降、角膜霧化、瞳孔中度散大固定、合併頭痛噁心嘔吐</span>，屬眼科急症。</li>
+     <li><span class="term">麥粒腫 vs 霰粒腫：</span>前者急性紅腫熱痛，後者為無痛性慢性硬結。</li>
+     <li><span class="term">結膜炎 vs 角膜炎：</span>後者有明顯畏光、視力受影響、睫狀充血。</li>
+     <li><span class="term">視疲勞 vs 乾眼症：</span>後者有明確淚液分泌不足或蒸發過強之證據。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">常用選穴與操作技巧</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>常用選穴</b><br>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">常用選穴</span><br>
    <a class="pt-tag linked" href="ar.html#pt-bl_jingming" title="在AR學習頁查看 睛明（BL1）">睛明</a><a class="pt-tag linked" href="ar.html#pt-st_chengqi" title="在AR學習頁查看 承泣（ST1）">承泣</a><a class="pt-tag linked" href="ar.html#pt-bl_zanzhu" title="在AR學習頁查看 攢竹（BL2）">攢竹</a><a class="pt-tag linked" href="ar.html#pt-sj_sizhukong" title="在AR學習頁查看 絲竹空（SJ23）">絲竹空</a><a class="pt-tag linked" href="ar.html#pt-gb_tongziliao" title="在AR學習頁查看 瞳子髎（GB1）">瞳子髎</a><a class="pt-tag linked" href="ar.html#pt-ex_yuyao" title="在AR學習頁查看 魚腰（EX-HN4）">魚腰</a><a class="pt-tag linked" href="ar.html#pt-st_sibai" title="在AR學習頁查看 四白（ST2）">四白</a><a class="pt-tag linked" href="ar.html#pt-ex_taiyang" title="在AR學習頁查看 太陽穴（EX-HN5）">太陽穴</a><br>
-   遠端配合合谷、太衝、風池、肝俞。</p>
-   <p><b>常用配伍：</b>風池＋睛明＋太陽＋攢竹＋合谷治目赤腫痛、青少年近視；肝俞＋風池＋太陽治視神經萎縮、視網膜出血。</p>
-   <p><b>取穴與進針要點</b></p>
-   <p>・欲改善視力問題，宜取<span class="hl">眶緣凹溝處</span>之穴位——<b>凹溝多有神經血管組織依附（其中以神經最多）</b>，如攢竹（眶上切跡處）、承泣、睛明；沿眶緣進針一至兩分即可，<span class="hl">睛明須沿鼻淚管走向</span>。<br>
-   ・<b>魚頭 vs 攢竹：</b>魚頭在眉骨上，攢竹位於眶下緣凹溝，故改善視力應取攢竹、瞳子髎、承泣、睛明、絲竹空（眶上緣）。<br>
-   ・<b>魚腰</b>在眉稜骨上，直刺深度僅1–2分，故多改採<b>魚腰透攢竹、魚腰透絲竹空</b>；魚頭、魚腰、魚尾位於眼輪匝肌上，可治顏面神經麻痺與肌肉問題。<br>
-   ・<b>眼輪匝肌（美容針法）</b>：第一針自攢竹指向對側睛明方向，<b>角度沿著皮膚走</b>。<br>
-   ・<b>耳尖（EX-HN6）</b>：折耳向前之耳廓上方尖端；<span class="hl">很少針，主要用於放血</span>，適用急性高熱、高血壓或眼睛急性角結膜炎。</p></div>
+   遠端配合合谷、太衝、風池、肝俞。</li>
+     <li><span class="term">常用配伍：</span>風池＋睛明＋太陽＋攢竹＋合谷治目赤腫痛、青少年近視；肝俞＋風池＋太陽治視神經萎縮、視網膜出血。</li>
+   </ul>
+   <p class="sub-lead">取穴與進針要點</p>
+   <ul class="c-list">
+     <li>欲改善視力問題，宜取<span class="hl">眶緣凹溝處</span>之穴位——凹溝多有神經血管組織依附（其中以神經最多），如攢竹（眶上切跡處）、承泣、睛明；沿眶緣進針一至兩分即可，<span class="hl">睛明須沿鼻淚管走向</span>。</li>
+     <li><span class="term">魚頭 vs 攢竹：</span>魚頭在眉骨上，攢竹位於眶下緣凹溝，故改善視力應取攢竹、瞳子髎、承泣、睛明、絲竹空（眶上緣）。</li>
+     <li><span class="term">魚腰</span>在眉稜骨上，直刺深度僅1–2分，故多改採魚腰透攢竹、魚腰透絲竹空；魚頭、魚腰、魚尾位於眼輪匝肌上，可治顏面神經麻痺與肌肉問題。</li>
+     <li><span class="term">眼輪匝肌（美容針法）</span>：第一針自攢竹指向對側睛明方向，角度沿著皮膚走。</li>
+     <li><span class="term">耳尖（EX-HN6）</span>：折耳向前之耳廓上方尖端；<span class="hl">很少針，主要用於放血</span>，適用急性高熱、高血壓或眼睛急性角結膜炎。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">中藥及其他中醫治療</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>風熱外襲：</b>疏風清熱——銀翹散、桑菊飲。</p>
-   <p><b>肝火上炎：</b>清肝瀉火——龍膽瀉肝湯。</p>
-   <p><b>肝腎陰虛：</b>滋養肝腎——杞菊地黃丸。</p>
-   <p><b>氣血不足：</b>益氣養血——八珍湯、歸脾湯。</p>
-   <p><b>其他療法：</b>耳尖或太陽穴點刺放血（急性目赤腫痛）、耳穴貼壓（眼、肝、目1、目2）、眼周溫熱敷。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">風熱外襲：</span>疏風清熱——銀翹散、桑菊飲。</li>
+     <li><span class="term">肝火上炎：</span>清肝瀉火——龍膽瀉肝湯。</li>
+     <li><span class="term">肝腎陰虛：</span>滋養肝腎——杞菊地黃丸。</li>
+     <li><span class="term">氣血不足：</span>益氣養血——八珍湯、歸脾湯。</li>
+     <li><span class="term">其他療法：</span>耳尖或太陽穴點刺放血（急性目赤腫痛）、耳穴貼壓（眼、肝、目1、目2）、眼周溫熱敷。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">西醫治療</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>結膜炎：</b>細菌性用抗生素眼藥水；病毒性以支持療法為主、注意接觸傳染；過敏性用抗組織胺或肥大細胞穩定劑眼藥水。</p>
-   <p><b>麥粒腫：</b>熱敷、局部抗生素藥膏；化膿嚴重者切開引流。</p>
-   <p><b>視疲勞／乾眼：</b>人工淚液、屈光矯正、用眼習慣調整。</p>
-   <p><b>青光眼：</b>降眼壓藥物、雷射或手術，屬眼科專科處理。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">結膜炎：</span>細菌性用抗生素眼藥水；病毒性以支持療法為主、注意接觸傳染；過敏性用抗組織胺或肥大細胞穩定劑眼藥水。</li>
+     <li><span class="term">麥粒腫：</span>熱敷、局部抗生素藥膏；化膿嚴重者切開引流。</li>
+     <li><span class="term">視疲勞／乾眼：</span>人工淚液、屈光矯正、用眼習慣調整。</li>
+     <li><span class="term">青光眼：</span>降眼壓藥物、雷射或手術，屬眼科專科處理。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">衛教</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p>・<b>用眼衛生</b>：近距離用眼每20–30分鐘遠望休息，保持適當閱讀距離與充足照明。</p>
-   <p>・急性結膜炎具傳染性——勤洗手、勿揉眼、毛巾與寢具分開使用。</p>
-   <p>・麥粒腫勿自行擠壓，以免感染擴散。</p>
-   <p>・<span class="hl">眼周針刺後可能出現瘀青</span>，事前應充分告知；出針後立即按壓、勿揉。</p>
-   <p>・配戴隱形眼鏡者於眼部發炎期間應暫停配戴。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">用眼衛生</span>：近距離用眼每20–30分鐘遠望休息，保持適當閱讀距離與充足照明。</li>
+   
+     <li>急性結膜炎具傳染性——勤洗手、勿揉眼、毛巾與寢具分開使用。</li>
+   
+     <li>麥粒腫勿自行擠壓，以免感染擴散。</li>
+   
+     <li><span class="hl">眼周針刺後可能出現瘀青</span>，事前應充分告知；出針後立即按壓、勿揉。</li>
+   
+     <li>配戴隱形眼鏡者於眼部發炎期間應暫停配戴。</li>
+   </ul>
+  </div>
       </details>
     </section>
 
@@ -828,85 +1142,131 @@
       </div>
       <details class="sec">
         <summary><span class="sec-title">臨床表現</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p>發作時常有<b>視力模糊、頭昏眼花、跌倒、失去平衡和軟弱無力</b>的感覺。</p>
-   <p>覺得本身（主觀）或環境（客觀）有<b>移動的幻覺</b>，屬於旋轉性或線性的移動；可為自發性、運動促發性，或與姿勢有關。</p>
+        <div class="sec-body">
+   <p>發作時常有視力模糊、頭昏眼花、跌倒、失去平衡和軟弱無力的感覺。</p>
+   <p>覺得本身（主觀）或環境（客觀）有移動的幻覺，屬於旋轉性或線性的移動；可為自發性、運動促發性，或與姿勢有關。</p>
    <p>中醫描述其狀為「目閉眼眩，身轉耳聾，如立舟車上，起則欲倒」（《壽世保元》）。</p>
-   <p>常伴<b>眼球震顫（nystagmus）</b>——<span class="hl">在強烈照光下會被抑制，所以要在燈暗時使用特殊器具檢查</span>。</p>
-   <p><span class="hl">眩暈以平衡失調為主；「頭暈」則無特定原因指向</span>（腦腫瘤、出血皆有可能），問診時須明確區分。</p></div>
+   <p>常伴眼球震顫（nystagmus）——<span class="hl">在強烈照光下會被抑制，所以要在燈暗時使用特殊器具檢查</span>。</p>
+   <p><span class="hl">眩暈以平衡失調為主；「頭暈」則無特定原因指向</span>（腦腫瘤、出血皆有可能），問診時須明確區分。</p>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">病因、流行病學與預後</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>生理基礎：</b>身體平衡與眼睛、內耳、頸部肌肉的本體感覺相關，訊號需同時傳送至大腦才能維持平衡。</p>
-   <p><b>中醫病因病機：</b></p>
-   <p>①<b>惱怒或情緒障礙</b>→損傷肝陰→肝陽上亢→血隨氣逆上擾清竅：眩暈、面部潮紅、心神不寧、失眠多夢<br>
-   ②<b>脾胃虛弱</b>飲食減少，或久病氣血兩虛→髓海（腦）不足→清竅失養：眩暈耳鳴、面色蒼白、精神倦怠、心悸失眠<br>
-   ③<b>飲食或勞倦</b>→痰濁中阻→濁陰不降、清陽不升：眩暈、頭重、胸悶噁心、食少多睡<br>
-   ④<b>飲</b>：內耳水分不正常的積聚（津液代謝障礙）→梅尼爾氏病或症候群</p>
-   <p><b>預後：</b>末梢性者多可恢復；<span class="hl">梅尼爾氏病因屬結構性問題，五苓散能改善症狀但無法根治</span>；中樞性者取決於原發病灶。</p></div>
+        <div class="sec-body">
+   <p><span class="term">生理基礎：</span>身體平衡與眼睛、內耳、頸部肌肉的本體感覺相關，訊號需同時傳送至大腦才能維持平衡。</p>
+   <p class="sub-lead">中醫病因病機：</p>
+   <ol class="c-list">
+     <li><span class="term">惱怒或情緒障礙</span>→損傷肝陰→肝陽上亢→血隨氣逆上擾清竅：眩暈、面部潮紅、心神不寧、失眠多夢</li>
+     <li><span class="term">脾胃虛弱</span>飲食減少，或久病氣血兩虛→髓海（腦）不足→清竅失養：眩暈耳鳴、面色蒼白、精神倦怠、心悸失眠</li>
+     <li><span class="term">飲食或勞倦</span>→痰濁中阻→濁陰不降、清陽不升：眩暈、頭重、胸悶噁心、食少多睡</li>
+     <li><span class="term">飲</span>：內耳水分不正常的積聚（津液代謝障礙）→梅尼爾氏病或症候群</li>
+   </ol>
+   <p><span class="term">預後：</span>末梢性者多可恢復；<span class="hl">梅尼爾氏病因屬結構性問題，五苓散能改善症狀但無法根治</span>；中樞性者取決於原發病灶。</p>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">檢驗與檢查</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>病史問診：</b>釐清是旋轉性眩暈或非特異性頭暈、發作型態（自發／姿勢誘發）、持續時間、有無疲乏性、伴隨聽力症狀。</p>
-   <p><b>眼球震顫檢查：</b>需<span class="hl">在燈暗時使用特殊器具（如 Frenzel 眼鏡）</span>，因強光會抑制眼震。</p>
-   <p><b>姿勢誘發試驗：</b>Dix-Hallpike 用於診斷 BPPV（耳石脫落）。</p>
-   <p><b>聽力檢查：</b>梅尼爾氏病典型為低頻感音神經性聽損。</p>
-   <p><b>神經學檢查：</b>肢體力量、複視、構音、共濟失調，用以排除中樞病灶。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">病史問診：</span>釐清是旋轉性眩暈或非特異性頭暈、發作型態（自發／姿勢誘發）、持續時間、有無疲乏性、伴隨聽力症狀。</li>
+     <li><span class="term">眼球震顫檢查：</span>需<span class="hl">在燈暗時使用特殊器具（如 Frenzel 眼鏡）</span>，因強光會抑制眼震。</li>
+     <li><span class="term">姿勢誘發試驗：</span>Dix-Hallpike 用於診斷 BPPV（耳石脫落）。</li>
+     <li><span class="term">聽力檢查：</span>梅尼爾氏病典型為低頻感音神經性聽損。</li>
+     <li><span class="term">神經學檢查：</span>肢體力量、複視、構音、共濟失調，用以排除中樞病灶。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">分型分期</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>一、生理性：</b>高度的眩暈、暈車。</p>
-   <p><b>二、病理性——末梢性眩暈（迷路和前庭神經疾病）</b><br>
-   特徵：<span class="hl">疲乏性</span>，伴隨或無聽神經症狀。<br>
-   病因：前庭神經炎、良性陣發性姿勢性眩暈（BPPV）、外傷後眩暈（車禍腦震盪、耳石掉落）、梅尼爾氏病、迷路性不平衡。</p>
-   <p><b>三、病理性——中樞性眩暈（中樞性前庭疾病）</b><br>
-   特徵：<span class="hl">無疲乏性</span>、常伴隨神經缺損如半身不遂、顏面神經麻痺、複視。<br>
-   病因：腦幹缺血、多發性硬化症、後顱窩腫瘤、基底動脈循環不全。</p>
-   <p><b>中醫辨證分型：</b>肝陽上亢／氣血兩虛／痰濁中阻／水飲內停。另有肥人眩運多氣虛有痰、瘦人眩運多血虛有火之論。</p></div>
+        <div class="sec-body">
+   <ol class="c-list">
+     <li><span class="term">生理性：</span>高度的眩暈、暈車。</li>
+     <li><span class="term">病理性——末梢性眩暈（迷路和前庭神經疾病）</span>
+       <ul class="c-list">
+         <li>特徵：<span class="hl">疲乏性</span>，伴隨或無聽神經症狀。</li>
+         <li>病因：前庭神經炎、良性陣發性姿勢性眩暈（BPPV）、外傷後眩暈（車禍腦震盪、耳石掉落）、梅尼爾氏病、迷路性不平衡。</li>
+       </ul>
+     </li>
+     <li><span class="term">病理性——中樞性眩暈（中樞性前庭疾病）</span>
+       <ul class="c-list">
+         <li>特徵：<span class="hl">無疲乏性</span>、常伴隨神經缺損如半身不遂、顏面神經麻痺、複視。</li>
+         <li>病因：腦幹缺血、多發性硬化症、後顱窩腫瘤、基底動脈循環不全。</li>
+       </ul>
+     </li>
+   </ol>
+   <p><span class="term">中醫辨證分型：</span>肝陽上亢／氣血兩虛／痰濁中阻／水飲內停。另有肥人眩運多氣虛有痰、瘦人眩運多血虛有火之論。</p>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">鑑別診斷</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>末梢性 vs 中樞性</b>為首要鑑別：前者具疲乏性、多伴耳部症狀；後者無疲乏性、伴神經缺損。</p>
-   <p><b>BPPV：</b>特定頭位誘發、持續數秒至一分鐘、Dix-Hallpike 陽性。</p>
-   <p><b>梅尼爾氏病：</b>反覆發作性眩暈＋波動性聽損＋耳鳴＋耳脹感。</p>
-   <p><b>前庭神經炎：</b>單次持續數天的劇烈眩暈，無聽力損失。</p>
-   <p><b>姿勢性低血壓、貧血、低血糖：</b>屬「頭暈」而非真性眩暈。</p>
-   <div class="warn-box">⚠ 合併半身無力、複視、言語不清、劇烈頭痛、意識改變或<span class="hl">聽力驟降</span>者，屬中樞性病變或內耳急症警訊，應<span class="hl">立即轉診</span>，不宜僅以針灸處理。</div></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">末梢性 vs 中樞性</span>為首要鑑別：前者具疲乏性、多伴耳部症狀；後者無疲乏性、伴神經缺損。</li>
+     <li><span class="term">BPPV：</span>特定頭位誘發、持續數秒至一分鐘、Dix-Hallpike 陽性。</li>
+     <li><span class="term">梅尼爾氏病：</span>反覆發作性眩暈＋波動性聽損＋耳鳴＋耳脹感。</li>
+     <li><span class="term">前庭神經炎：</span>單次持續數天的劇烈眩暈，無聽力損失。</li>
+     <li><span class="term">姿勢性低血壓、貧血、低血糖：</span>屬「頭暈」而非真性眩暈。</li>
+   </ul>
+   <div class="warn-box">⚠ 合併半身無力、複視、言語不清、劇烈頭痛、意識改變或<span class="hl">聽力驟降</span>者，屬中樞性病變或內耳急症警訊，應<span class="hl">立即轉診</span>，不宜僅以針灸處理。</div>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">常用選穴與操作技巧</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>常用選穴</b><br>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">常用選穴</span><br>
    <a class="pt-tag linked" href="ar.html#pt-ex_yintang" title="在AR學習頁查看 印堂（EX-HN3）">印堂</a><a class="pt-tag linked" href="ar.html#pt-ex_taiyang" title="在AR學習頁查看 太陽穴（EX-HN5）">太陽穴</a>、百會、四神聰、風池、翳風<br>
-   遠端配合太衝（平肝）、豐隆（化痰）、足三里（健脾）、內關（止嘔）。</p>
-   <p><b>四神聰（EX-HN1）：</b>頭頂部百會前、後、左、右各一寸，共四穴。<span class="hl">針0.3–0.5吋沿皮刺入，針尖向外刺如戴帽樣</span>。主治中風、半身不遂、頭頂痛、眩暈、癲癇、失智症等；有疏通經絡、增強肢體運動功能作用。因屬奇穴、無所屬經脈，故無順經逆經問題。</p>
-   <p><b>操作技巧</b></p>
-   <p>・頭頂之頭痛與眩暈，可取百會加四神聰。<br>
-   ・高血壓引起者搭配風池、太衝、四神聰。<br>
-   ・急性發作、劇烈嘔吐者宜先取內關、風池，待症狀緩解再處理局部。<br>
-   ・痰濁型可加豐隆並配合溫灸中脘、足三里。</p></div>
+   遠端配合太衝（平肝）、豐隆（化痰）、足三里（健脾）、內關（止嘔）。</li>
+     <li><span class="term">四神聰（EX-HN1）：</span>頭頂部百會前、後、左、右各一寸，共四穴。<span class="hl">針0.3–0.5吋沿皮刺入，針尖向外刺如戴帽樣</span>。主治中風、半身不遂、頭頂痛、眩暈、癲癇、失智症等；有疏通經絡、增強肢體運動功能作用。因屬奇穴、無所屬經脈，故無順經逆經問題。</li>
+   </ul>
+   <p class="sub-lead">操作技巧</p>
+   <ul class="c-list">
+     <li>頭頂之頭痛與眩暈，可取百會加四神聰。</li>
+     <li>高血壓引起者搭配風池、太衝、四神聰。</li>
+     <li>急性發作、劇烈嘔吐者宜先取內關、風池，待症狀緩解再處理局部。</li>
+     <li>痰濁型可加豐隆並配合溫灸中脘、足三里。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">中藥及其他中醫治療</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>肝陽上亢：</b>平肝潛陽——<span class="hl">天麻鉤藤飲</span>。鉤藤可放鬆肌肉、收縮血管，減緩神經壓迫。</p>
-   <p><b>氣血兩虛：</b>培補脾胃、補益氣血——<span class="hl">四君子湯加天麻</span>。</p>
-   <p><b>痰濁中阻：</b>健脾化痰——<span class="hl">半夏白朮天麻湯</span>；可用天南星、瓜蔞、枳實、陳皮燥濕化痰。</p>
-   <p><b>水飲內停：</b>利水——<span class="hl">苓桂朮甘湯加五苓散、天麻</span>。五苓散能平衡內耳水液循環、改善梅尼爾氏症症狀，惟屬結構性問題故無法根治。</p>
-   <p><b>其他古方參考：</b>風則消風散、川芎散；寒則不換金正氣散加芎、芷、白芍；暑則黃連香薷飲；濕則除濕湯、滲濕湯；氣虛者升陽補氣（黃耆、人參、白朮、川芎、當歸、甘菊花、柴胡、升麻）；血虛者益氣補血芎歸湯；中脘伏痰嘔逆眩暈用旋覆花湯；心下有支飲、苦冒眩者用澤瀉白朮湯。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">肝陽上亢：</span>平肝潛陽——<span class="hl">天麻鉤藤飲</span>。鉤藤可放鬆肌肉、收縮血管，減緩神經壓迫。</li>
+     <li><span class="term">氣血兩虛：</span>培補脾胃、補益氣血——<span class="hl">四君子湯加天麻</span>。</li>
+     <li><span class="term">痰濁中阻：</span>健脾化痰——<span class="hl">半夏白朮天麻湯</span>；可用天南星、瓜蔞、枳實、陳皮燥濕化痰。</li>
+     <li><span class="term">水飲內停：</span>利水——<span class="hl">苓桂朮甘湯加五苓散、天麻</span>。五苓散能平衡內耳水液循環、改善梅尼爾氏症症狀，惟屬結構性問題故無法根治。</li>
+     <li><span class="term">其他古方參考：</span>風則消風散、川芎散；寒則不換金正氣散加芎、芷、白芍；暑則黃連香薷飲；濕則除濕湯、滲濕湯；氣虛者升陽補氣（黃耆、人參、白朮、川芎、當歸、甘菊花、柴胡、升麻）；血虛者益氣補血芎歸湯；中脘伏痰嘔逆眩暈用旋覆花湯；心下有支飲、苦冒眩者用澤瀉白朮湯。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">西醫治療</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>急性期症狀控制：</b>前庭抑制劑（betahistine、抗組織胺）、止吐藥；<span class="hl">不宜長期使用</span>以免影響中樞代償。</p>
-   <p><b>BPPV：</b>耳石復位術（Epley manoeuvre）為首選，效果快速。</p>
-   <p><b>梅尼爾氏病：</b>低鹽飲食、利尿劑、betahistine；頑固者鼓室內注射或手術。</p>
-   <p><b>前庭神經炎：</b>短期類固醇、前庭復健運動。</p>
-   <p><b>中樞性眩暈：</b>治療原發疾病（腦血管、脫髓鞘、腫瘤）。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">急性期症狀控制：</span>前庭抑制劑（betahistine、抗組織胺）、止吐藥；<span class="hl">不宜長期使用</span>以免影響中樞代償。</li>
+     <li><span class="term">BPPV：</span>耳石復位術（Epley manoeuvre）為首選，效果快速。</li>
+     <li><span class="term">梅尼爾氏病：</span>低鹽飲食、利尿劑、betahistine；頑固者鼓室內注射或手術。</li>
+     <li><span class="term">前庭神經炎：</span>短期類固醇、前庭復健運動。</li>
+     <li><span class="term">中樞性眩暈：</span>治療原發疾病（腦血管、脫髓鞘、腫瘤）。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">衛教</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p>・急性發作時立即坐下或躺下，避免跌倒受傷；<span class="hl">勿駕駛、勿操作機械、勿爬高</span>。</p>
-   <p>・起床採「三步驟」：先坐起片刻、再坐床緣、確認無不適再站起。</p>
-   <p>・梅尼爾氏病患者<b>低鹽飲食</b>、避免咖啡因與酒精。</p>
-   <p>・BPPV 患者避免快速轉頭與特定誘發頭位；復位後短期內睡眠採半坐臥。</p>
-   <p>・保持情緒平穩、避免熬夜與過勞；中醫觀點認為惱怒傷肝、勞倦傷脾皆可誘發。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li>急性發作時立即坐下或躺下，避免跌倒受傷；<span class="hl">勿駕駛、勿操作機械、勿爬高</span>。</li>
+   
+     <li>起床採「三步驟」：先坐起片刻、再坐床緣、確認無不適再站起。</li>
+   
+     <li>梅尼爾氏病患者低鹽飲食、避免咖啡因與酒精。</li>
+   
+     <li>BPPV 患者避免快速轉頭與特定誘發頭位；復位後短期內睡眠採半坐臥。</li>
+   
+     <li>保持情緒平穩、避免熬夜與過勞；中醫觀點認為惱怒傷肝、勞倦傷脾皆可誘發。</li>
+   </ul>
+  </div>
       </details>
     </section>
 
@@ -922,145 +1282,218 @@
       ⚠ 口周肌肉（笑肌、顴大肌、顴小肌、口輪匝肌）針刺皆不可過深。</div>
       <details class="sec">
         <summary><span class="sec-title">臨床表現</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>常見主訴：</b>膚色暗沉、黃褐斑、皺紋（抬頭紋、眉間紋、法令紋、木偶紋）、臉部鬆弛下垂、左右不對稱、下顎線條不明顯。</p>
-   <p><b>伴隨體徵：</b>咬肌肥厚、顳肌萎縮（多見於偏頭痛者）、頸闊肌鬆弛、肩頸前傾。</p>
-   <p><span class="hl">胸廓較大者、肩膀前傾者會連帶影響臉部皺紋分布</span>；咬肌與下頷角延伸出的皺紋走向亦因人而異。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">常見主訴：</span>膚色暗沉、黃褐斑、皺紋（抬頭紋、眉間紋、法令紋、木偶紋）、臉部鬆弛下垂、左右不對稱、下顎線條不明顯。</li>
+     <li><span class="term">伴隨體徵：</span>咬肌肥厚、顳肌萎縮（多見於偏頭痛者）、頸闊肌鬆弛、肩頸前傾。</li>
+   </ul>
+   <p><span class="hl">胸廓較大者、肩膀前傾者會連帶影響臉部皺紋分布</span>；咬肌與下頷角延伸出的皺紋走向亦因人而異。</p>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">病因、流行病學與預後</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>結構因素：</b>表情肌長期張力不均、筋膜沾黏、脂肪墊下移、骨性支撐流失。</p>
-   <p><b>連動因素：</b><span class="hl">胸鎖乳突肌（SCM）萎縮時，頸闊肌（platysma）會受到影響，進而牽連到臉部</span>。</p>
-   <p><b>中醫病機：</b>肝鬱氣滯則氣血不暢、面失所養；脾虛濕蘊則面色晦暗浮腫；腎虛則色素沉著、早衰。</p>
-   <p><b>個體差異：</b>男女眼窩高度不一樣——<span class="hl">身高較高的男性眼眶會比較高，女性眼睛會比較平</span>；皮膚厚度亦因人而異，須於施術前評估。</p>
-   <p><b>預後：</b>屬調理性治療，<span class="hl">療效評估宜以數週至數月為週期</span>，需持續療程並配合生活調整。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">結構因素：</span>表情肌長期張力不均、筋膜沾黏、脂肪墊下移、骨性支撐流失。</li>
+     <li><span class="term">連動因素：</span><span class="hl">胸鎖乳突肌（SCM）萎縮時，頸闊肌（platysma）會受到影響，進而牽連到臉部</span>。</li>
+     <li><span class="term">中醫病機：</span>肝鬱氣滯則氣血不暢、面失所養；脾虛濕蘊則面色晦暗浮腫；腎虛則色素沉著、早衰。</li>
+     <li><span class="term">個體差異：</span>男女眼窩高度不一樣——<span class="hl">身高較高的男性眼眶會比較高，女性眼睛會比較平</span>；皮膚厚度亦因人而異，須於施術前評估。</li>
+     <li><span class="term">預後：</span>屬調理性治療，<span class="hl">療效評估宜以數週至數月為週期</span>，需持續療程並配合生活調整。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">檢驗與檢查</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>筋膜分層評估：</b>臉部筋膜可區分成三個部分；<span class="hl">上臉部比較單純、都是單一層肌肉，下臉部比較多重疊的肌肉（鼻子中線、顴骨）</span>。</p>
-   <p><b>觸診：</b>確認皮膚厚度、肌肉起止（I/O）方向、咬肌與顳肌邊界、下頷角位置。<b>耳廓肌與顳肌的轉折點都必須用手觸摸才能定位。</b></p>
-   <p><b>對稱性評估：</b>比較左右眉高、眼裂、鼻唇溝深度、口角高度與下頷線。</p>
-   <p><b>整體姿勢評估：</b>觀察肩頸前傾、胸廓大小對臉部的影響。</p>
-   <p><b>體質分型：</b>韓醫四象體質（太陽、少陽、太陰、少陰）可作為體質調理與方藥搭配之參考。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">筋膜分層評估：</span>臉部筋膜可區分成三個部分；<span class="hl">上臉部比較單純、都是單一層肌肉，下臉部比較多重疊的肌肉（鼻子中線、顴骨）</span>。</li>
+     <li><span class="term">觸診：</span>確認皮膚厚度、肌肉起止（I/O）方向、咬肌與顳肌邊界、下頷角位置。耳廓肌與顳肌的轉折點都必須用手觸摸才能定位。</li>
+     <li><span class="term">對稱性評估：</span>比較左右眉高、眼裂、鼻唇溝深度、口角高度與下頷線。</li>
+     <li><span class="term">整體姿勢評估：</span>觀察肩頸前傾、胸廓大小對臉部的影響。</li>
+     <li><span class="term">體質分型：</span>韓醫四象體質（太陽、少陽、太陰、少陰）可作為體質調理與方藥搭配之參考。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">分型分期</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>三大目標：Small、Slow、Symmetric</b>（小幅度、慢速、左右對稱）。</p>
-   <p><b>兩道定位線（Vertical and horizontal retaining walls）：</b><br>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">三大目標：Small、Slow、Symmetric</span>（小幅度、慢速、左右對稱）。</li>
+     <li>兩道定位線（Vertical and horizontal retaining walls）：<br>
    ・<span class="hl">額肌的邊緣是第一條線</span><br>
-   ・<span class="hl">第二條線的起點是顴大肌與顴小肌</span></p>
-   <p><b>依施術部位分區：</b>上臉部（額肌、皺眉肌、降眉間肌、眼輪匝肌、提上眼瞼肌）／中臉部（提上唇肌群、顴大小肌、笑肌、鼻肌）／下臉部（口輪匝肌、降口角肌、頦肌、咬肌）／頸部（頸闊肌、二腹肌、SCM）。</p>
-   <p><b>中醫辨證分型：</b>肝鬱氣滯／脾虛濕蘊／腎虛／氣滯血瘀。</p></div>
+   ・<span class="hl">第二條線的起點是顴大肌與顴小肌</span></li>
+     <li><span class="term">依施術部位分區：</span>上臉部（額肌、皺眉肌、降眉間肌、眼輪匝肌、提上眼瞼肌）／中臉部（提上唇肌群、顴大小肌、笑肌、鼻肌）／下臉部（口輪匝肌、降口角肌、頦肌、咬肌）／頸部（頸闊肌、二腹肌、SCM）。</li>
+     <li><span class="term">中醫辨證分型：</span>肝鬱氣滯／脾虛濕蘊／腎虛／氣滯血瘀。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">鑑別診斷</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>黃褐斑 vs 顴部褐青色母斑：</b>後者色澤偏藍灰、位於真皮層，針灸與外用藥效果有限。</p>
-   <p><b>臉部不對稱：</b>須先排除<span class="hl">顏面神經麻痺後遺症、顏面痙攣、咬肌肥大、骨骼性不對稱</span>——病理性者應先治療原發病。</p>
-   <p><b>臉部浮腫：</b>須排除甲狀腺功能低下、腎臟疾病、藥物（類固醇）因素。</p>
-   <p><b>色素沉著：</b>須排除內分泌疾病（愛迪生氏病）、藥物性色素沉著。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">黃褐斑 vs 顴部褐青色母斑：</span>後者色澤偏藍灰、位於真皮層，針灸與外用藥效果有限。</li>
+     <li><span class="term">臉部不對稱：</span>須先排除<span class="hl">顏面神經麻痺後遺症、顏面痙攣、咬肌肥大、骨骼性不對稱</span>——病理性者應先治療原發病。</li>
+     <li><span class="term">臉部浮腫：</span>須排除甲狀腺功能低下、腎臟疾病、藥物（類固醇）因素。</li>
+     <li><span class="term">色素沉著：</span>須排除內分泌疾病（愛迪生氏病）、藥物性色素沉著。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">常用選穴與操作技巧</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>傳統選穴（膚況調理）</b><br>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">傳統選穴（膚況調理）</span><br>
    <a class="pt-tag linked" href="ar.html#pt-st_sibai" title="在AR學習頁查看 四白（ST2）">四白</a><a class="pt-tag linked" href="ar.html#pt-si_quanliao" title="在AR學習頁查看 顴髎（SI18）">顴髎</a><a class="pt-tag linked" href="ar.html#pt-st_juliao" title="在AR學習頁查看 巨髎（ST3）">巨髎</a><a class="pt-tag linked" href="ar.html#pt-li_yingxiang" title="在AR學習頁查看 迎香（LI20）">迎香</a><a class="pt-tag linked" href="ar.html#pt-ex_yintang" title="在AR學習頁查看 印堂（EX-HN3）">印堂</a><a class="pt-tag linked" href="ar.html#pt-ex_taiyang" title="在AR學習頁查看 太陽穴（EX-HN5）">太陽穴</a><br>
-   依證型配合三陰交、血海、太衝等遠端穴位。多採淺刺、圍刺或美容針細針淺刺（皮內針）。</p>
-   <p><b>常用定位參考：</b><span class="hl">大腸經、三焦經是常用的定位點</span>（對神經系統也有效）。</p>
-   <p><b>分區肌肉操作要點</b></p>
-   <p>・<b>皺眉肌</b>：位於眼輪匝肌上方的一小塊，用手指自攢竹位置<b>往內上推</b>可觸得（有人被眼輪匝肌蓋住故位置略異）。上面針三針，從眉毛往上兩針就好。影響前額皺紋，<span class="hl">要跟其他肌肉一起針才比較有效果</span>。<br>
-   ・<b>降眉間肌（鼻根肌）</b>：起點在鼻根、<b>沒有很下面</b>；自眉頭下面一點對過去推定位，<span class="hl">針刺不能太深，貼皮下走就好</span>，兩側各一針；不易進針可把鼻骨上面的肌肉捏起來。眼睛容易不舒服的人可針。<br>
-   ・<b>眼輪匝肌</b>：第一針自攢竹開始，指向對面的睛明，<b>角度沿著皮膚走</b>。<br>
-   ・<b>提上眼瞼肌</b>：<span class="hl">提醒病人閉眼睛針；針尖不可以往眼球</span>，可以手抵在眼球保護並確定位置。眉頭會比較有高度，所以眉頭下針的上下角度較大，到眉尾角度較小；從中間開始下針，像扇形往外走。<span class="hl">拔針時提插多次一點（15～20次），且都是往後退、不會前後前後。</span><br>
-   ・<b>提上唇肌／提上唇鼻翼肌</b>：以<b>鼻翼跟眼睛的交叉</b>兩條線定位；提上唇鼻翼肌自迎香旁邊水平進針，<span class="hl">一定要過鼻翼</span>。<br>
-   ・<b>顴大肌／顴小肌</b>：<b>大在外、小在內</b>，自顴骨開始，水平線是嘴角，<span class="hl">針尖朝睛明穴</span>；兩針針對時應會連動。<br>
-   ・<b>笑肌</b>：下針時用左手食指把導管頂得深一點。<br>
-   ・<b>降口角肌</b>：是一塊三角形的肌肉，<b>針的角度是站起來的</b>；<span class="hl">跟頸闊肌一起針效果比較好</span>。<br>
-   ・<b>耳廓肌</b>：<span class="hl">用手摸才可以針</span>，只扎三針（前、上、後耳廓肌）；針會幾乎貼著耳朵進去，於肌肉前2–3mm找到位置後再進針、直接穿過。<br>
-   ・<b>頸闊肌（platysma）</b>：和筋膜的相關性蠻高；下巴下面的部分要扎比較多，<span class="hl">上下段針尖的方向要相反</span>——通常下巴針尖往外往上提，下半部就顛倒。<br>
-   ・<b>二腹肌</b>：自舌骨到下頷骨，<b>對下巴左右對稱很重要</b>。定位點是廉泉穴，往左或右2mm就是二腹肌，此為第一針；第二針在下頷角90度進針；第三針在下頷角到耳垂的中間、45度角。<br>
-   ・<b>胸鎖乳突肌（SCM）</b>：自鎖骨的三分之一處往上到乳突（約完骨GB12的位置），把它分成五個點，但<b>只針四個位置</b>；<span class="hl">倒數第二個位置是肺尖，禁針</span>。垂直進針、針完就拔針；<span class="hl">鎖骨上的那針不可以超過五毫米</span>。<br>
-   ・<b>咬肌／顳肌／翼內肌／翼外肌</b>：詳見「顳頜關節障礙」與「顳側頭痛」段落。</p></div>
+   依證型配合三陰交、血海、太衝等遠端穴位。多採淺刺、圍刺或美容針細針淺刺（皮內針）。</li>
+     <li><span class="term">常用定位參考：</span><span class="hl">大腸經、三焦經是常用的定位點</span>（對神經系統也有效）。</li>
+   </ul>
+   <p class="sub-lead">分區肌肉操作要點</p>
+   <ul class="c-list">
+     <li><span class="term">皺眉肌</span>：位於眼輪匝肌上方的一小塊，用手指自攢竹位置往內上推可觸得（有人被眼輪匝肌蓋住故位置略異）。上面針三針，從眉毛往上兩針就好。影響前額皺紋，<span class="hl">要跟其他肌肉一起針才比較有效果</span>。</li>
+     <li><span class="term">降眉間肌（鼻根肌）</span>：起點在鼻根、沒有很下面；自眉頭下面一點對過去推定位，<span class="hl">針刺不能太深，貼皮下走就好</span>，兩側各一針；不易進針可把鼻骨上面的肌肉捏起來。眼睛容易不舒服的人可針。</li>
+     <li><span class="term">眼輪匝肌</span>：第一針自攢竹開始，指向對面的睛明，角度沿著皮膚走。</li>
+     <li><span class="term">提上眼瞼肌</span>：<span class="hl">提醒病人閉眼睛針；針尖不可以往眼球</span>，可以手抵在眼球保護並確定位置。眉頭會比較有高度，所以眉頭下針的上下角度較大，到眉尾角度較小；從中間開始下針，像扇形往外走。<span class="hl">拔針時提插多次一點（15～20次），且都是往後退、不會前後前後。</span></li>
+     <li><span class="term">提上唇肌／提上唇鼻翼肌</span>：以鼻翼跟眼睛的交叉兩條線定位；提上唇鼻翼肌自迎香旁邊水平進針，<span class="hl">一定要過鼻翼</span>。</li>
+     <li><span class="term">顴大肌／顴小肌</span>：大在外、小在內，自顴骨開始，水平線是嘴角，<span class="hl">針尖朝睛明穴</span>；兩針針對時應會連動。</li>
+     <li><span class="term">笑肌</span>：下針時用左手食指把導管頂得深一點。</li>
+     <li><span class="term">降口角肌</span>：是一塊三角形的肌肉，針的角度是站起來的；<span class="hl">跟頸闊肌一起針效果比較好</span>。</li>
+     <li><span class="term">耳廓肌</span>：<span class="hl">用手摸才可以針</span>，只扎三針（前、上、後耳廓肌）；針會幾乎貼著耳朵進去，於肌肉前2–3mm找到位置後再進針、直接穿過。</li>
+     <li><span class="term">頸闊肌（platysma）</span>：和筋膜的相關性蠻高；下巴下面的部分要扎比較多，<span class="hl">上下段針尖的方向要相反</span>——通常下巴針尖往外往上提，下半部就顛倒。</li>
+     <li><span class="term">二腹肌</span>：自舌骨到下頷骨，對下巴左右對稱很重要。定位點是廉泉穴，往左或右2mm就是二腹肌，此為第一針；第二針在下頷角90度進針；第三針在下頷角到耳垂的中間、45度角。</li>
+     <li><span class="term">胸鎖乳突肌（SCM）</span>：自鎖骨的三分之一處往上到乳突（約完骨GB12的位置），把它分成五個點，但只針四個位置；<span class="hl">倒數第二個位置是肺尖，禁針</span>。垂直進針、針完就拔針；<span class="hl">鎖骨上的那針不可以超過五毫米</span>。</li>
+     <li><span class="term">咬肌／顳肌／翼內肌／翼外肌</span>：詳見「顳頜關節障礙」與「顳側頭痛」段落。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">中藥及其他中醫治療</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>肝鬱氣滯：</b>疏肝解鬱——逍遙散、加味逍遙散。</p>
-   <p><b>脾虛濕蘊：</b>健脾利濕——參苓白朮散、六君子湯。</p>
-   <p><b>腎虛：</b>滋補肝腎——六味地黃丸、左歸丸。<span class="hl">四象體質中脾胃較好而消化系統較差、愛喝酒、容易便秘者，適合六味地黃丸。</span></p>
-   <p><b>氣滯血瘀：</b>活血化瘀——桃紅四物湯、血府逐瘀湯。</p>
-   <p><b>其他療法：</b>臉部刮痧、面部推拿、耳穴貼壓（內分泌、肺、肝、腎）；恐慌、焦慮明顯者針膽經配合顳肌、眼輪匝肌，<span class="hl">再加上水藥效果很好</span>。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">肝鬱氣滯：</span>疏肝解鬱——逍遙散、加味逍遙散。</li>
+     <li><span class="term">脾虛濕蘊：</span>健脾利濕——參苓白朮散、六君子湯。</li>
+     <li><span class="term">腎虛：</span>滋補肝腎——六味地黃丸、左歸丸。<span class="hl">四象體質中脾胃較好而消化系統較差、愛喝酒、容易便秘者，適合六味地黃丸。</span></li>
+     <li><span class="term">氣滯血瘀：</span>活血化瘀——桃紅四物湯、血府逐瘀湯。</li>
+     <li><span class="term">其他療法：</span>臉部刮痧、面部推拿、耳穴貼壓（內分泌、肺、肝、腎）；恐慌、焦慮明顯者針膽經配合顳肌、眼輪匝肌，<span class="hl">再加上水藥效果很好</span>。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">西醫治療</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p><b>肉毒桿菌素：</b>作用於神經肌肉接合處減弱肌肉收縮。<span class="hl">肉毒容易影響肌肉的表情，所以美顏針在維持線條的柔和比較重要</span>——兩者取向不同。</p>
-   <p><b>玻尿酸填充：</b>補充容積、支撐凹陷處。</p>
-   <p><b>雷射與光療：</b>針對色素沉著、血管性病變與膚質。</p>
-   <p><b>外用藥：</b>A酸、對苯二酚、傳明酸（黃褐斑）。</p>
-   <p><b>防曬</b>為所有色素治療的基礎。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">肉毒桿菌素：</span>作用於神經肌肉接合處減弱肌肉收縮。<span class="hl">肉毒容易影響肌肉的表情，所以美顏針在維持線條的柔和比較重要</span>——兩者取向不同。</li>
+     <li><span class="term">玻尿酸填充：</span>補充容積、支撐凹陷處。</li>
+     <li><span class="term">雷射與光療：</span>針對色素沉著、血管性病變與膚質。</li>
+     <li><span class="term">外用藥：</span>A酸、對苯二酚、傳明酸（黃褐斑）。</li>
+     <li><span class="term">防曬</span>為所有色素治療的基礎。</li>
+   </ul>
+  </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">衛教</span><span class="sec-arrow">▾</span></summary>
-        <div class="sec-body"><p>・操作前後應徹底消毒；<span class="hl">告知術後可能出現瘀青</span>，尤其眼周與顳部。</p>
-   <p>・療程需搭配<b>防曬</b>與作息衛教；黃褐斑患者防曬為療效關鍵。</p>
-   <p>・<span class="hl">療效評估宜以數週至數月為週期觀察，避免過度承諾短期速效。</span></p>
-   <p>・避免單側咀嚼與緊咬牙關，以減少咬肌肥厚與左右不對稱。</p>
-   <p>・調整肩頸姿勢、避免長時間低頭；頸部與胸廓狀態會直接影響臉部線條。</p></div>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li>操作前後應徹底消毒；<span class="hl">告知術後可能出現瘀青</span>，尤其眼周與顳部。</li>
+   
+     <li>療程需搭配防曬與作息衛教；黃褐斑患者防曬為療效關鍵。</li>
+   
+     <li><span class="hl">療效評估宜以數週至數月為週期觀察，避免過度承諾短期速效。</span></li>
+   
+     <li>避免單側咀嚼與緊咬牙關，以減少咬肌肥厚與左右不對稱。</li>
+   
+     <li>調整肩頸姿勢、避免長時間低頭；頸部與胸廓狀態會直接影響臉部線條。</li>
+   </ul>
+  </div>
       </details>
     </section>
 
     <div class="section-title" id="sec-complications">⚠ 常見異常狀況與處理</div>
     <details class="sec complication">
       <summary><span class="sec-title">暈針</span><span class="sec-arrow">▾</span></summary>
-      <div class="sec-body"><p><b>好發情境：</b>空腹、過度疲勞、緊張焦慮、初次接受針灸者。</p>
-   <p><b>症狀：</b>頭暈、面色蒼白、冷汗、心悸，嚴重可致<span class="hl">短暫意識喪失</span>。</p>
-   <p><b>處理：</b>立即停針並起出全部針具，協助患者平躺、<span class="hl">頭低腳高</span>，鬆解衣領，注意保暖並給予溫開水，密切觀察生命徵象；症狀未緩解或意識未恢復應盡速送醫。</p></div>
+      <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">好發情境：</span>空腹、過度疲勞、緊張焦慮、初次接受針灸者。</li>
+     <li><span class="term">症狀：</span>頭暈、面色蒼白、冷汗、心悸，嚴重可致<span class="hl">短暫意識喪失</span>。</li>
+     <li><span class="term">處理：</span>立即停針並起出全部針具，協助患者平躺、<span class="hl">頭低腳高</span>，鬆解衣領，注意保暖並給予溫開水，密切觀察生命徵象；症狀未緩解或意識未恢復應盡速送醫。</li>
+   </ul>
+  </div>
     </details>
     <details class="sec complication">
       <summary><span class="sec-title">皮下血腫（尤其眼周與顳部穴位）</span><span class="sec-arrow">▾</span></summary>
-      <div class="sec-body"><p><b>好發部位：</b><a class="pt-tag linked" href="ar.html#pt-bl_jingming" title="在AR學習頁查看 睛明（BL1）">睛明</a><a class="pt-tag linked" href="ar.html#pt-st_chengqi" title="在AR學習頁查看 承泣（ST1）">承泣</a>、球後等眼周穴位，因血管分布密集、組織疏鬆，出血後易迅速腫脹瘀青；<a class="pt-tag linked" href="ar.html#pt-ex_taiyang" title="在AR學習頁查看 太陽穴（EX-HN5）">太陽穴</a>區有<span class="hl">顳淺動脈額支</span>通過；鼻旁、口角外側有顏面動脈走行；顴弓下方有橫顏面動脈。</p>
-   <p><b>處理：</b>出針後立即以棉球加壓止血，<span class="hl">避免揉按患處</span>；已形成血腫者初期冷敷、48小時後改熱敷促進吸收，並衛教患者血腫多可於1–2週自行消退。</p>
-   <p><b>預防：</b>眼周穴位進針僅一至兩分、沿眶緣走行；<span class="hl">服用抗凝血劑或凝血功能異常者，眼周與顳部穴位宜避免深刺</span>。</p></div>
+      <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">好發部位：</span><a class="pt-tag linked" href="ar.html#pt-bl_jingming" title="在AR學習頁查看 睛明（BL1）">睛明</a><a class="pt-tag linked" href="ar.html#pt-st_chengqi" title="在AR學習頁查看 承泣（ST1）">承泣</a>、球後等眼周穴位，因血管分布密集、組織疏鬆，出血後易迅速腫脹瘀青；<a class="pt-tag linked" href="ar.html#pt-ex_taiyang" title="在AR學習頁查看 太陽穴（EX-HN5）">太陽穴</a>區有<span class="hl">顳淺動脈額支</span>通過；鼻旁、口角外側有顏面動脈走行；顴弓下方有橫顏面動脈。</li>
+     <li><span class="term">處理：</span>出針後立即以棉球加壓止血，<span class="hl">避免揉按患處</span>；已形成血腫者初期冷敷、48小時後改熱敷促進吸收，並衛教患者血腫多可於1–2週自行消退。</li>
+     <li><span class="term">預防：</span>眼周穴位進針僅一至兩分、沿眶緣走行；<span class="hl">服用抗凝血劑或凝血功能異常者，眼周與顳部穴位宜避免深刺</span>。</li>
+   </ul>
+  </div>
     </details>
     <details class="sec complication">
       <summary><span class="sec-title">滯針／彎針</span><span class="sec-arrow">▾</span></summary>
-      <div class="sec-body"><p><b>常見原因：</b>患者緊張致局部肌肉痙攣、行針手法過重、留針時患者體位變動（如下關穴取穴後張閉口）。</p>
-   <p><b>處理：</b>安撫患者放鬆、暫緩行針待肌肉鬆弛後再緩慢出針，<span class="hl">切勿強行拔針</span>；彎針時應循彎曲方向緩慢退出，<span class="hl">禁止暴力拉扯以免斷針</span>。</p></div>
+      <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">常見原因：</span>患者緊張致局部肌肉痙攣、行針手法過重、留針時患者體位變動（如下關穴取穴後張閉口）。</li>
+     <li><span class="term">處理：</span>安撫患者放鬆、暫緩行針待肌肉鬆弛後再緩慢出針，<span class="hl">切勿強行拔針</span>；彎針時應循彎曲方向緩慢退出，<span class="hl">禁止暴力拉扯以免斷針</span>。</li>
+   </ul>
+  </div>
     </details>
     <details class="sec complication">
       <summary><span class="sec-title">神經損傷風險</span><span class="sec-arrow">▾</span></summary>
-      <div class="sec-body"><p>顏面部布有三叉神經與顏面神經分支（詳見AR學習頁「重要解剖結構」），若進針過深、角度不當或反覆提插捻轉，理論上可能刺激或損及神經分支，造成局部麻木感或短暫感覺異常。</p>
+      <div class="sec-body">
+   <p>顏面部布有三叉神經與顏面神經分支（詳見AR學習頁「重要解剖結構」），若進針過深、角度不當或反覆提插捻轉，理論上可能刺激或損及神經分支，造成局部麻木感或短暫感覺異常。</p>
    <p>操作時應熟悉解剖層次、控制進針深度與角度，<span class="hl">出現異常放射狀觸電感應立即退針調整方向</span>。</p>
-   <p><b>提醒：</b>顏面神經支配表情肌、二腹肌、莖乳突肌與鐙骨肌，並含支配淚腺、鼻腺、舌下腺之副交感纖維與舌前2/3味覺（鼓索神經）；治療後若出現新發生的味覺改變、聽覺過敏或腺體分泌異常，須重新評估。</p>
-   <p><b>五大分支體表投影與走向：</b>神經穿出腮腺前緣後呈扇形展開，其主要體表分支定位如下：</p>
-   <p>・<b>顳支（Temporal branch）</b>：從耳垂上緣經顴弓中、後1/3交界處向前上方行至額肌，位於外耳道口至眼外眥連線上方。<br>
-   ・<b>顴支（Zygomatic branch）</b>：沿顴骨表面水平前行至眼輪匝肌及外眼角。<br>
-   ・<b>頰支（Buccal branch）</b>：平行於腮腺管（Stensen's duct）上下方前行，位於顴弓下方至口角區。<br>
-   ・<b>下頷邊緣支（Marginal mandibular branch）</b>：沿下頷骨下緣下方或上方橫過顏面動靜脈，位置較淺，易在下頷角受損。<br>
-   ・<b>頸支（Cervical branch）</b>：向下穿過腮腺下極，在頸闊肌（Platysma）深面支配頸部。</p>
-   <p><b>手術尋找顏面神經主幹（Main trunk）地標：</b>手術尋找顏面神經主幹時，最常利用以下三個經典解剖結構<sup>[7]</sup>：</p>
-   <p>・<b>耳屏軟骨切跡（Tragal pointer）</b>：耳屏軟骨前緣尖端，神經主幹位於其深面約1.0至1.5公分處（內下方）<sup>[8]</sup>。<br>
-   ・<b>鼓乳縫（Tympanomastoid suture）</b>：位於外耳道骨部與乳突之間的骨縫，主幹通常在此骨縫下方約6至8公厘處離開莖乳孔<sup>[8]</sup>。<br>
-   ・<b>二腹肌後腹（Posterior belly of digastric muscle）</b>：沿二腹肌後腹上緣向後追溯至乳突切跡，神經主幹剛好位於該肌上緣的深面<sup>[8]</sup>。</p>
-   <div class="warn-box">⚠ 上述地標為手術／解剖教學參考，非供臉部針灸取穴依據；臨床針刺仍以本頁「常用選穴與操作技巧」之淺刺、貼皮平刺原則為準，避免深刺誤傷神經主幹。</div></div>
+   <ul class="c-list">
+     <li><span class="term">提醒：</span>顏面神經支配表情肌、二腹肌、莖乳突肌與鐙骨肌，並含支配淚腺、鼻腺、舌下腺之副交感纖維與舌前2/3味覺（鼓索神經）；治療後若出現新發生的味覺改變、聽覺過敏或腺體分泌異常，須重新評估。</li>
+     <li><span class="term">五大分支體表投影與走向：</span>神經穿出腮腺前緣後呈扇形展開，其主要體表分支定位如下：</li>
+   
+     <li><span class="term">顳支（Temporal branch）</span>：從耳垂上緣經顴弓中、後1/3交界處向前上方行至額肌，位於外耳道口至眼外眥連線上方。</li>
+     <li><span class="term">顴支（Zygomatic branch）</span>：沿顴骨表面水平前行至眼輪匝肌及外眼角。</li>
+     <li><span class="term">頰支（Buccal branch）</span>：平行於腮腺管（Stensen's duct）上下方前行，位於顴弓下方至口角區。</li>
+     <li><span class="term">下頷邊緣支（Marginal mandibular branch）</span>：沿下頷骨下緣下方或上方橫過顏面動靜脈，位置較淺，易在下頷角受損。</li>
+     <li><span class="term">頸支（Cervical branch）</span>：向下穿過腮腺下極，在頸闊肌（Platysma）深面支配頸部。</li>
+   </ul>
+   <p><span class="term">手術尋找顏面神經主幹（Main trunk）地標：</span>手術尋找顏面神經主幹時，最常利用以下三個經典解剖結構<sup>[7]</sup>：</p>
+   <ul class="c-list">
+     <li><span class="term">耳屏軟骨切跡（Tragal pointer）</span>：耳屏軟骨前緣尖端，神經主幹位於其深面約1.0至1.5公分處（內下方）<sup>[8]</sup>。</li>
+     <li><span class="term">鼓乳縫（Tympanomastoid suture）</span>：位於外耳道骨部與乳突之間的骨縫，主幹通常在此骨縫下方約6至8公厘處離開莖乳孔<sup>[8]</sup>。</li>
+     <li>二腹肌後腹（Posterior belly of digastric muscle）：沿二腹肌後腹上緣向後追溯至乳突切跡，神經主幹剛好位於該肌上緣的深面<sup>[8]</sup>。</li>
+   </ul>
+   <div class="warn-box">⚠ 上述地標為手術／解剖教學參考，非供臉部針灸取穴依據；臨床針刺仍以本頁「常用選穴與操作技巧」之淺刺、貼皮平刺原則為準，避免深刺誤傷神經主幹。</div>
+  </div>
     </details>
     <details class="sec complication">
       <summary><span class="sec-title">誤入腮腺與深部構造</span><span class="sec-arrow">▾</span></summary>
-      <div class="sec-body"><p><b>高風險區：</b>咬肌區之腮腺與腮腺管；<a class="pt-tag linked" href="ar.html#pt-st_xiaguan" title="在AR學習頁查看 下關（ST7）">下關</a>深面之翼外肌、下頷角深面之翼內肌。</p>
-   <p><b>風險：</b>進針過深或方向偏差可能傷及腮腺、深部翼靜脈叢或上頷動脈分支，造成<span class="hl">大範圍血腫</span>、局部腫脹或腮腺瘻管。</p>
-   <p><b>預防：</b>咬肌採貼皮面淺層平刺；翼外肌自下關略呈水平朝人中方向；翼內肌於下頷角前凹窩垂直進針、針尖略朝耳側避免抵骨；操作前務必以觸診確認下頷角與顴骨邊界。</p></div>
+      <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">高風險區：</span>咬肌區之腮腺與腮腺管；<a class="pt-tag linked" href="ar.html#pt-st_xiaguan" title="在AR學習頁查看 下關（ST7）">下關</a>深面之翼外肌、下頷角深面之翼內肌。</li>
+     <li><span class="term">風險：</span>進針過深或方向偏差可能傷及腮腺、深部翼靜脈叢或上頷動脈分支，造成<span class="hl">大範圍血腫</span>、局部腫脹或腮腺瘻管。</li>
+     <li><span class="term">預防：</span>咬肌採貼皮面淺層平刺；翼外肌自下關略呈水平朝人中方向；翼內肌於下頷角前凹窩垂直進針、針尖略朝耳側避免抵骨；操作前務必以觸診確認下頷角與顴骨邊界。</li>
+   </ul>
+  </div>
     </details>
     <details class="sec complication">
       <summary><span class="sec-title">放血操作之安全界線</span><span class="sec-arrow">▾</span></summary>
-      <div class="sec-body"><p>臨床可見耳尖、<a class="pt-tag linked" href="ar.html#pt-ex_taiyang" title="在AR學習頁查看 太陽穴（EX-HN5）">太陽穴</a>、金津／玉液等點刺放血操作（用於急性高熱、目赤腫痛、劇烈偏頭痛、舌腫痛等）。</p>
-   <p><b>注意：</b>部分流派採大量放血手法（三稜針較長、放血量多），教學上應強調<span class="hl">在療效與安全之間審慎拿捏</span>；務必使用單次拋棄式針具、確實消毒、控制放血量並壓迫止血。</p>
-   <p><b>禁忌／慎用：</b><span class="hl">凝血功能異常、服用抗凝血劑、貧血、糖尿病或免疫功能低下之患者。</span></p></div>
+      <div class="sec-body">
+   <p>臨床可見耳尖、<a class="pt-tag linked" href="ar.html#pt-ex_taiyang" title="在AR學習頁查看 太陽穴（EX-HN5）">太陽穴</a>、金津／玉液等點刺放血操作（用於急性高熱、目赤腫痛、劇烈偏頭痛、舌腫痛等）。</p>
+   <ul class="c-list">
+     <li><span class="term">注意：</span>部分流派採大量放血手法（三稜針較長、放血量多），教學上應強調<span class="hl">在療效與安全之間審慎拿捏</span>；務必使用單次拋棄式針具、確實消毒、控制放血量並壓迫止血。</li>
+     <li><span class="term">禁忌／慎用：</span><span class="hl">凝血功能異常、服用抗凝血劑、貧血、糖尿病或免疫功能低下之患者。</span></li>
+   </ul>
+  </div>
     </details>
     <details class="sec complication">
       <summary><span class="sec-title">頸部禁針區與氣胸風險</span><span class="sec-arrow">▾</span></summary>
-      <div class="sec-body"><p>美顏針或頸部鬆解操作處理胸鎖乳突肌時，自鎖骨內1/3至乳突分五點取穴，其中<span class="hl">倒數第二點對應肺尖，為禁針區</span>；<span class="hl">鎖骨上方之針深度不可超過5mm</span>，並採垂直進針、針畢即拔。</p>
-   <p>若術後出現胸痛、呼吸急促、乾咳等症狀，應<span class="hl">高度懷疑氣胸並立即安排胸部X光檢查</span>。</p></div>
+      <div class="sec-body">
+   <p>美顏針或頸部鬆解操作處理胸鎖乳突肌時，自鎖骨內1/3至乳突分五點取穴，其中<span class="hl">倒數第二點對應肺尖，為禁針區</span>；<span class="hl">鎖骨上方之針深度不可超過5mm</span>，並採垂直進針、針畢即拔。</p>
+   <p>若術後出現胸痛、呼吸急促、乾咳等症狀，應<span class="hl">高度懷疑氣胸並立即安排胸部X光檢查</span>。</p>
+  </div>
     </details>
     <details class="sec complication">
       <summary><span class="sec-title">感染</span><span class="sec-arrow">▾</span></summary>
-      <div class="sec-body"><p>針具、皮膚消毒不確實或患者免疫力低下時可能引發局部感染。</p>
-   <p>應落實單次使用無菌針具、進針前確實消毒，術後衛教患者保持針孔清潔乾燥；若出現<span class="hl">紅腫熱痛加劇、化膿</span>等情形應盡速回診處理。</p></div>
+      <div class="sec-body">
+   <p>針具、皮膚消毒不確實或患者免疫力低下時可能引發局部感染。</p>
+   <p>應落實單次使用無菌針具、進針前確實消毒，術後衛教患者保持針孔清潔乾燥；若出現<span class="hl">紅腫熱痛加劇、化膿</span>等情形應盡速回診處理。</p>
+  </div>
     </details>
 
     <div class="section-title" id="sec-danger">📍 顏面高風險穴位一覽</div>
@@ -1075,7 +1508,8 @@
 
     <div class="section-title" id="sec-refs">📚 參考資料</div>
     <section class="disease-card plain">
-      <div class="sec-body"><p>本頁臨床內容整理改寫自下列教學講義與臨床資料，經彙整為教學示意用途，非逐句引用，亦不取代原始文獻與臨床專業判斷：</p>
+      <div class="sec-body">
+   <p>本頁臨床內容整理改寫自下列教學講義與臨床資料，經彙整為教學示意用途，非逐句引用，亦不取代原始文獻與臨床專業判斷：</p>
    <p>1. 孫茂峰教授《針灸科學—經外奇穴》課程共筆（2015.02.25）。<br>
       2. 謝慶良教授《中醫內科學—三叉神經痛、顏面痙攣、眩暈》課程共筆（2015.10.15）。<br>
       3. 謝慶良教授《神經學—十二對腦神經的檢查》課程共筆（2014.09.24）。<br>
@@ -1083,12 +1517,13 @@
       5. 郭博元醫師受訪衛教文章〈臉歪、流口水，原來這也是顏面神經麻痺？別錯過黃金治療前2週！〉。<br>
       6. Hu et al. (2023). "Face painting as an anatomical learning tool based on individual ultrasonographic examination", <i>Clinical Anatomy</i> 36(3):426-432. doi:10.1002/ca.23974（供AR解剖疊圖之肌肉／血管範圍參考）。<br>
       7. <a href="https://www.sciencedirect.com/science/article/pii/S1879729612000154" target="_blank" rel="noopener">ScienceDirect（Journal of Cranio-Maxillofacial Surgery 相關文獻）</a>（供顏面神經主幹手術定位地標之綜述參考）。<br>
-      8. <a href="https://www.theentresident.com/ent-notes-lectures/facial-nerve-landmarks" target="_blank" rel="noopener">The ENT Resident — "Facial Nerve Landmarks"</a>（供耳屏軟骨切跡、鼓乳縫、二腹肌後腹三大解剖地標之數據參考）。</p></div>
+      8. <a href="https://www.theentresident.com/ent-notes-lectures/facial-nerve-landmarks" target="_blank" rel="noopener">The ENT Resident — "Facial Nerve Landmarks"</a>（供耳屏軟骨切跡、鼓乳縫、二腹肌後腹三大解剖地標之數據參考）。</p>
+  </div>
     </section>
 
   </main>
 
-  <footer>顏面部穴位AR學習平台 v2.75 · 2026年8月15日更新</footer>
+  <footer>顏面部穴位AR學習平台 v2.77 · 2026年8月17日更新</footer>
 </div>
 
 <script src="../assets/acupoints-geo.js"></script>

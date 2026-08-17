@@ -205,7 +205,7 @@ const ACUPOINTS = [
     desc:'眶下緣，瞳孔直下與外眥垂線之間凹陷處',
     indications:'目赤腫痛、視力減退、眼肌麻痺、近視',
     anatomy:'眶下緣深部為眼球下方組織，布有眶下神經分支',
-    technique:'沿眶下緣緩慢直刺0.5–1寸，不宜提插捻轉，出針後按壓片刻',
+    technique:'沿眶下緣緩慢直刺0.5–2寸，不宜提插捻轉，出針後按壓片刻。＊用特製圓頭針比較不會出血',
     calc:(kp,s,sc)=>{
       const b = s==='R'?kp[IDX.eyeBottomR]:kp[IDX.eyeBottomL];
       const o = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
@@ -234,7 +234,7 @@ const ACUPOINTS = [
     desc:'鼻翼外緣中點，鼻唇溝凹陷處',
     indications:'鼻塞、鼻淵、口眼歪斜、面癢',
     anatomy:'皮下為提上唇肌，布有眶下神經及面神經頰支',
-    technique:'斜刺或平刺0.3–0.5寸',
+    technique:'斜刺或平刺0.3–1寸',
     calc:(kp,s)=>{
       const ala = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
       return { x: ala.x, y: kp[IDX.noseBase].y };
@@ -243,7 +243,7 @@ const ACUPOINTS = [
     desc:'鼻孔外緣直下，水溝穴旁約0.5寸',
     indications:'鼻塞、鼻衄、口歪、口噤',
     anatomy:'皮下為口輪匝肌，布有眶下神經分支及面神經頰支',
-    technique:'斜刺0.3–0.5寸',
+    technique:'斜刺0.3–1寸',
     calc:(kp,s)=>{
       const ala = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
       const m = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
@@ -282,7 +282,7 @@ const ACUPOINTS = [
     desc:'口角外側，瞳孔直下',
     indications:'口眼歪斜、流涎、三叉神經痛',
     anatomy:'皮下為口輪匝肌，深層為頰肌，布有面神經及眶下神經分支',
-    technique:'斜刺或平刺0.5–0.8寸，可透刺頰車',
+    technique:'斜刺或平刺0.5–1寸，可透刺頰車',
     calc:(kp,s,sc)=>{
       const m = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
       const px = pupilCenter(kp,s).x;
@@ -292,14 +292,14 @@ const ACUPOINTS = [
     desc:'下頜角前方，咬肌附著部前緣，動脈搏動處',
     indications:'口眼歪斜、頰腫、齒痛、面癱',
     anatomy:'布有面動靜脈、面神經下頜緣支',
-    technique:'避開動脈，斜刺或平刺0.3–0.5寸',
+    technique:'<b>避開動脈</b>，斜刺或平刺0.3–0.5寸',
     calc:(kp,s)=> s==='R' ? mid(kp[IDX.mouthCornerR], kp[IDX.jawR], 0.6)
                           : mid(kp[IDX.mouthCornerL], kp[IDX.jawL], 0.6) },
   { id:'st_jiache', name:'頰車', code:'ST6', meridian:'ST', side:'LR',
     desc:'下頜角前上方一橫指，咀嚼時咬肌隆起處',
     indications:'口眼歪斜、齒痛、頰腫、牙關緊閉',
     anatomy:'皮下為咬肌，布有耳大神經及面神經下頜緣支',
-    technique:'直刺0.3–0.5寸，或平刺透地倉',
+    technique:'直刺0.3–1寸，或平刺透地倉',
     calc:(kp,s,sc)=>{
       const j = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
       return off(j, 0, -sc*0.05);
@@ -308,7 +308,7 @@ const ACUPOINTS = [
     desc:'顴弓下緣，下頜骨髁狀突前方凹陷處',
     indications:'耳聾耳鳴、齒痛、口眼歪斜、顳頜關節炎',
     anatomy:'皮下為腮腺，深層為翼外肌，布有耳顳神經及面神經',
-    technique:'直刺0.3–0.5寸，張口取穴，閉口進針',
+    technique:'直刺0.3–1寸，張口取穴，閉口進針。＊深處是蝶腭神經節（Sphenopalatine ganglion）為副交感神經節，支配淚腺、鼻竇、鼻腔黏膜、咽部的腺體等。可治療鼻過敏等症，深針2–3吋。',
     calc:(kp,s)=> s==='R' ? mid(kp[IDX.templeR], kp[IDX.jawR], 0.35)
                           : mid(kp[IDX.templeL], kp[IDX.jawL], 0.35) },
 
@@ -316,7 +316,7 @@ const ACUPOINTS = [
     desc:'目外眥直下，顴骨下緣凹陷處',
     indications:'口眼歪斜、眼瞼瞤動、齒痛、面痛',
     anatomy:'皮下為咬肌起始部，布有面神經及眶下神經分支',
-    technique:'直刺0.3–0.5寸，或斜刺',
+    technique:'直刺0.3–1寸，或斜刺',
     calc:(kp,s)=>{
       const e = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
       const ala = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
@@ -327,7 +327,7 @@ const ACUPOINTS = [
     desc:'目內眥角上方0.1寸凹陷處',
     indications:'目赤腫痛、迎風流淚、視物不明、近視',
     anatomy:'位於眼眶內側緣，深部為眼球內側，布有滑車上下神經',
-    technique:'輕推眼球固定，沿眶內側壁緩慢直刺0.3–0.5寸，不宜提插捻轉',
+    technique:'輕推眼球固定，沿眶內側壁緩慢直刺0.3–1.5寸，不宜提插捻轉。＊針刺時針尖方向外側10–15°較不會出血',
     calc:(kp,s)=>{
       const p = s==='R'?kp[IDX.eyeInnerR]:kp[IDX.eyeInnerL];
       const w = s==='R'?dist(kp[IDX.eyeOuterR],kp[IDX.eyeInnerR]):dist(kp[IDX.eyeOuterL],kp[IDX.eyeInnerL]);
@@ -337,7 +337,7 @@ const ACUPOINTS = [
     desc:'眉頭內側凹陷處，眶上切跡處',
     indications:'頭痛、眉稜骨痛、眼瞼瞤動、目視不明',
     anatomy:'皮下為額肌，布有眶上神經、眶上動靜脈',
-    technique:'平刺0.3–0.5寸，或向下透睛明（輕刺）',
+    technique:'平刺0.3–1寸，或向下透睛明（輕刺）',
     calc:(kp,s)=> s==='R' ? mid(kp[IDX.browInnerR], kp[IDX.eyeInnerR], 0.15)
                           : mid(kp[IDX.browInnerL], kp[IDX.eyeInnerL], 0.15) },
 
@@ -345,14 +345,14 @@ const ACUPOINTS = [
     desc:'眉梢外端凹陷處',
     indications:'頭痛、目眩、眼瞼瞤動、齒痛',
     anatomy:'皮下為眼輪匝肌，布有顴顳神經分支',
-    technique:'平刺0.3–0.5寸',
+    technique:'平刺0.3–1寸',
     calc:(kp,s)=> s==='R' ? kp[IDX.browOuterR] : kp[IDX.browOuterL] },
 
   { id:'gb_tongziliao', name:'瞳子髎', code:'GB1', meridian:'GB', side:'LR',
     desc:'目外眥外側0.5寸凹陷處',
     indications:'頭痛、目赤腫痛、目翳、口眼歪斜',
     anatomy:'皮下為眼輪匝肌，布有顴面神經、顴顳神經',
-    technique:'平刺0.3–0.5寸，或三稜針點刺出血',
+    technique:'平刺0.3–1寸，或三稜針點刺出血',
     calc:(kp,s,sc)=>{
       const e = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
       const dir = s==='R'?-1:1;
@@ -362,7 +362,7 @@ const ACUPOINTS = [
     desc:'顴弓上緣，下關穴直上凹陷處',
     indications:'耳聾耳鳴、齒痛、口眼歪斜、偏頭痛',
     anatomy:'皮下為顳肌，布有耳顳神經、面神經顴支',
-    technique:'直刺0.3–0.5寸，張口取穴',
+    technique:'直刺0.3–1寸，張口取穴',
     calc:(kp,s,sc)=>{
       const m = s==='R'?mid(kp[IDX.templeR],kp[IDX.jawR],0.3):mid(kp[IDX.templeL],kp[IDX.jawL],0.3);
       return off(m, 0, -sc*0.1);
@@ -371,7 +371,7 @@ const ACUPOINTS = [
     desc:'眉毛中點直上1寸',
     indications:'頭痛、眉稜骨痛、眼瞼瞤動、目眩',
     anatomy:'皮下為額肌，布有眶上神經外側支',
-    technique:'平刺0.3–0.5寸',
+    technique:'平刺0.3–1寸',
     calc:(kp,s,sc)=>{
       const b = s==='R'?kp[IDX.browMidR]:kp[IDX.browMidL];
       return off(b, 0, -sc*0.22);

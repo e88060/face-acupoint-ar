@@ -114,6 +114,13 @@
   #arqPanel { flex: 1; padding: 16px; display: flex; flex-direction: column; }
   #arqStart { text-align: center; padding: 30px 16px; }
   #arqStart p { color: #666; font-size: 12.5px; line-height: 1.9; margin-bottom: 20px; }
+  /* v2.77：跑考說明改以項目符號條列 */
+  .arq-intro {
+    text-align: left; color: #666; font-size: 12.5px; line-height: 1.8;
+    margin: 0 auto 20px; padding-left: 20px; max-width: 460px;
+  }
+  .arq-intro li { margin-bottom: 6px; }
+  .arq-intro li.arq-tip { color: #3d7ab0; font-weight: 600; }
   #arqStartBtn {
     padding: 14px 32px; border: none; border-radius: 10px; background: #D97757; color: #fff;
     font-size: 15px; font-weight: 700;
@@ -209,16 +216,20 @@
           <label for="arqStudentName">學員姓名</label>
           <input type="text" id="arqStudentName" placeholder="請輸入姓名">
         </div>
-        <p>AR跑考會隨機出題，共兩種題型：(1)<b>點位題5題</b>——依系統顯示的穴位名稱，用手指在下方相機畫面中點出該穴位所在位置；(2)<b>指認題15題</b>——畫面中會標示出某一構造（穴位5題／肌肉5題／血管神經5題），請於下方選項選出正確名稱。作答前不會顯示位置，回答後才會顯示正解。建議正臉面對鏡頭、光線充足。<br>
-        <span style="color:#3d7ab0;font-weight:600;">＊請上下左右移動臉部讓立體定位更容易<br>＊可拉近距離讓點選更精確</span></p>
-        <button id="arqStartBtn">開始跑考（20題：點位題5題＋指認題15題）</button>
+        <ul class="arq-intro">
+          <li>AR跑考會隨機出題，共兩種題型：(1)<b>點位題</b>——依系統顯示的穴位名稱，用手指在下方相機畫面中點出該穴位所在位置；(2)<b>指認題</b>——畫面中會標示出某一構造，請於下方選項選出正確名稱。</li>
+          <li>建議正臉面對鏡頭、光線充足。</li>
+          <li class="arq-tip">請上下左右移動臉部讓立體定位更容易</li>
+          <li class="arq-tip">點選時可拉近距離讓定位更精確</li>
+        </ul>
+        <button id="arqStartBtn">開始跑考（20題）</button>
         <div style="margin-top:14px;"><button class="conn-test" type="button">測試成績上傳連線</button></div>
       </div>
       <div id="arqQuestion" style="display:none;">
         <div class="targetName" id="arqName"></div>
         <div class="targetCode" id="arqCode"></div>
         <div id="arqTapHint">👆 請在上方相機畫面點出此穴位位置<br>
-        <span style="color:#888;font-weight:400;">＊上下左右移動臉部可讓立體定位更容易　＊拉近距離可讓點選更精確</span></div>
+        <span style="color:#888;font-weight:400;">＊上下左右移動臉部可讓立體定位更容易<br>＊拉近距離可讓點選更精確</span></div>
       </div>
       <div id="arqIdentifyQuestion">
         <div class="prompt" id="arqIdentifyPrompt">請觀察上方相機畫面中標示的構造，選出正確名稱</div>
@@ -240,9 +251,9 @@
         <input type="text" id="quizStudentName" placeholder="請輸入姓名">
       </div>
       <p style="font-size:11.5px;color:#999;margin:0 0 16px;line-height:1.9;">測驗共20題，隨機抽取：<br>
-      ・穴位10題（經絡歸經／取穴位置／主治功效）<br>
-      ・解剖結構5題（神經運動與感覺支配2題、肌肉起止點與功能3題）<br>
-      ・常見疾病5題（臨床症狀、分期分型）</p>
+      ・穴位（經絡歸經／取穴位置／主治功效）<br>
+      ・解剖結構（神經運動與感覺支配、肌肉起止點與功能）<br>
+      ・常見疾病（臨床症狀、分期分型）</p>
       <button id="startQuizBtn">開始測驗</button>
       <div style="margin-top:14px;text-align:center;"><button class="conn-test" type="button">測試成績上傳連線</button></div>
     </div>
@@ -274,7 +285,7 @@
   <button id="uploadCloseBtn" type="button">關閉</button>
 </div>
 
-<footer>顏面部穴位AR學習平台 v2.76 · 2026年8月16日更新</footer>
+<footer>顏面部穴位AR學習平台 v2.77 · 2026年8月17日更新</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core@4.20.0/dist/tf-core.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter@4.20.0/dist/tf-converter.min.js"></script>
@@ -617,18 +628,18 @@ const DISEASE_SYMPTOM = [
 ];
 
 const DISEASE_STAGING = [
-  { q:'面癱依病變部位分為中樞型與末梢型，下列何者為「中樞型」的特徵？',
+  { q:'顏面神經麻痺依病變部位分為中樞型與末梢型，下列何者為「中樞型」的特徵？',
     a:'上臉部不受影響，仍可閉眼、額部皺紋不會消失',
     wrong:['上下臉部皆受影響，無法閉眼且額紋消失','必定合併同側CN6麻痺','必定合併聽覺過敏與味覺減退'],
     ex:'閉眼與皺額之肌肉由兩側大腦半球共同支配，故中樞型仍保留；最快速的床邊鑑別即看額紋與閉眼。' },
-  { q:'面癱的分期，下列何者正確？',
+  { q:'顏面神經麻痺的分期，下列何者正確？',
     a:'急性期（1–2週內）／恢復期（2週後）／後遺症期（3個月以上未恢復）',
     wrong:['急性期（3天內）／亞急性期（1個月）／慢性期（半年以上）','發作期／緩解期兩期','輕度／中度／重度三級'],
     ex:'急性期宜淺刺輕刺激，恢復期可透刺加強刺激量。' },
-  { q:'面癱的嚴重度分級 House-Brackmann scale 共分幾級？',
+  { q:'顏面神經麻痺的嚴重度分級 House-Brackmann scale 共分幾級？',
     a:'I–VI級，數字越大越嚴重', wrong:['I–IV級，數字越大越輕微','1–3級','A–C三型'],
     ex:'須用力才能閉眼約為 III 級，完全無法閉眼為 VI 級，可作為療程前後的客觀追蹤指標。' },
-  { q:'面癱末梢型中的「腦內型」，病灶位於何處？',
+  { q:'顏面神經麻痺末梢型中的「腦內型」，病灶位於何處？',
     a:'橋腦', wrong:['莖乳孔外之末梢神經','腮腺內神經叢','大腦皮質運動區'],
     ex:'腦內型常合併對側半身不遂，並可伴同側CN6麻痺；腦外型病灶則在末梢神經。' },
   { q:'三叉神經痛最好發於哪些分支？',
@@ -644,17 +655,10 @@ const DISEASE_STAGING = [
   { q:'顳頜關節障礙依組織來源分型，何者針灸療效最佳？',
     a:'肌源性（咀嚼肌群緊張或激痛點）', wrong:['關節源性之關節盤不可復位型','關節退化型','咬合不正型'],
     ex:'關節源性者包含關節盤移位（可復位／不可復位）與關節退化，多需較長療程或牙科介入。' },
-  { q:'過敏性鼻炎的中醫辨證分型中，「噴嚏連連、清涕如水、遇冷即發、畏風自汗」屬何證？',
-    a:'肺氣虛寒', wrong:['脾氣虛弱','腎陽不足','肺經鬱熱'],
-    ex:'脾氣虛弱者鼻塞鼻脹較重、納差便溏；腎陽不足者病程日久、腰膝痠軟；肺經鬱熱者涕黃黏稠。' },
   { q:'眩暈的病理性分型中，「中樞性眩暈」的特徵為何？',
     a:'無疲乏性，常伴半身不遂、顏面神經麻痺或複視等神經缺損',
     wrong:['具疲乏性，伴或不伴聽神經症狀','僅見於高處或暈車時','必定合併耳鳴與聽力喪失'],
     ex:'末梢性眩暈（迷路與前庭神經疾病）則具疲乏性，病因含前庭神經炎、BPPV、梅尼爾氏病等。' },
-  { q:'顏面美容針灸的三大操作目標為何？',
-    a:'Small、Slow、Symmetric（小幅度、慢速、左右對稱）',
-    wrong:['Strong、Speed、Straight','Safe、Sterile、Shallow','Superficial、Stable、Standard'],
-    ex:'另有兩道定位線：額肌的邊緣為第一條線，第二條線起點為顴大肌與顴小肌。' },
   { q:'顏面美容針灸依施術部位分區，「下臉部」包含下列哪一組肌肉？',
     a:'口輪匝肌、降口角肌、頦肌、咬肌', wrong:['額肌、皺眉肌、降眉間肌、眼輪匝肌','提上唇肌群、顴大小肌、笑肌、鼻肌','頸闊肌、二腹肌、胸鎖乳突肌'],
     ex:'上臉部為額肌、皺眉肌、降眉間肌、眼輪匝肌等；中臉部為提上唇肌群、顴大小肌、笑肌、鼻肌；頸部為頸闊肌、二腹肌、SCM。' }

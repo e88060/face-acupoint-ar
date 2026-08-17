@@ -159,6 +159,10 @@
   .subgroup-content { display: flex; flex-direction: column; gap: 8px; padding-left: 2px; }
 
   .placeholder-note { color: #999; font-size: 11.5px; margin: 2px 0 4px; }
+  /* v2.77：說明文字改以項目符號條列，取代大量粗體標示 */
+  .note-list { margin: 3px 0 4px; padding-left: 16px; }
+  .note-list li { margin-bottom: 3px; }
+  .note-list li:last-child { margin-bottom: 0; }
 
   .nerve-block {
     background: #f2f2f0; border-radius: 10px; padding: 9px 10px 10px;
@@ -300,51 +304,62 @@
           <div class="subgroup-section">
             <div class="subgroup-header collapsed"><span class="arrow">▾</span>神經支配<label class="group-all"><input type="checkbox" class="subgroupAllCb"> 全選</label></div>
             <div class="subgroup-content collapsed">
-              <p class="placeholder-note">顏面部各表情肌（額肌、眼輪匝肌、口輪匝肌等）的「運動」皆由顏面神經（第七對腦神經）五大分支支配；顏面部皮膚、口鼻黏膜的「感覺」則由三叉神經（第五對腦神經）眼神經V1、上頷神經V2、下頷神經V3三大分支負責。咀嚼肌群（咬肌、翼內肌、翼外肌）例外，其運動由三叉神經下頷神經V3中的運動纖維支配，並非顏面神經。</p>
+              <p class="placeholder-note">顏面的運動與感覺：</p>
+              <ul class="placeholder-note note-list">
+                <li>顏面部各表情肌（額肌、眼輪匝肌、口輪匝肌等）的「<b>運動</b>」皆由顏面神經（CN7）五大分支支配；咀嚼肌群（咬肌、翼內肌、翼外肌）例外，其運動由三叉神經下頷神經V3中的運動纖維支配，並非顏面神經。</li>
+                <li>顏面部皮膚、口鼻黏膜的「<b>感覺</b>」則由三叉神經（CN5）眼神經V1、上頷神經V2、下頷神經V3三大分支負責。</li>
+              </ul>
               <div class="nerve-block">
                 <div class="nerve-title collapsed"><span class="arrow">▾</span>三叉神經<label class="blk-all"><input type="checkbox" class="blockAllCb"> 全選</label></div>
                 <div class="nerve-body collapsed">
-                  <p class="nerve-desc">感覺神經：主司臉部皮膚、口鼻黏膜的痛溫觸覺。<b>路徑：</b>三叉神經節（以虛線橢圓表示）分出三大支；<b>凡行於顱內、眶內、鼻腔內等深層者以虛線，穿出骨孔／出眶後行於皮下者以實線</b>表示。<b>畫面配色：</b>眼神經 V1＝<span style="color:#4dd0e1">青色</span>、上頷神經 V2＝<span style="color:#aed581">綠色</span>、下頷神經 V3＝<span style="color:#ce93d8">紫色</span>，與顏面神經（黃色）區別。</p>
+                  <ul class="nerve-desc note-list">
+                    <li>三叉神經為感覺神經，主司臉部皮膚、口鼻黏膜的痛溫觸覺。</li>
+                    <li>路徑：三叉神經節（以虛線橢圓表示）分出三大支；凡行於顱內、眶內、鼻腔內等深層者以虛線，穿出骨孔／出眶後行於皮下者以實線表示。畫面配色：眼神經 V1＝<span style="color:#4dd0e1">青色</span>、上頷神經 V2＝<span style="color:#aed581">綠色</span>、下頷神經 V3＝<span style="color:#ce93d8">紫色</span>，與顏面神經（黃色）區別。</li>
+                  </ul>
                   <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_ganglion"> 三叉神經節 Trigeminal ganglion</label>
                   <p class="nv-detail">位於顱底顳骨岩部三叉神經壓迹處，由此分出眼神經 V1、上頷神經 V2、下頷神經 V3 三大分支。</p>
                   <input class="note-input anat-note" data-note-id="tri_ganglion" placeholder="備註…" value="">
 
-                  <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_v1"> 眼神經 V1 Ophthalmic nerve（眶上孔）</label>
-                  <p class="nv-detail">V1 於進入眶上裂（superior orbital fissure）前，先分為<b>淚腺神經、額神經、鼻睫神經</b>三支（畫面上此三條父幹以虛線表示，行於眶內深層）；各支再分出皮支穿出眼眶到顏面，支配周圍皮膚。四條皮支<b>各有獨立出口，並非同自眶上孔發出</b>：<br>
-                  ❶<b>額神經</b>（Frontal n.）：於眶頂骨膜上前行，至眶上緣分為兩條「supra」——<br>
-                  　①<b>眶上神經</b>（Supra-orbital n.）：自<b>眶上孔／眶上切跡</b>（離正中線約 2.5 公分、約瞳孔垂線上）穿出，再分內、外側支，支配上眼皮、前額，外側支可上行至頂部頭皮。<br>
-                  　②<b>滑車上神經</b>（Supratrochlear n.）：自<b>額切跡</b>穿出，位於眶上孔<b>內側約 0.8–1 公分</b>（離正中線約 1.7 公分，約當內眥垂線、攢竹內側），沿正中線旁上行，支配前額近中線的帶狀區與內半上眼皮。<br>
-                  ❷<b>鼻睫神經</b>（Nasociliary n.）：沿眶內側壁前行，分出——<br>
-                  　③<b>滑車下神經</b>（Infratrochlear n.）：於<b>滑車下方、內眥韌帶上方</b>出眶（約內眥正上方），支配內半上眼皮、內眥、淚囊與鼻根側面。<br>
-                  　④<b>篩前神經</b>（Ant. ethmoidal n.）→<b>鼻外神經</b>（External nasal n.）：篩前神經經篩板入鼻腔、於鼻腔內下行，至<b>鼻骨下緣與上外側鼻軟骨交界處（rhinion，約鼻背中段）</b>才穿出皮下，支配該處以下之鼻背至鼻尖（<b>不含鼻翼</b>，鼻翼屬 V2 眶下神經）。<br>
-                  ❸<b>淚腺神經</b>（Lacrimal n.）：沿眶外側壁前行至淚腺，皮支自<b>眶上緣外 1/3、眶外上角</b>出眶（約眉尾垂線），僅支配<b>外半上眼皮</b>與外眥外上方的小三角區。<br>
-                  <b>體表定位點—眶上孔／眶上切跡</b>（Supraorbital foramen / notch）：位於眼眶上緣的中外側交界處（約在瞳孔正上方垂直線上），是眶上神經穿出至額頭與頭皮的皮下定位點。</p>
+                  <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_v1"> 眼神經 (Ophthalmic) V1</label>
+                  <p class="nv-detail">V1 於進入眶上裂（superior orbital fissure）前，先分為淚腺神經、額神經、鼻睫神經三支（畫面上此三條父幹以虛線表示，行於眶內深層）；各支再分出皮支穿出眼眶到顏面，支配周圍皮膚。四條皮支各有獨立出口，並非同自眶上孔發出：<br>
+                  ❶額神經（Frontal n.）：於眶頂骨膜上前行，至眶上緣分為兩條「supra」——<br>
+                  　①眶上神經（Supra-orbital n.）：自眶上孔／眶上切跡（離正中線約 2.5 公分、約瞳孔垂線上）穿出，再分內、外側支，支配上眼皮、前額，外側支可上行至頂部頭皮。<br>
+                  　②滑車上神經（Supratrochlear n.）：自額切跡穿出，位於眶上孔內側約 0.8–1 公分（離正中線約 1.7 公分，約當內眥垂線、攢竹內側），沿正中線旁上行，支配前額近中線的帶狀區與內半上眼皮。<br>
+                  ❷鼻睫神經（Nasociliary n.）：沿眶內側壁前行，分出——<br>
+                  　③滑車下神經（Infratrochlear n.）：於滑車下方、內眥韌帶上方出眶（約內眥正上方），支配內半上眼皮、內眥、淚囊與鼻根側面。<br>
+                  　④篩前神經（Ant. ethmoidal n.）→鼻外神經（External nasal n.）：篩前神經經篩板入鼻腔、於鼻腔內下行，至鼻骨下緣與上外側鼻軟骨交界處（rhinion，約鼻背中段）才穿出皮下，支配該處以下之鼻背至鼻尖（不含鼻翼，鼻翼屬 V2 眶下神經）。<br>
+                  ❸淚腺神經（Lacrimal n.）：沿眶外側壁前行至淚腺，皮支自眶上緣外 1/3、眶外上角出眶（約眉尾垂線），僅支配外半上眼皮與外眥外上方的小三角區。<br>
+                  ＊體表定位點—眶上孔／眶上切跡（Supraorbital foramen / notch）：位於眼眶上緣的中外側交界處（約在瞳孔正上方垂直線上），是眶上神經穿出至額頭與頭皮的皮下定位點。</p>
                   <input class="note-input anat-note" data-note-id="tri_v1" placeholder="備註…" value="">
 
-                  <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_v2"> 上頷神經 V2 Maxillary nerve（眶下孔）</label>
+                  <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_v2"> 上頷神經 (Maxillary nerve) V2</label>
                   <p class="nv-detail">從圓孔（foramen rotundum）離開頭顱，經翼腭窩、眶下裂進入眼眶，續行於眶下溝／眶下管，最後自眶下孔穿出。支配面部者為下列分支：<br>
-                  ❶<b>顴神經</b>（Zygomatic n.）：於眶內即由主幹分出（畫面上以虛線表示其眶內段），再分為兩支——<br>
-                  　①<b>顴顳支</b>（Zygomaticotemporal br.）：穿顴骨進入顳窩，自<b>額顴縫後方、眶外緣之後</b>穿出（在外眥的<b>外上方</b>，非外下方），向上支配前顳部皮膚。<br>
-                  　②<b>顴面支</b>（Zygomaticofacial br.）：自顴骨外側面的顴面孔穿出，位置在<b>外眥外下方約 2–2.5 公分</b>的顴突隆起上，支配顴部皮膚。<br>
-                  ③<b>眶下神經</b>（Infra-orbital n.）：從眶下孔穿出後隨即散為三群皮支——<b>下眼瞼支</b>（上行至下眼皮）、<b>鼻外側支</b>（走向鼻側與鼻翼）、<b>上唇支</b>（下行至上唇）。<br>
-                  <b>體表定位點—眶下孔</b>（Infraorbital foramen）：位於眼眶下緣中點下方約 0.5 至 1 公分處（約在瞳孔正下方、距正中線約 3 公分的顴骨／上顎骨面上），是眶下神經的淺層出口。<b>注意</b>：眶下緣本身已在下眼瞼緣下方約 0.5–0.8 公分，故自下眼瞼緣起算，眶下孔約在其下 1.3–1.8 公分處，勿誤取在眶下緣上。四白穴（ST2）即取此孔，本頁兩者共用同一定位計算。</p>
+                  ❶顴神經（Zygomatic n.）：於眶內即由主幹分出（畫面上以虛線表示其眶內段），再分為兩支——<br>
+                  　①顴顳支（Zygomaticotemporal br.）：穿顴骨進入顳窩，自額顴縫後方、眶外緣之後穿出（在外眥的外上方，非外下方），向上支配前顳部皮膚。<br>
+                  　②顴面支（Zygomaticofacial br.）：自顴骨外側面的顴面孔穿出，位置在外眥外下方約 2–2.5 公分的顴突隆起上，支配顴部皮膚。<br>
+                  ❷眶下神經（Infra-orbital n.）：從眶下孔穿出後隨即散為三群皮支——下眼瞼支（上行至下眼皮）、鼻外側支（走向鼻側與鼻翼）、上唇支（下行至上唇）。<br>
+                  ＊體表定位點—眶下孔（Infraorbital foramen）：位於眼眶下緣中點下方約 0.5 至 1 公分處（約在瞳孔正下方、距正中線約 3 公分的顴骨／上顎骨面上），是眶下神經的淺層出口。注意：眶下緣本身已在下眼瞼緣下方約 0.5–0.8 公分，故自下眼瞼緣起算，眶下孔約在其下 1.3–1.8 公分處，勿誤取在眶下緣上。四白穴（ST2）即取此孔。</p>
                   <input class="note-input anat-note" data-note-id="tri_v2" placeholder="備註…" value="">
 
-                  <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_v3"> 下頷神經 V3 Mandibular nerve（頦孔）</label>
+                  <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_v3"> 下頷神經 (Mandibular nerve) V3</label>
                   <p class="nv-detail">從卵圓孔（foramen ovale）穿出後分為前、後兩幹，此處僅列與面部感覺相關者（V3 尚含咀嚼肌群的運動纖維與舌神經等）：<br>
-                  ①<b>耳顳神經</b>（Auriculotemporal n.）：自後幹分出後以兩根夾持腦膜中動脈，向後行於<b>下頷骨髁突頸部與外耳道之間</b>，再自腮腺上緣穿出、與顳淺動脈伴行沿<b>耳屏前方</b>上行，支配耳前、外耳道、鼓膜與顳部頭皮。<br>
-                  ②<b>頰神經</b>（Buccal n.）：穿翼外肌兩頭之間下行，自咬肌前緣淺出後穿頰肌，支配頰部<b>皮膚與口腔黏膜</b>——屬感覺支，與顏面神經的頰支（運動）名同實異，是常見混淆點。<br>
-                  ③<b>下齒槽神經</b>（Inferior alveolar n.）→<b>頦神經</b>（Mental n.）：下齒槽神經經下頷孔進入下頷管（畫面上以虛線表示其骨內段），沿途分支支配下排牙齒，末端自頦孔穿出續為頦神經，支配下唇與下巴皮膚。下齒槽神經阻斷術（IANB）即以下頷孔為目標。<br>
-                  <b>體表定位點—頦孔</b>（Mental foramen）：位於下顎骨前外側、約第二小臼齒根尖下方的骨面上，為頦神經穿出供應下唇與下巴的體表定位點。</p>
+                  ❶耳顳神經（Auriculotemporal n.）：自後幹分出後以兩根夾持腦膜中動脈，向後行於下頷骨髁突頸部與外耳道之間，再自腮腺上緣穿出、與顳淺動脈伴行沿耳屏前方上行，支配耳前、外耳道、鼓膜與顳部頭皮。<br>
+                  ❷頰神經（Buccal n.）：穿翼外肌兩頭之間下行，自咬肌前緣淺出後穿頰肌，支配頰部皮膚與口腔黏膜——屬感覺支，與顏面神經的頰支（運動）名同實異，是常見混淆點。<br>
+                  ❸下齒槽神經（Inferior alveolar n.）→頦神經（Mental n.）：下齒槽神經經下頷孔進入下頷管（畫面上以虛線表示其骨內段），沿途分支支配下排牙齒，末端自頦孔穿出續為頦神經，支配下唇與下巴皮膚。下齒槽神經阻斷術（IANB）即以下頷孔為目標。<br>
+                  ＊體表定位點—頦孔（Mental foramen）：位於下顎骨前外側、約第二小臼齒根尖下方的骨面上，為頦神經穿出供應下唇與下巴的體表定位點。</p>
                   <input class="note-input anat-note" data-note-id="tri_v3" placeholder="備註…" value="">
-                  <p class="nerve-desc">＊三孔（眶上孔、眶下孔、頦孔）約略位於同一垂直線上，臨床可作為觸診與神經阻斷的定位參考。</p>
+                  <p class="nerve-desc">＊三孔（眶上孔、眶下孔、頦孔）約略位於同一垂直線上，臨床可作為觸診定位參考。</p>
 
                   <div class="nerve-title collapsed" style="margin-top:10px"><span class="arrow">▾</span>感覺分佈（皮節）<label class="blk-all"><input type="checkbox" class="blockAllCb"> 全選</label></div>
                   <div class="nerve-body collapsed">
-                    <p class="nerve-desc">勾選後於AR畫面以半透明色塊疊出該支的<b>皮膚感覺支配範圍</b>。<b>分界依據：</b>V1／V2 以<b>眼裂</b>為界（上眼瞼屬 V1、下眼瞼屬 V2），鼻部另以<b>鼻背旁正中線</b>為界（鼻背至鼻尖屬 V1，鼻側與鼻翼屬 V2）；V2／V3 以自<b>口角向後上斜行至耳屏前</b>之線為界（上唇屬 V2、下唇屬 V3）。</p>
+                    <ul class="nerve-desc note-list">
+                      <li>勾選後於AR畫面以半透明色塊疊出該支的皮膚感覺支配範圍。</li>
+                      <li>分界依據：V1／V2 以眼裂為界（上眼瞼屬 V1、下眼瞼屬 V2），鼻部另以鼻背旁正中線為界（鼻背至鼻尖屬 V1，鼻側與鼻翼屬 V2）；V2／V3 以自口角向後上斜行至耳屏前之線為界（上唇屬 V2、下唇屬 V3）。</li>
+                    </ul>
 
                     <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_derm_v1"> V1 眼神經感覺區</label>
-                    <p class="nv-detail">前額、頭皮頂部（向後可達顱頂冠狀縫一帶）、上眼瞼、內眥、鼻背與鼻尖（不含鼻翼）。<b>臨床：</b>角膜反射的傳入支屬 V1，故 V1 病變時患側角膜反射消失；帶狀疱疹侵犯 V1（herpes zoster ophthalmicus）若疹子出現在鼻尖／鼻背（Hutchinson 徵象，即鼻睫神經受侵），代表眼球併發症風險升高。</p>
+                    <p class="nv-detail">前額、頭皮頂部（向後可達顱頂冠狀縫一帶）、上眼瞼、內眥、鼻背與鼻尖（不含鼻翼）。<br>
+                    ＊臨床：角膜反射的傳入支屬 V1，故 V1 病變時患側角膜反射消失；帶狀疱疹侵犯 V1（herpes zoster ophthalmicus）若疹子出現在鼻尖／鼻背（Hutchinson 徵象，即鼻睫神經受侵），代表眼球併發症風險升高。</p>
                     <input class="note-input anat-note" data-note-id="tri_derm_v1" placeholder="備註…" value="">
 
                     <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_derm_v2"> V2 上頷神經感覺區</label>
@@ -352,7 +367,7 @@
                     <input class="note-input anat-note" data-note-id="tri_derm_v2" placeholder="備註…" value="">
 
                     <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_derm_v3"> V3 下頷神經感覺區</label>
-                    <p class="nv-detail">下唇、下巴、下頷體表面的皮膚、頰部皮膚與黏膜、耳前與顳部頭皮（耳顳神經）；深部另含下排牙齒與牙齦、舌前 2/3 的<b>一般感覺</b>（味覺則由顏面神經的鼓索負責）。V3 另含咀嚼肌群（咬肌、顳肌、翼內外肌）的運動支配，為三支中唯一的混合神經。<br><b>註：</b>耳顳神經的支配續向耳前、耳上頭皮延伸，該範圍已超出 FaceMesh 可靠涵蓋區（本頁未收錄耳部與髮際線），故填色僅畫至下顏面。</p>
+                    <p class="nv-detail">下唇、下巴、下頷體表面的皮膚、頰部皮膚與黏膜、耳前與顳部頭皮（耳顳神經）；深部另含下排牙齒與牙齦、<b>舌前 2/3</b> 的一般感覺（味覺則由顏面神經的鼓索負責）。V3 另含咀嚼肌群（咬肌、顳肌、翼內外肌）的運動支配，為三支中唯一的混合神經。<br>＊耳顳神經的支配續向耳前、耳上頭皮延伸，該範圍已超出 FaceMesh 可靠涵蓋區（本頁未收錄耳部與髮際線），故填色僅畫至下顏面。</p>
                     <input class="note-input anat-note" data-note-id="tri_derm_v3" placeholder="備註…" value="">
 
                     <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="tri_derm_spared"> 下頷角豁免區（C2–3，非三叉神經）</label>
@@ -366,7 +381,10 @@
               <div class="nerve-block">
                 <div class="nerve-title collapsed"><span class="arrow">▾</span>顏面神經<label class="blk-all"><input type="checkbox" class="blockAllCb"> 全選</label></div>
                 <div class="nerve-body collapsed">
-                  <p class="nerve-desc">運動神經：支配臉部表情肌。<b>五大分支體表投影與走向：</b>神經穿出腮腺前緣後呈扇形展開（畫面以實線表示，區別於三叉神經的虛線），其主要體表分支定位如下：</p>
+                  <ul class="nerve-desc note-list">
+                    <li>顏面神經為運動神經：支配臉部表情肌。</li>
+                    <li><b>五大分支體表投影與走向：</b>神經穿出腮腺前緣後呈扇形展開（畫面以實線表示，區別於三叉神經的虛線），其主要體表分支定位如下：</li>
+                  </ul>
                   <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_stylo"> 莖乳孔（神經幹起點）</label><input class="note-input anat-note" data-note-id="fac_stylo" placeholder="備註…" value="">
                   <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_plexus"> 腮腺內神經叢</label><input class="note-input anat-note" data-note-id="fac_plexus" placeholder="備註…" value="">
                   <label class="nerve-cb"><input type="checkbox" class="nv-cb" data-key="fac_temporal"> 顳支 Temporal branch</label>
@@ -385,11 +403,11 @@
                   <p class="nv-detail">向下穿過腮腺下極，在頸闊肌（Platysma）深面支配頸部。</p>
                   <input class="note-input anat-note" data-note-id="fac_cervical" placeholder="備註…" value="">
                   <div class="nv-landmark">
-                    <b>手術尋找顏面神經主幹（Main trunk）的三個經典解剖結構：</b>
+                    <b>＊手術尋找顏面神經主幹（Main trunk）的三個經典解剖結構：</b>
                     <ol>
-                      <li><b>耳屏軟骨切跡（Tragal pointer）</b>：耳屏軟骨前緣尖端，神經主幹位於其深面約 1.0 至 1.5 公分處（內下方）。</li>
-                      <li><b>鼓乳縫（Tympanomastoid suture）</b>：位於外耳道骨部與乳突之間的骨縫，主幹通常在此骨縫下方約 6 至 8 公厘處離開莖乳孔。</li>
-                      <li><b>二腹肌後腹（Posterior belly of digastric muscle）</b>：沿二腹肌後腹上緣向後追溯至乳突切跡，神經主幹剛好位於該肌上緣的深面。</li>
+                      <li>耳屏軟骨切跡（Tragal pointer）：耳屏軟骨前緣尖端，神經主幹位於其深面約 1.0 至 1.5 公分處（內下方）。</li>
+                      <li>鼓乳縫（Tympanomastoid suture）：位於外耳道骨部與乳突之間的骨縫，主幹通常在此骨縫下方約 6 至 8 公厘處離開莖乳孔。</li>
+                      <li>二腹肌後腹（Posterior belly of digastric muscle）：沿二腹肌後腹上緣向後追溯至乳突切跡，神經主幹剛好位於該肌上緣的深面。</li>
                     </ol>
                   </div>
                 </div>
@@ -400,7 +418,7 @@
           <div class="subgroup-section">
             <div class="subgroup-header collapsed"><span class="arrow">▾</span>血管<label class="group-all"><input type="checkbox" class="subgroupAllCb"> 全選</label></div>
             <div class="subgroup-content collapsed">
-              <p class="placeholder-note">參考文獻整理，僅供教學示意，非個人化精確血管定位，臨床注射仍須專業判斷與影像確認。</p>
+              <p class="placeholder-note">顏面表淺動脈分支。</p>
               <div class="nerve-block">
                 <div class="nerve-title collapsed"><span class="arrow">▾</span>動脈分支<label class="blk-all"><input type="checkbox" class="blockAllCb"> 全選</label></div>
                 <div class="nerve-body collapsed">
@@ -420,7 +438,7 @@
           <div class="subgroup-section">
             <div class="subgroup-header collapsed"><span class="arrow">▾</span>肌肉<label class="group-all"><input type="checkbox" class="subgroupAllCb"> 全選</label></div>
             <div class="subgroup-content collapsed">
-              <p class="placeholder-note">以外框線＋半透明著色呈現肌肉大致範圍，參考文獻整理，非個人化精確肌肉邊界，實際層次仍因個體差異而不同。</p>
+              <p class="placeholder-note">以外框線＋半透明著色呈現肌肉大致範圍，實際定位仍因個體差異而不同。</p>
               <div class="nerve-block">
                 <div class="nerve-title collapsed"><span class="arrow">▾</span>表情肌群<label class="blk-all"><input type="checkbox" class="blockAllCb"> 全選</label></div>
                 <div class="nerve-body collapsed">
@@ -513,7 +531,7 @@
           <div class="subgroup-section">
             <div class="subgroup-header collapsed"><span class="arrow">▾</span>其他重要構造<label class="group-all"><input type="checkbox" class="subgroupAllCb"> 全選</label></div>
             <div class="subgroup-content collapsed">
-              <p class="placeholder-note">以點位呈現代表性位置，參考文獻整理，僅供教學示意。</p>
+              <p class="placeholder-note">以點位呈現代表性位置，參考文獻整理。</p>
               <div class="nerve-block">
                 <div class="nerve-title collapsed"><span class="arrow">▾</span>結締組織／腺體／脂肪墊<label class="blk-all"><input type="checkbox" class="blockAllCb"> 全選</label></div>
                 <div class="nerve-body collapsed">
@@ -559,7 +577,7 @@
         <li>以上解剖與操作說明僅供學習參考，實際臨床操作請依專業判斷。</li>
       </ul>
     </div>
-    <div id="versionFooter">v2.75 · 2026年8月15日更新</div>
+    <div id="versionFooter">v2.77 · 2026年8月17日更新</div>
   </div>
 </div>
 
@@ -571,7 +589,7 @@
 
 <script>
 /* ------------------------------------------------------------------
-   顏面部穴位AR學習 v2.75
+   顏面部穴位AR學習 v2.77
    原理：MediaPipe FaceMesh 468 關鍵點 → 以穩定解剖錨點（眉/眼/鼻/口/
         臉頰輪廓/顳部）為基準，用比例換算法推算各穴位相對座標 →
         依勾選狀態即時疊加繪製，並依臉部轉向隱藏遮住那側的點
@@ -802,7 +820,7 @@ const ACUPOINTS = [
     desc:'眶下緣，瞳孔直下與外眥垂線之間凹陷處',
     indications:'目赤腫痛、視力減退、眼肌麻痺、近視',
     anatomy:'眶下緣深部為眼球下方組織，布有眶下神經分支',
-    technique:'沿眶下緣緩慢直刺0.5–1寸，不宜提插捻轉，出針後按壓片刻',
+    technique:'沿眶下緣緩慢直刺0.5–2寸，不宜提插捻轉，出針後按壓片刻。＊用特製圓頭針比較不會出血',
     calc:(kp,s,sc)=>{
       const b = s==='R'?kp[IDX.eyeBottomR]:kp[IDX.eyeBottomL];
       const o = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
@@ -831,7 +849,7 @@ const ACUPOINTS = [
     desc:'鼻翼外緣中點，鼻唇溝凹陷處',
     indications:'鼻塞、鼻淵、口眼歪斜、面癢',
     anatomy:'皮下為提上唇肌，布有眶下神經及面神經頰支',
-    technique:'斜刺或平刺0.3–0.5寸',
+    technique:'斜刺或平刺0.3–1寸',
     calc:(kp,s)=>{
       const ala = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
       return { x: ala.x, y: kp[IDX.noseBase].y };
@@ -840,7 +858,7 @@ const ACUPOINTS = [
     desc:'鼻孔外緣直下，水溝穴旁約0.5寸',
     indications:'鼻塞、鼻衄、口歪、口噤',
     anatomy:'皮下為口輪匝肌，布有眶下神經分支及面神經頰支',
-    technique:'斜刺0.3–0.5寸',
+    technique:'斜刺0.3–1寸',
     calc:(kp,s)=>{
       const ala = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
       const m = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
@@ -879,7 +897,7 @@ const ACUPOINTS = [
     desc:'口角外側，瞳孔直下',
     indications:'口眼歪斜、流涎、三叉神經痛',
     anatomy:'皮下為口輪匝肌，深層為頰肌，布有面神經及眶下神經分支',
-    technique:'斜刺或平刺0.5–0.8寸，可透刺頰車',
+    technique:'斜刺或平刺0.5–1寸，可透刺頰車',
     calc:(kp,s,sc)=>{
       const m = s==='R'?kp[IDX.mouthCornerR]:kp[IDX.mouthCornerL];
       const px = pupilCenter(kp,s).x;
@@ -889,14 +907,14 @@ const ACUPOINTS = [
     desc:'下頜角前方，咬肌附著部前緣，動脈搏動處',
     indications:'口眼歪斜、頰腫、齒痛、面癱',
     anatomy:'布有面動靜脈、面神經下頜緣支',
-    technique:'避開動脈，斜刺或平刺0.3–0.5寸',
+    technique:'<b>避開動脈</b>，斜刺或平刺0.3–0.5寸',
     calc:(kp,s)=> s==='R' ? mid(kp[IDX.mouthCornerR], kp[IDX.jawR], 0.6)
                           : mid(kp[IDX.mouthCornerL], kp[IDX.jawL], 0.6) },
   { id:'st_jiache', name:'頰車', code:'ST6', meridian:'ST', side:'LR',
     desc:'下頜角前上方一橫指，咀嚼時咬肌隆起處',
     indications:'口眼歪斜、齒痛、頰腫、牙關緊閉',
     anatomy:'皮下為咬肌，布有耳大神經及面神經下頜緣支',
-    technique:'直刺0.3–0.5寸，或平刺透地倉',
+    technique:'直刺0.3–1寸，或平刺透地倉',
     calc:(kp,s,sc)=>{
       const j = s==='R'?kp[IDX.jawR]:kp[IDX.jawL];
       return off(j, 0, -sc*0.05);
@@ -905,7 +923,7 @@ const ACUPOINTS = [
     desc:'顴弓下緣，下頜骨髁狀突前方凹陷處',
     indications:'耳聾耳鳴、齒痛、口眼歪斜、顳頜關節炎',
     anatomy:'皮下為腮腺，深層為翼外肌，布有耳顳神經及面神經',
-    technique:'直刺0.3–0.5寸，張口取穴，閉口進針',
+    technique:'直刺0.3–1寸，張口取穴，閉口進針。＊深處是蝶腭神經節（Sphenopalatine ganglion）為副交感神經節，支配淚腺、鼻竇、鼻腔黏膜、咽部的腺體等。可治療鼻過敏等症，深針2–3吋。',
     calc:(kp,s)=> s==='R' ? mid(kp[IDX.templeR], kp[IDX.jawR], 0.35)
                           : mid(kp[IDX.templeL], kp[IDX.jawL], 0.35) },
 
@@ -913,7 +931,7 @@ const ACUPOINTS = [
     desc:'目外眥直下，顴骨下緣凹陷處',
     indications:'口眼歪斜、眼瞼瞤動、齒痛、面痛',
     anatomy:'皮下為咬肌起始部，布有面神經及眶下神經分支',
-    technique:'直刺0.3–0.5寸，或斜刺',
+    technique:'直刺0.3–1寸，或斜刺',
     calc:(kp,s)=>{
       const e = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
       const ala = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
@@ -924,7 +942,7 @@ const ACUPOINTS = [
     desc:'目內眥角上方0.1寸凹陷處',
     indications:'目赤腫痛、迎風流淚、視物不明、近視',
     anatomy:'位於眼眶內側緣，深部為眼球內側，布有滑車上下神經',
-    technique:'輕推眼球固定，沿眶內側壁緩慢直刺0.3–0.5寸，不宜提插捻轉',
+    technique:'輕推眼球固定，沿眶內側壁緩慢直刺0.3–1.5寸，不宜提插捻轉。＊針刺時針尖方向外側10–15°較不會出血',
     calc:(kp,s)=>{
       const p = s==='R'?kp[IDX.eyeInnerR]:kp[IDX.eyeInnerL];
       const w = s==='R'?dist(kp[IDX.eyeOuterR],kp[IDX.eyeInnerR]):dist(kp[IDX.eyeOuterL],kp[IDX.eyeInnerL]);
@@ -934,7 +952,7 @@ const ACUPOINTS = [
     desc:'眉頭內側凹陷處，眶上切跡處',
     indications:'頭痛、眉稜骨痛、眼瞼瞤動、目視不明',
     anatomy:'皮下為額肌，布有眶上神經、眶上動靜脈',
-    technique:'平刺0.3–0.5寸，或向下透睛明（輕刺）',
+    technique:'平刺0.3–1寸，或向下透睛明（輕刺）',
     calc:(kp,s)=> s==='R' ? mid(kp[IDX.browInnerR], kp[IDX.eyeInnerR], 0.15)
                           : mid(kp[IDX.browInnerL], kp[IDX.eyeInnerL], 0.15) },
 
@@ -942,14 +960,14 @@ const ACUPOINTS = [
     desc:'眉梢外端凹陷處',
     indications:'頭痛、目眩、眼瞼瞤動、齒痛',
     anatomy:'皮下為眼輪匝肌，布有顴顳神經分支',
-    technique:'平刺0.3–0.5寸',
+    technique:'平刺0.3–1寸',
     calc:(kp,s)=> s==='R' ? kp[IDX.browOuterR] : kp[IDX.browOuterL] },
 
   { id:'gb_tongziliao', name:'瞳子髎', code:'GB1', meridian:'GB', side:'LR',
     desc:'目外眥外側0.5寸凹陷處',
     indications:'頭痛、目赤腫痛、目翳、口眼歪斜',
     anatomy:'皮下為眼輪匝肌，布有顴面神經、顴顳神經',
-    technique:'平刺0.3–0.5寸，或三稜針點刺出血',
+    technique:'平刺0.3–1寸，或三稜針點刺出血',
     calc:(kp,s,sc)=>{
       const e = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
       const dir = s==='R'?-1:1;
@@ -959,7 +977,7 @@ const ACUPOINTS = [
     desc:'顴弓上緣，下關穴直上凹陷處',
     indications:'耳聾耳鳴、齒痛、口眼歪斜、偏頭痛',
     anatomy:'皮下為顳肌，布有耳顳神經、面神經顴支',
-    technique:'直刺0.3–0.5寸，張口取穴',
+    technique:'直刺0.3–1寸，張口取穴',
     calc:(kp,s,sc)=>{
       const m = s==='R'?mid(kp[IDX.templeR],kp[IDX.jawR],0.3):mid(kp[IDX.templeL],kp[IDX.jawL],0.3);
       return off(m, 0, -sc*0.1);
@@ -968,7 +986,7 @@ const ACUPOINTS = [
     desc:'眉毛中點直上1寸',
     indications:'頭痛、眉稜骨痛、眼瞼瞤動、目眩',
     anatomy:'皮下為額肌，布有眶上神經外側支',
-    technique:'平刺0.3–0.5寸',
+    technique:'平刺0.3–1寸',
     calc:(kp,s,sc)=>{
       const b = s==='R'?kp[IDX.browMidR]:kp[IDX.browMidL];
       return off(b, 0, -sc*0.22);
