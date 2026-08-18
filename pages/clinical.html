@@ -109,7 +109,7 @@
   .sec-body p { margin: 0 0 9px; }
   .sec-body p:last-child { margin-bottom: 0; }
   .sec-body li { color: #000; font-weight: 400; }
-  .sec-body b { color: #000; font-weight: 700; }
+  .sec-body b { color: #000; font-weight: 400; }
 
   /* ---------------- v2.77：內容改以條列整理 ---------------- */
   /* 項目符號／編號清單 */
@@ -120,17 +120,19 @@
   ul.c-list { list-style-type: disc; }
   ul.c-list ul.c-list { list-style-type: circle; margin-top: 5px; }
   ol.c-list { list-style-type: decimal; }
-  .c-list::marker, .c-list > li::marker { color: #D97757; }
+  /* v2.79b：清單標記符號改黑色，橘色只保留給 .hl 重點標示 */
+  .c-list::marker, .c-list > li::marker { color: #000; }
 
   /* 條列前的小標題（取代原本整段粗體） */
+  /* v2.79b：段落小標題改黑色粗體（屬必要標題），不用橘色 */
   .sub-lead {
-    margin: 12px 0 6px; font-size: 13px; color: #b85a30;
+    margin: 12px 0 6px; font-size: 13px; color: #000;
     font-weight: 700; letter-spacing: .3px;
   }
   .sub-lead:first-child { margin-top: 0; }
 
-  /* 條目開頭的名詞標籤（小標題性質）：黑色粗體 */
-  .term { color: #000; font-weight: 700; }
+  /* v2.79b：條目開頭的名詞標籤不再加粗，與內文同為黑色一般字重 */
+  .term { color: #000; font-weight: 400; }
 
   /* 異常狀況卡片 */
   details.sec.complication {
@@ -149,7 +151,7 @@
     text-decoration: none; border: 1px solid transparent;
   }
   .pt-tag.linked {
-    background: #fdf2ea; color: #b85a30; border-color: #f0d7c4; font-weight: 700;
+    background: #fdf2ea; color: #b85a30; border-color: #f0d7c4; font-weight: 400;
   }
   a.pt-tag.linked:hover { background: #D97757; color: #fff; border-color: #D97757; }
 
@@ -157,7 +159,8 @@
     background: #fdf2ea; border-left: 3px solid #D97757; border-radius: 0;
     padding: 10px 12px; font-size: 12.5px; color: #a65b2e; line-height: 1.9; margin: 10px 0;
   }
-  .warn-box .hl { color: #8f3d18; font-weight: 700; }   /* 警示框內仍保留粗體 */
+  .warn-box .hl { color: #8f3d18; font-weight: 400; }   /* v2.79b：警示框內重點亦不加粗，僅以顏色區分 */
+  .warn-box b { font-weight: 400; }
   .top-warn { margin: 12px 0 4px; }
 
   .section-title {
@@ -171,7 +174,7 @@
   #dangerTable { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 4px; }
   #dangerTable th, #dangerTable td { border-bottom: 1px solid #eee; padding: 9px 7px; text-align: left; vertical-align: top; }
   #dangerTable th { color: #888; font-weight: 700; font-size: 11.5px; white-space: nowrap; }
-  #dangerTable td.pt-name { font-weight: 700; color: #222; white-space: nowrap; }
+  #dangerTable td.pt-name { font-weight: 400; color: #000; white-space: nowrap; }
   #dangerTable td.pt-name a { color: #b85a30; text-decoration: none; }
   #dangerTable td.pt-name a:hover { text-decoration: underline; }
 
@@ -227,7 +230,8 @@
       <div class="nav-group-label">五官疾患</div>
       <div class="nav-links">
         <a href="#d-rhinitis">過敏性鼻炎</a>
-        <a href="#d-eye">眼部疾患</a>
+        <a href="#d-dryeye">乾眼症</a>
+        <a href="#d-glaucoma">青光眼</a>
         <a href="#d-vertigo">眩暈</a>
       </div>
     </div>
@@ -258,9 +262,10 @@
       <details class="sec">
         <summary><span class="sec-title">臨床表現</span><span class="sec-arrow">▾</span></summary>
         <div class="sec-body">
-   <p>顏面神經支配臉部表情肌，受損時患者無法微笑、閉緊嘴巴，進食時食物容易從口角流出；眼周與額部肌肉無力，影響眼睛張開或閉合，抬頭紋與眼部表情逐漸消失。</p>
-   <p>常見伴隨症狀：<span class="hl">聽覺過敏（hypercusis）</span>——鐙骨肌麻痺無法調控中耳聽小骨，說話時覺得周遭聲音突然變大；耳朵或耳後乳突疼痛；<span class="hl">同側舌前2/3味覺減退</span>（鼓索神經）；鼻唇溝變淺、嘴角偏斜、流口水。</p>
-   <p>較少見者可有臉頰麻木、視力模糊。顏面神經上唾液核支配淚腺、鼻腺、舌下腺，失調亦會造成腺體分泌異常。</p>
+   <ul class="c-list">
+     <li>顏面神經支配臉部表情肌，受損時患者無法微笑、閉緊嘴巴，進食時食物容易從口角流出；眼周與額部肌肉無力，影響眼睛張開或閉合，抬頭紋與眼部表情逐漸消失。</li>
+     <li>常見伴隨症狀：<span class="hl">聽覺過敏（hypercusis）</span>——鐙骨肌麻痺無法調控中耳聽小骨，說話時覺得周遭聲音突然變大；耳朵或耳後乳突疼痛；<span class="hl">同側舌前2/3味覺減退</span>（鼓索神經）；鼻唇溝變淺、嘴角偏斜、流口水。</li>
+   </ul>
    <div class="warn-box">⚠ 眼瞼閉合不全會使眼睛乾澀，嚴重可引發<span class="hl">角膜潰瘍</span>，為本病最需優先處理的併發症。</div>
   </div>
       </details>
@@ -274,12 +279,12 @@
      <li><span class="term">神經損傷</span>：車禍、臉部外傷或手術。</li>
    </ol>
    <ul class="c-list">
-     <li><span class="term">中樞性</span>則由腦部病變引起，如中風、腦出血、腦腫瘤。</li>
      <li><span class="term">高風險族群：</span>產後婦女、糖尿病患者、水痘帶狀皰疹病毒感染者（耳前有灼熱感疼痛感者須考慮 Ramsay Hunt 亨特氏症候群）。</li>
-     <li><span class="term">預後：</span>大多數患者在治療後<span class="hl">三個月內</span>逐漸恢復。<span class="hl">年齡較大、顏面完全麻痺、有糖尿病或高血壓病史者恢復較慢。</span></li>
+     <li><span class="term">預後：</span>大多數患者在治療後<span class="hl">三個月內</span>逐漸恢復。<span class="hl">年齡較大、顏面完全麻痺、有糖尿病或高血壓病史者恢復較慢。</span>多年後仍可能復發，<span class="hl">大多發生於同側同一部位</span>。</li>
      <li><span class="term">連帶運動（synkinesis）：</span>恢復過程中神經「接錯線」，如咀嚼時不自覺眨眼、眨眼時臉頰抽動，或進食時流眼淚。通常隨治療逐漸改善，頑固者可考慮肉毒桿菌注射。</li>
    </ul>
-   <p>多年後仍可能復發，<span class="hl">大多發生於同側同一部位</span>。</p>
+   <p class="sub-lead">中樞性</p>
+   <p>由腦部病變引起，如中風、腦出血、腦腫瘤。</p>
   </div>
       </details>
       <details class="sec">
@@ -323,10 +328,11 @@
       <details class="sec">
         <summary><span class="sec-title">鑑別診斷</span><span class="sec-arrow">▾</span></summary>
         <div class="sec-body">
-   <p><span class="term">與中風（中樞性）鑑別為第一要務：</span>顏面神經麻痺通常只影響面部運動；中風則常合併其他身體症狀，如半邊手腳無力、語言不清、突發頭暈與噁心。<span class="hl">最快速的床邊鑑別是看額紋與閉眼——中樞型保留、周邊型消失。</span></p>
+   <p class="sub-lead">與中風（中樞性）鑑別：</p>
+   <p>為第一要務：顏面神經麻痺通常只影響面部運動；中風則常合併其他身體症狀，如半邊手腳無力、語言不清、突發頭暈與噁心。<span class="hl">最快速的床邊鑑別是看額紋與閉眼——中樞型保留、周邊型消失。</span></p>
    <p class="sub-lead">其他需鑑別者：</p>
    <ul class="c-list">
-     <li><span class="term">Ramsay Hunt 症候群</span>：耳前灼熱疼痛、外耳道或耳廓皰疹，屬帶狀皰疹病毒，預後較 Bell's palsy 差</li>
+     <li><span class="term">Ramsay Hunt 症候群</span>：耳前灼熱疼痛、外耳道或耳廓皰疹，為帶狀皰疹病毒感染影響顏面神經，預後較 Bell's palsy 差</li>
      <li><span class="term">腮腺腫瘤</span>：漸進性、無痛性顏面無力，須影像檢查</li>
      <li><span class="term">萊姆病</span>：合併發燒、肌肉痠痛，有蜱蟲叮咬史</li>
      <li><span class="term">顏面痙攣</span>：屬肌肉過度收縮（陽性症狀），與麻痺（陰性症狀）方向相反</li>
@@ -342,7 +348,7 @@
    遠端配合合谷、翳風；恢復期可加足三里以扶正。</p>
    <p class="sub-lead">操作技巧</p>
    <ul class="c-list">
-     <li><span class="hl">急性期（發病1–2週內）宜淺刺、輕刺激</span>，手法輕柔，避免強刺激加重局部發炎水腫。</li>
+     <li><span class="hl">急性期（發病1–2週內）宜淺刺、輕刺激</span>，手法輕柔，避免強刺激加重局部發炎水腫。<span class="hl">電針介入在急性期要慎用</span>，避免刺激發炎反應、影響神經恢復。</li>
      <li><span class="term">恢復期</span>可透刺加強刺激量：地倉透頰車、陽白透魚腰、魚腰透攢竹或魚腰透絲竹空（魚腰在眉稜骨上，直刺僅能入1–2分，故多採透刺）。</li>
      <li>可配合溫針灸、灸法或電針（疏密波）促進神經功能恢復。</li>
      <li><span class="hl">口周肌肉（笑肌、顴大肌、顴小肌、口輪匝肌）針刺不可過深</span>，以貼皮下平刺為原則。</li>
@@ -369,7 +375,7 @@
      <li><span class="term">眼部保護：</span>人工淚液、睡前眼藥膏、眼罩。</li>
      <li><span class="term">肉毒桿菌注射：</span>用於後遺症期頑固性連帶運動。</li>
    </ul>
-   <p>建議患者出現類似症狀時<span class="hl">盡快至神經科評估</span>，由醫師依病情選擇適合的治療方式；類固醇用藥與針灸療程皆須在專業指導下進行。</p>
+   <p>建議患者出現類似症狀時<span class="hl">盡快至神經科評估</span>，由醫師依病情選擇適合的治療方式。</p>
   </div>
       </details>
       <details class="sec">
@@ -380,7 +386,6 @@
      <li><span class="term">護眼為第一優先</span>：眨眼功能受損易致眼睛乾澀，嚴重可引發<span class="hl">角膜潰瘍</span>。使用人工淚液、睡前眼藥膏、外出配戴護目鏡，並可適度熱敷保濕潤滑。</li>
      <li><span class="term">按摩與熱敷</span>：依臉部肌肉走向，以大拇指對穴位進行適當按壓，配合熱敷幫助臉部血液循環，促進神經恢復。</li>
      <li><span class="term">生活作息</span>：避免溫差過大，尤其天氣寒冷或頻繁進出冷氣房；保持充足睡眠、均衡飲食、避免過度勞累以提高免疫力。</li>
-     <li><span class="term">選擇專業醫療機構與有經驗的醫師</span>進行評估與治療，確保療程的安全性與有效性。</li>
    </ol>
   </div>
       </details>
@@ -395,13 +400,18 @@
       <details class="sec">
         <summary><span class="sec-title">臨床表現</span><span class="sec-arrow">▾</span></summary>
         <div class="sec-body">
-   <p>神經支配的同側顏面肌出現不隨意、間歇的、不規則的、強直的或陣攣的收縮。</p>
-   <p><span class="hl">最常從眼輪匝肌開始</span>，隨後擴展到臉部其他部分；最常影響眼輪匝肌，其次為口輪匝肌，再其次為顴肌。<span class="hl">下眼瞼較上眼瞼常見。</span></p>
-   <p>可伴同側耳內出現節律性 clicking 聲——鼓膜張肌（tensor tympani）或鐙骨肌（stapedius）收縮所致。</p>
-   <p><span class="term">加重因子：</span>壓迫感、焦慮、神經不安、疲勞、臉部或眼睛運動、光線、閱讀、咀嚼、駕駛。<br>
-   減輕因子：放鬆、飲酒。<br>
-   <span class="hl">約80%的患者在睡眠中仍會出現痙攣。</span></p>
-   <p>常影響視覺造成閱讀、駕駛困擾，以及社交上的困窘。</p>
+   <ul class="c-list">
+     <li>神經支配的同側顏面肌出現不隨意、間歇的、不規則的、強直的或陣攣的收縮。
+       <ul class="c-list">
+         <li><span class="hl">最常從眼輪匝肌開始</span>，隨後擴展到臉部其他部分；最常影響眼輪匝肌，其次為口輪匝肌，再其次為顴肌。<span class="hl">下眼瞼較上眼瞼常見。</span></li>
+         <li>可伴同側耳內出現節律性 clicking 聲——鼓膜張肌（tensor tympani）或鐙骨肌（stapedius）收縮所致。</li>
+         <li>常影響視覺造成閱讀、駕駛困擾，以及社交上的困窘。</li>
+         <li><span class="hl">約80%的患者在睡眠中仍會出現痙攣。</span></li>
+       </ul>
+     </li>
+     <li><span class="term">加重因子：</span>壓迫感、焦慮、神經不安、疲勞、臉部或眼睛運動、光線、閱讀、咀嚼、駕駛。<br>
+     減輕因子：放鬆、飲酒。</li>
+   </ul>
   </div>
       </details>
       <details class="sec">
@@ -412,10 +422,12 @@
      <li><span class="term">血管壓迫（最主要）</span>：迷走（aberrant）或擴張的血管壓迫顏面神經的<span class="hl">神經根出口區（root exit zone）</span>——前下小腦動脈與後下小腦動脈不正常扭曲；動靜脈畸形、基底動脈瘤、椎體動脈扭曲等。</li>
      <li><span class="term">腫瘤（0.3–1.3%）</span>：腦膜瘤、脂肪瘤、表皮瘤、神經鞘瘤（小腦橋腦角腫瘤）。</li>
      <li><span class="term">顏面神經損傷</span>：異位性刺激源產生逆向傳遞，可導致顏面神經核、中樞和大腦皮質的再組織化。</li>
-     <li><span class="term">貝爾氏麻痺後之連帶運動（5.7%）</span>。⑤伴隨三叉神經痛（5.1%）。</li>
+     <li><span class="term">貝爾氏麻痺後之連帶運動（5.7%）</span>。</li>
+     <li><span class="term">伴隨三叉神經痛（5.1%）</span>。</li>
    </ol>
+   <p class="sub-lead">病理機制：</p>
    <ul class="c-list">
-     <li><span class="term">病理機制：</span>神經纖維受擠壓後髓鞘變薄甚至裸露，與其他軸突形成短回路（short circuit）；並有面神經核的脫抑制（disinhibition）。</li>
+     <li>神經纖維受擠壓後髓鞘變薄甚至裸露，與其他軸突形成短回路（short circuit）；並有面神經核的脫抑制（disinhibition）。</li>
      <li><span class="term">流行病學：</span>中年發病（40–50歲）；女性 14.5人/10萬人，男性 7.4人/10萬人，<span class="hl">女性多於男性</span>；通常單側發病，兩側性約占 0.6–3%。</li>
    </ul>
   </div>
@@ -425,6 +437,7 @@
         <div class="sec-body">
    <ul class="c-list">
      <li><span class="term">臨床觀察：</span>記錄抽搐起始部位（多為眼輪匝肌）、擴散範圍、發作頻率與持續時間、誘發與緩解因子，以及睡眠中是否持續。</li>
+     <li>評估<span class="hl">頸部（顏面神經出口）</span>是否有張力或緊繃。</li>
      <li><span class="term">影像檢查：</span>腦部 MRI／MRA 評估小腦橋腦角是否有血管壓迫或腫瘤，為排除次發性病因的關鍵。</li>
      <li><span class="term">電生理檢查：</span>肌電圖可見異常肌肉反應（abnormal muscle response, AMR）。</li>
      <li><span class="term">耳部評估：</span>若合併聽力障礙或耳鳴，須進一步排除小腦橋腦角腫瘤。</li>
@@ -434,14 +447,17 @@
       <details class="sec">
         <summary><span class="sec-title">分型分期</span><span class="sec-arrow">▾</span></summary>
         <div class="sec-body">
-   <p><span class="term">依病因分：</span>原發性（血管壓迫，最多）／次發性（腫瘤、外傷、貝爾氏麻痺後連帶運動）。</p>
-   <p class="sub-lead">依短路型態分（病理機制）：</p>
    <ul class="c-list">
-     <li><span class="term">Emphatic transmission</span>（cross talk）</li>
-     <li><span class="term">Efferent to efferent</span>：貝爾氏麻痺後非重複性的連帶運動型</li>
-     <li><span class="term">Afferent to efferent</span>：半面痙攣之重複性抽搐</li>
+     <li><span class="term">依病因分：</span>原發性（血管壓迫，最多）／次發性（腫瘤、外傷、貝爾氏麻痺後連帶運動）。</li>
+     <li><span class="term">依短路型態分（病理機制）：</span>
+       <ul class="c-list">
+         <li><span class="term">Emphatic transmission</span>（cross talk）</li>
+         <li><span class="term">Efferent to efferent</span>：貝爾氏麻痺後非重複性的連帶運動型</li>
+         <li><span class="term">Afferent to efferent</span>：半面痙攣之重複性抽搐</li>
+       </ul>
+     </li>
+     <li><span class="term">中醫辨證：</span>肝陽化風（陽太亢）／熱極生風（陽太亢）／血虛生風（陰太弱）。</li>
    </ul>
-   <p><span class="term">中醫辨證：</span>肝陽化風（陽太亢）／熱極生風（陽太亢）／血虛生風（陰太弱）。</p>
   </div>
       </details>
       <details class="sec">
@@ -449,7 +465,7 @@
         <div class="sec-body">
    <ul class="c-list">
      <li><span class="term">眼瞼痙攣（Blepharospasm）：</span><span class="hl">半面痙攣通常造成單側眨眼；雙側強烈眨眼通常為眼瞼痙攣的病徵</span>，此為最重要的鑑別點。</li>
-     <li><span class="term">顏面神經麻痺：</span>方向相反——麻痺為肌肉無力（陰性），痙攣為過度收縮（陽性）。</li>
+     <li><span class="term">顏面神經麻痺：</span>方向相反——麻痺為肌肉無力，痙攣為過度收縮。</li>
      <li><span class="term">抽動症（tic）／肌陣攣：</span>可短暫由意志抑制，睡眠中消失。</li>
      <li><span class="term">小腦橋腦角腫瘤：</span>症狀進行性加重、合併聽力障礙或其他腦神經症狀時須高度懷疑。</li>
    </ul>
@@ -463,9 +479,7 @@
    遠端：合谷、太衝、風池、三陰交（平肝熄風、養血柔筋）。</p>
    <p class="sub-lead">操作技巧</p>
    <ul class="c-list">
-     <li>局部宜<span class="hl">輕刺激、淺刺、少捻轉</span>，避免強刺激誘發或加重抽搐。</li>
-     <li>治療應以遠端平肝熄風穴位為主導，局部僅作輔助。</li>
-     <li>可配合鬆解顳肌、眼輪匝肌周邊張力。</li>
+     <li>局部宜<span class="hl">輕刺激、淺刺、少捻轉</span>，避免強刺激誘發或加重抽搐。治療應以遠端平肝熄風穴位為主導，局部僅作輔助。可配合鬆解顳肌、眼輪匝肌周邊張力。</li>
      <li>恐慌、焦慮明顯者，臨床有針膽經配合顳肌、眼輪匝肌，再加服中藥的作法。</li>
    </ul>
   </div>
@@ -506,7 +520,6 @@
    
      <li>症狀進行性加重、合併聽力障礙或其他腦神經症狀時，應主動回診安排影像檢查。</li>
    
-     <li>接受肉毒桿菌注射者，需理解療效約維持3–6個月、需重複施打，並知悉眼瞼下垂等暫時性副作用。</li>
    </ul>
   </div>
       </details>
@@ -546,7 +559,7 @@
         <div class="sec-body">
    <p><span class="term">感覺檢查：</span><span class="hl">一定要利用左右兩邊做比較，兩邊不一樣一定有問題。</span></p>
    <ul class="c-list">
-     <li>痛覺：用針刺整個臉部（切忌針不能太尖）</li>
+     <li>痛覺：用針刺整個臉部（或用棉棒後側代替）</li>
      <li>溫度覺：用冰冷或熱的物體、試管輕觸整個臉部</li>
      <li>觸覺：用棉花或毛筆輕觸整個臉部</li>
    
@@ -560,14 +573,14 @@
       <details class="sec">
         <summary><span class="sec-title">分型分期</span><span class="sec-arrow">▾</span></summary>
         <div class="sec-body">
-   <p class="sub-lead">依神經分支分：</p>
    <ul class="c-list">
-     <li><span class="term">V1 眼支（Ophthalmic branch）</span>：前額、眼眶周圍</li>
-     <li><span class="term">V2 上頷支（Maxillary branch）</span>：面頰、上唇、上齒——<span class="hl">好發</span></li>
-     <li><span class="term">V3 下頷支（Mandibular branch）</span>：下頷、下唇、下齒——<span class="hl">好發</span></li>
-   </ul>
-   <p>三分支之出顱孔（眶上孔／眶下孔／頦孔）約略在同一垂直線上，可對照AR學習頁「重要解剖結構—神經」觀察。</p>
-   <ul class="c-list">
+     <li><span class="term">依神經分支分：</span>
+       <ul class="c-list">
+         <li><span class="term">V1 眼支（Ophthalmic branch）</span>：前額、眼眶周圍</li>
+         <li><span class="term">V2 上頷支（Maxillary branch）</span>：面頰、上唇、上齒——<span class="hl">好發</span></li>
+         <li><span class="term">V3 下頷支（Mandibular branch）</span>：下頷、下唇、下齒——<span class="hl">好發</span></li>
+       </ul>
+     </li>
      <li><span class="term">依病因分：</span>典型（原發性，血管壓迫）／次發性（腫瘤、多發性硬化症）。</li>
      <li><span class="term">依病程分：</span>發作期（扳機點高度敏感）／緩解期。</li>
    </ul>
@@ -659,9 +672,11 @@
       <details class="sec">
         <summary><span class="sec-title">臨床表現</span><span class="sec-arrow">▾</span></summary>
         <div class="sec-body">
-   <p>疼痛位於顳側（太陽穴一帶），可為搏動性或緊繃感，範圍大致對應顳肌分布。</p>
-   <p>偏頭痛者常伴畏光、畏聲、噁心嘔吐，活動後加重；顳側頭痛則多與肌肉張力、姿勢、壓力相關。</p>
-   <p>觸診常可發現<span class="hl">一側顳肌緊繃或萎縮</span>、壓痛明顯；顳肌被筋膜包圍，部分人可摸到兩條界線（年紀越大越明顯）。</p>
+   <ul class="c-list">
+     <li>疼痛位於顳側（太陽穴一帶），可為搏動性或緊繃感，範圍大致對應顳肌分布。</li>
+     <li>偏頭痛者常伴畏光、畏聲、噁心嘔吐，活動後加重；顳側頭痛則多與肌肉張力、姿勢、壓力相關。</li>
+     <li>觸診常可發現<span class="hl">一側顳肌緊繃或萎縮</span>、壓痛明顯；顳肌被筋膜包圍，部分人可摸到兩條界線（年紀越大越明顯）。</li>
+   </ul>
   </div>
       </details>
       <details class="sec">
@@ -679,6 +694,15 @@
         <summary><span class="sec-title">檢驗與檢查</span><span class="sec-arrow">▾</span></summary>
         <div class="sec-body">
    <ul class="c-list">
+     <li><span class="term">偏頭痛的診斷標準（ICHD-3）：</span>
+       <ol class="c-list" style="list-style-type:upper-alpha;">
+         <li>至少有五次發作符合基準 B–D</li>
+         <li>頭痛發作持續 <span class="hl">4–72 小時</span>（未經治療或治療無效）</li>
+         <li>頭痛至少具下列四項特徵其中兩項：①單側　②搏動性　③疼痛程度中或重度　④日常活動會使頭痛加劇，或因而避免此類活動（如走路或爬樓梯）</li>
+         <li>當頭痛發作時至少有下列一項：①噁心及／或嘔吐　②畏光及怕吵</li>
+         <li>沒有其他更合適的 ICHD-3 診斷</li>
+       </ol>
+     </li>
      <li><span class="term">觸診：</span>囑患者咬緊上下顎，觸摸顳肌與咬肌是否對稱隆起；沿顳肌前後緣尋找壓痛點與轉折點。</li>
      <li><span class="term">顳頜關節評估：</span>檢查張口幅度、關節彈響、是否偏移，以排除合併顳頜關節障礙。</li>
      <li><span class="term">血壓測量：</span>高血壓引起之頭痛需另行處理。</li>
@@ -689,14 +713,17 @@
       <details class="sec">
         <summary><span class="sec-title">分型分期</span><span class="sec-arrow">▾</span></summary>
         <div class="sec-body">
-   <p><span class="term">西醫分類：</span>偏頭痛（有／無預兆）／緊縮型頭痛／叢發性頭痛。<span class="hl">偏頭痛須符合一定的頻率、性質和程度標準，否則只能算顳側頭痛。</span></p>
-   <p class="sub-lead">中醫循經分型：</p>
    <ul class="c-list">
+     <li><span class="term">西醫分類：</span>偏頭痛（有／無預兆）／緊縮型頭痛／叢發性頭痛。<span class="hl">偏頭痛須符合一定的頻率、性質和程度標準，否則只能算顳側頭痛。</span></li>
+     <li><span class="term">中醫循經分型：</span>
+       <ul class="c-list">
      <li><span class="term">少陽頭痛</span>（顳側）：局部取率谷、角孫、瞳子髎、太陽；遠端取外關、陽陵泉</li>
      <li><span class="term">陽明頭痛</span>（前額）：局部取頭維；遠端取合谷、足三里</li>
      <li><span class="term">厥陰／巔頂頭痛</span>：百會加四神聰</li>
+       </ul>
+     </li>
+     <li><span class="hl">從西醫角度看率谷或角孫都是顳肌，但中醫視之為少陽經</span>；遠道取穴時再細緻辨別屬少陽或胃經，此為比局部取穴進階的循經、遠近取穴。</li>
    </ul>
-   <p><span class="hl">從西醫角度看率谷或角孫都是顳肌，但中醫視之為少陽經</span>；遠道取穴時再細緻辨別屬少陽或胃經，此為比局部取穴進階的循經、遠近取穴。</p>
   </div>
       </details>
       <details class="sec">
@@ -714,18 +741,20 @@
       <details class="sec">
         <summary><span class="sec-title">常用選穴與操作技巧</span><span class="sec-arrow">▾</span></summary>
         <div class="sec-body">
-   <p><span class="term">常用選穴（遠近配穴）</span><br>
-   局部：<a class="pt-tag linked" href="ar.html#pt-ex_taiyang" title="在AR學習頁查看 太陽穴（EX-HN5）">太陽穴</a>、率谷、角孫、<a class="pt-tag linked" href="ar.html#pt-gb_tongziliao" title="在AR學習頁查看 瞳子髎（GB1）">瞳子髎</a>、頭維<br>
-   遠端：外關（三焦經）、陽陵泉（膽經）；屬陽明者取合谷、足三里。<br>
-   巔頂痛：百會加四神聰；高血壓引起之頭痛可搭配風池、太衝、四神聰。</p>
-   <p><span class="hl">瞳子髎（膽經）位於目外眥旁五分，距太陽穴很近且屬正經穴，臨床常直接取之。</span></p>
-   <p class="sub-lead">顳肌操作要點</p>
+   <ul class="c-list">
+     <li><span class="term">常用選穴（遠近配穴）</span><br>
+     局部：<a class="pt-tag linked" href="ar.html#pt-ex_taiyang" title="在AR學習頁查看 太陽穴（EX-HN5）">太陽穴</a>、率谷、角孫、<a class="pt-tag linked" href="ar.html#pt-gb_tongziliao" title="在AR學習頁查看 瞳子髎（GB1）">瞳子髎</a>、頭維<br>
+     遠端：外關（三焦經）、陽陵泉（膽經）；屬陽明者取合谷、足三里。<br>
+     巔頂痛：百會加四神聰；高血壓引起之頭痛可搭配風池、太衝、四神聰。</li>
+     <li><span class="hl">瞳子髎（膽經）位於目外眥旁五分，距太陽穴很近且屬正經穴，臨床常直接取之。</span></li>
+     <li><span class="term">太陽穴：</span>針刺通過皮膚、皮下組織、顳肌；可疏風散熱、清頭目。配肝俞、風池治視神經萎縮、視網膜出血；配風池、頭維治偏頭痛；配下關、地倉治顏面神經麻痺。</li>
+   </ul>
+   <p class="sub-lead">顳肌操作要點：</p>
    <ul class="c-list">
      <li>顳肌被筋膜包圍，偏頭痛的人容易有一邊顳肌萎縮，前後都要針。</li>
      <li><span class="hl">顳肌前半部比較肥厚、後半部比較薄</span>；找顳肌時要找轉折點分前後，前半部針尖朝上。</li>
      <li><span class="hl">顳肌前半部一定要針到且針數要密集一點（8～10針）</span>，顳肌的力量出來其他才會有效果；最前面一路到眼角的位置為定位參考。</li>
    </ul>
-   <p><span class="term">太陽穴：</span>針刺通過皮膚、皮下組織、顳肌；可疏風散熱、清頭目。配肝俞、風池治視神經萎縮、視網膜出血；配風池、頭維治偏頭痛；配下關、地倉治顏面神經麻痺。</p>
   </div>
       </details>
       <details class="sec">
@@ -775,9 +804,11 @@
       <details class="sec">
         <summary><span class="sec-title">臨床表現</span><span class="sec-arrow">▾</span></summary>
         <div class="sec-body">
-   <p><span class="term">三大主症：</span>張口受限、關節區疼痛、關節彈響（clicking／crepitus）。</p>
-   <p>可伴咀嚼肌痠痛、耳前疼痛、頭痛（尤其顳側）、咬合不適感。</p>
-   <p>症狀常於晨起或咀嚼硬物後加重；壓力大、夜間磨牙者更明顯。</p>
+   <ul class="c-list">
+     <li><span class="term">三大主症：</span>張口受限、關節區疼痛、關節彈響（clicking／crepitus）。</li>
+     <li>可伴咀嚼肌痠痛、耳前疼痛、頭痛（尤其顳側）、咬合不適感。</li>
+     <li>症狀常於晨起或咀嚼硬物後加重；壓力大、夜間磨牙者更明顯。</li>
+   </ul>
   </div>
       </details>
       <details class="sec">
@@ -844,7 +875,9 @@
      <li><span class="term">咬肌</span>：從頭骨到下巴，有內、外兩層；<span class="hl">貼著皮膚面針淺層</span>，針完整體應呈上窄下寬的梯形樣態。先摸下頷角，再往上推到顴骨，以另一側食指推觸確認邊緣；<span class="hl">外緣針數要比較多、比較密集</span>。</li>
      <li><span class="term">顳肌</span>：詳見「顳側頭痛」段落——前半部肥厚須密集下針且針尖朝上，後半部較薄。</li>
    </ul>
-   <p>可配合局部溫灸、按摩鬆解咬肌與翼外肌張力。</p>
+   <ul class="c-list">
+     <li>可配合局部溫灸、按摩鬆解咬肌與翼外肌張力。</li>
+   </ul>
   </div>
       </details>
       <details class="sec">
@@ -896,10 +929,12 @@
       <details class="sec">
         <summary><span class="sec-title">臨床表現</span><span class="sec-arrow">▾</span></summary>
         <div class="sec-body">
-   <p><span class="term">典型四大症狀：</span>陣發性噴嚏、清水樣鼻涕、鼻塞、鼻癢。</p>
-   <p>可伴眼癢、流淚、結膜充血（過敏性結膜炎）、鼻後滴流、慢性咳嗽。</p>
-   <p><span class="term">嗅覺障礙：</span>鼻塞使氣體分子無法到達上鼻道之嗅覺受器，形成<span class="hl">呼吸性嗅覺障礙</span>。</p>
-   <p>兒童可見黑眼圈（allergic shiner）、揉鼻動作（allergic salute）與鼻橫紋。</p>
+   <ul class="c-list">
+     <li><span class="term">典型四大症狀：</span>陣發性噴嚏、清水樣鼻涕、鼻塞、鼻癢。</li>
+     <li>可伴眼癢、流淚、結膜充血（過敏性結膜炎）、鼻後滴流、慢性咳嗽。</li>
+     <li><span class="term">嗅覺障礙：</span>鼻塞使氣體分子無法到達上鼻道之嗅覺受器，形成<span class="hl">呼吸性嗅覺障礙</span>。</li>
+     <li>兒童可見黑眼圈（allergic shiner）、揉鼻動作（allergic salute）與鼻橫紋。</li>
+   </ul>
   </div>
       </details>
       <details class="sec">
@@ -935,7 +970,8 @@
      <li><span class="term">腎陽不足</span>：病程日久、遇寒加重、腰膝痠軟、夜尿頻多</li>
      <li><span class="term">肺經鬱熱</span>：鼻癢噴嚏、涕黃黏稠、口乾咽燥</li>
    </ul>
-   <p><span class="term">嗅覺障礙分型：</span>呼吸性（鼻腔阻塞）／末梢性（嗅上皮、嗅覺細胞損傷）／中樞性。</p>
+   <p class="sub-lead">嗅覺障礙分型</p>
+   <p>呼吸性（鼻腔阻塞）／末梢性（嗅上皮、嗅覺細胞損傷）／中樞性。</p>
   </div>
       </details>
       <details class="sec">
@@ -1011,32 +1047,46 @@
       </details>
     </section>
 
-    <section class="disease-card" id="d-eye">
+    <section class="disease-card" id="d-dryeye">
       <div class="disease-head">
-        <h2>眼部疾患（目赤腫痛・視疲勞・眼瞼疾患）</h2>
-        <div class="subtitle">含急性結膜炎、麥粒腫、視神經萎縮、青少年近視、視疲勞等眼周相關證治</div>
-        <button class="expand-all" type="button" data-target="d-eye">全部展開</button>
+        <h2>乾眼症（白澀症・神水將枯）<span class="badge">常見</span></h2>
+        <div class="subtitle">淚液分泌不足或蒸發過強所致之眼表疾病；中醫多屬肺陰不足、肝腎陰虛，或脾胃濕熱蘊結胞瞼</div>
+        <button class="expand-all" type="button" data-target="d-dryeye">全部展開</button>
       </div>
-      <div class="warn-box top-warn">⚠ <b>球後穴（EX-HN7）</b>位於眶下緣外1/4與內3/4交界，須以執筆式持針沿眶腔下壁直刺1–1.5吋，針感多為眼球痠脹或突出感。<span class="hl">此穴風險高，且刺破血管是常見的事</span>——成為熊貓眼就算了，若血往眼球流便會造成角膜或結膜下充血。<span class="hl">不必為了療效未定的穴位而冒險。</span>所有眼周穴位（睛明、承泣、球後）出針後皆須立即以棉球加壓止血、勿揉按。</div>
+      <div class="warn-box top-warn">⚠ 眼周穴位（<a class="pt-tag linked" href="ar.html#pt-bl_jingming" title="在AR學習頁查看 睛明（BL1）">睛明</a><a class="pt-tag linked" href="ar.html#pt-st_chengqi" title="在AR學習頁查看 承泣（ST1）">承泣</a>）組織疏鬆、血管密集，<span class="hl">出針後務必立即以棉球加壓止血、勿揉按</span>；乾眼患者眼表本已脆弱，針刺前後應避免反覆揉眼。<br>
+      ⚠ 乾眼若合併<span class="hl">視力急劇下降、劇烈眼痛、畏光流淚不止</span>，須排除角膜潰瘍、鞏膜炎等眼科急症，立即轉診。</div>
       <details class="sec">
         <summary><span class="sec-title">臨床表現</span><span class="sec-arrow">▾</span></summary>
         <div class="sec-body">
    <ul class="c-list">
-     <li><span class="term">目赤腫痛：</span>結膜充血、畏光流淚、異物感、分泌物增多。</li>
-     <li><span class="term">麥粒腫（針眼）：</span>眼瞼局部紅腫熱痛、可觸及硬結。</li>
-     <li><span class="term">視疲勞：</span>久視後眼脹、乾澀、視物模糊、伴頭痛與頸肩緊繃。</li>
-     <li><span class="term">視神經病變：</span>視力減退、視野缺損、色覺異常。</li>
+     <li><span class="term">核心症狀：</span>眼乾澀、異物感（沙粒感）、灼熱刺痛、眼皮沉重、睜眼費力。</li>
+     <li><span class="term">視覺症狀：</span><span class="hl">視力時好時壞、眨眼後短暫變清楚</span>——淚膜不穩定所致，為與屈光不正的重要區別。</li>
+     <li><span class="term">看似矛盾的徵象：</span>部分患者反而<span class="hl">易流淚</span>，屬眼表刺激引發的反射性流淚，並非淚液充足。</li>
+     <li><span class="term">加重情境：</span>長時間使用螢幕、閱讀、開車、配戴隱形眼鏡、冷氣或電扇直吹、乾燥或多風環境、睡眠不足；症狀多<span class="hl">午後至傍晚加重</span>。</li>
+     <li><span class="term">眼瞼徵象：</span>瞼緣充血增厚、瞼板腺開口阻塞或分泌物混濁（瞼板腺功能障礙 MGD），常合併眼瞼炎。</li>
+     <li><span class="term">全身伴隨：</span>合併口乾、關節痠痛者須考慮乾燥症候群（Sjögren syndrome）。</li>
    </ul>
   </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">病因、流行病學與預後</span><span class="sec-arrow">▾</span></summary>
         <div class="sec-body">
+   <p class="sub-lead">西醫病因：</p>
    <ul class="c-list">
-     <li><span class="term">西醫：</span>感染（病毒、細菌）、過敏、眼瞼腺體阻塞、長時間近距離用眼、屈光不正未矯正。</li>
-     <li><span class="term">中醫：</span>肝開竅於目；風熱上攻、肝火上炎則目赤腫痛；肝血不足、肝腎陰虛則視物昏花、眼乾澀。</li>
-     <li><span class="term">解剖基礎：</span>五臟六腑之精氣皆上注於目；筋骨氣血之精與脈並繫於目、上屬於腦。</li>
-     <li><span class="term">預後：</span>急性結膜炎與麥粒腫多可短期痊癒；視神經萎縮預後較差，針灸多為輔助。</li>
+     <li><span class="term">水液缺乏型：</span>淚腺分泌不足，見於年長者、更年期女性、乾燥症候群、淚腺放射線或手術後。</li>
+     <li><span class="term">蒸發過強型（最常見）：</span><span class="hl">瞼板腺功能障礙（MGD）</span>使脂質層不足、淚膜快速蒸發；長時間注視螢幕致<span class="hl">眨眼次數由每分鐘約15次降至5次以下</span>。</li>
+     <li><span class="term">藥物因素：</span>抗組織胺、抗憂鬱劑、利尿劑、部分降壓藥、含防腐劑（BAK）之長期點眼藥。</li>
+     <li><span class="term">其他：</span>隱形眼鏡長期配戴、雷射屈光手術後、眼瞼閉合不全（含顏面神經麻痺後遺症）、維生素A缺乏。</li>
+   </ul>
+   <p class="sub-lead">中醫病機：</p>
+   <ul class="c-list">
+     <li>肝開竅於目、淚為肝之液；<span class="hl">肝腎陰虛則神水不足</span>，目失濡養而乾澀。</li>
+     <li>肺陰不足、津不上承則白睛乾澀無華；久視傷血，血虛不能養目。</li>
+     <li>脾胃濕熱蘊結胞瞼，可見瞼緣紅赤、分泌物黏稠，對應現代之瞼板腺功能障礙。</li>
+   </ul>
+   <ul class="c-list">
+     <li><span class="term">流行病學：</span>盛行率隨年齡上升，女性多於男性，與更年期荷爾蒙變化相關；3C 使用普及使年輕族群比例明顯增加。</li>
+     <li><span class="term">預後：</span>屬<span class="hl">慢性、需長期管理</span>之疾病，多數可良好控制但不易根治；針灸與熱敷對蒸發過強型及視疲勞相關者反應較佳。</li>
    </ul>
   </div>
       </details>
@@ -1044,25 +1094,35 @@
         <summary><span class="sec-title">檢驗與檢查</span><span class="sec-arrow">▾</span></summary>
         <div class="sec-body">
    <ul class="c-list">
-     <li><span class="term">視力與視野檢查</span>為基本評估。</li>
-     <li><span class="term">眼瞼與結膜視診：</span>區分結膜充血（周邊為主）與睫狀充血（角膜緣為主，提示較嚴重的角膜或虹膜病變）。</li>
-     <li><span class="term">角膜反射：</span>感覺經三叉神經 V1 傳入、顏面神經傳出（5進7出）。</li>
-     <li><span class="term">眼球運動（EOM）：</span>評估 CN3、CN4、CN6。</li>
-     <li><span class="term">眼底檢查：</span>視神經萎縮、視網膜出血之評估。</li>
+     <li><span class="term">淚膜破裂時間（TBUT）：</span>點螢光素後囑患者眨眼一次再持續睜眼，記錄淚膜出現破裂點的時間，<span class="hl">小於10秒為不穩定</span>。</li>
+     <li><span class="term">Schirmer 試驗：</span>試紙置於下瞼外1/3結膜囊5分鐘，<span class="hl">濕潤長度小於5mm 提示水液分泌不足</span>。</li>
+     <li><span class="term">角結膜染色：</span>螢光素或麗絲胺綠染色，觀察角膜點狀上皮缺損之範圍與位置。</li>
+     <li><span class="term">瞼板腺評估：</span>以指腹輕壓瞼緣觀察分泌物性狀（清澈／混濁／牙膏樣），並檢視腺體開口是否阻塞。</li>
+     <li><span class="term">問卷量表：</span>OSDI 或 SPEED 問卷可量化症狀嚴重度，適合作為療程前後的追蹤指標。</li>
+     <li><span class="term">中醫四診：</span>觀察舌質（紅少苔屬陰虛、黃膩屬濕熱）與脈象，並詢問口乾、便祕、睡眠與情緒。</li>
    </ul>
-   <div class="warn-box">⚠ 突發視力下降、眼球劇痛合併頭痛噁心（急性青光眼）、外傷後視力改變者，應<span class="hl">立即轉診眼科</span>。</div>
   </div>
       </details>
       <details class="sec">
         <summary><span class="sec-title">分型分期</span><span class="sec-arrow">▾</span></summary>
         <div class="sec-body">
-   <p><span class="term">依病位分：</span>眼瞼（麥粒腫、眼瞼炎）／結膜（結膜炎）／角膜（角膜炎、潰瘍）／眼內（青光眼、白內障）／視神經（視神經炎、萎縮）。</p>
-   <p class="sub-lead">中醫辨證分型：</p>
    <ul class="c-list">
-     <li><span class="term">風熱外襲</span>：目赤癢痛、羞明流淚、發病急</li>
-     <li><span class="term">肝火上炎</span>：目赤腫痛劇烈、口苦咽乾、煩躁易怒</li>
-     <li><span class="term">肝腎陰虛</span>：眼乾澀、視物昏花、腰膝痠軟</li>
-     <li><span class="term">氣血不足</span>：久視疲勞、視物模糊、面色少華</li>
+     <li><span class="term">依機轉分：</span>
+       <ul class="c-list">
+         <li><span class="term">水液缺乏型：</span>Schirmer 明顯偏低，常合併全身乾燥症狀。</li>
+         <li><span class="term">蒸發過強型：</span>Schirmer 尚可但 TBUT 明顯縮短，多合併瞼板腺功能障礙。</li>
+         <li><span class="term">混合型：</span>臨床最常見，兩種機轉並存。</li>
+       </ul>
+     </li>
+     <li><span class="term">依嚴重度分：</span>輕度（僅症狀、無染色）／中度（點狀角膜上皮缺損）／重度（絲狀角膜炎、角膜潰瘍風險）。</li>
+     <li><span class="term">中醫辨證分型：</span>
+       <ul class="c-list">
+         <li><span class="term">肺陰不足：</span>眼乾少淚、乾咳咽燥、舌紅少津。</li>
+         <li><span class="term">肝腎陰虛：</span>眼乾澀昏花、腰膝痠軟、頭暈耳鳴、五心煩熱。</li>
+         <li><span class="term">脾胃濕熱：</span>瞼緣紅赤、眵多黏稠、口黏納呆、舌苔黃膩。</li>
+         <li><span class="term">氣滯血瘀：</span>久病、情志不遂，眼脹刺痛、目絡赤絲。</li>
+       </ul>
+     </li>
    </ul>
   </div>
       </details>
@@ -1070,10 +1130,12 @@
         <summary><span class="sec-title">鑑別診斷</span><span class="sec-arrow">▾</span></summary>
         <div class="sec-body">
    <ul class="c-list">
-     <li><span class="term">急性結膜炎 vs 急性青光眼：</span>後者<span class="hl">眼球劇痛、視力急劇下降、角膜霧化、瞳孔中度散大固定、合併頭痛噁心嘔吐</span>，屬眼科急症。</li>
-     <li><span class="term">麥粒腫 vs 霰粒腫：</span>前者急性紅腫熱痛，後者為無痛性慢性硬結。</li>
-     <li><span class="term">結膜炎 vs 角膜炎：</span>後者有明顯畏光、視力受影響、睫狀充血。</li>
-     <li><span class="term">視疲勞 vs 乾眼症：</span>後者有明確淚液分泌不足或蒸發過強之證據。</li>
+     <li><span class="term">過敏性結膜炎：</span>以<span class="hl">癢</span>為主症，結膜乳突增生、季節性明顯，常合併過敏性鼻炎。</li>
+     <li><span class="term">瞼緣炎／蠕形蟎感染：</span>睫毛根部脫屑或圓柱狀套袖樣結痂，晨起症狀最明顯。</li>
+     <li><span class="term">視疲勞（調節性）：</span>症狀隨用眼時間累積，休息後緩解，TBUT 與染色多正常。</li>
+     <li><span class="term">角膜病變／絲狀角膜炎：</span>疼痛與畏光顯著、視力下降，需裂隙燈確認。</li>
+     <li><span class="term">藥物性眼表病變：</span>長期使用含防腐劑眼藥水，停藥或改用不含防腐劑後改善。</li>
+     <li><span class="term">眼瞼閉合不全：</span>顏面神經麻痺、甲狀腺眼病所致之暴露性角膜炎，<span class="hl">須先處理原發病</span>。</li>
    </ul>
   </div>
       </details>
@@ -1081,18 +1143,13 @@
         <summary><span class="sec-title">常用選穴與操作技巧</span><span class="sec-arrow">▾</span></summary>
         <div class="sec-body">
    <ul class="c-list">
-     <li><span class="term">常用選穴</span><br>
-   <a class="pt-tag linked" href="ar.html#pt-bl_jingming" title="在AR學習頁查看 睛明（BL1）">睛明</a><a class="pt-tag linked" href="ar.html#pt-st_chengqi" title="在AR學習頁查看 承泣（ST1）">承泣</a><a class="pt-tag linked" href="ar.html#pt-bl_zanzhu" title="在AR學習頁查看 攢竹（BL2）">攢竹</a><a class="pt-tag linked" href="ar.html#pt-sj_sizhukong" title="在AR學習頁查看 絲竹空（SJ23）">絲竹空</a><a class="pt-tag linked" href="ar.html#pt-gb_tongziliao" title="在AR學習頁查看 瞳子髎（GB1）">瞳子髎</a><a class="pt-tag linked" href="ar.html#pt-ex_yuyao" title="在AR學習頁查看 魚腰（EX-HN4）">魚腰</a><a class="pt-tag linked" href="ar.html#pt-st_sibai" title="在AR學習頁查看 四白（ST2）">四白</a><a class="pt-tag linked" href="ar.html#pt-ex_taiyang" title="在AR學習頁查看 太陽穴（EX-HN5）">太陽穴</a><br>
-   遠端配合合谷、太衝、風池、肝俞。</li>
-     <li><span class="term">常用配伍：</span>風池＋睛明＋太陽＋攢竹＋合谷治目赤腫痛、青少年近視；肝俞＋風池＋太陽治視神經萎縮、視網膜出血。</li>
-   </ul>
-   <p class="sub-lead">取穴與進針要點</p>
-   <ul class="c-list">
-     <li>欲改善視力問題，宜取<span class="hl">眶緣凹溝處</span>之穴位——凹溝多有神經血管組織依附（其中以神經最多），如攢竹（眶上切跡處）、承泣、睛明；沿眶緣進針一至兩分即可，<span class="hl">睛明須沿鼻淚管走向</span>。</li>
-     <li><span class="term">魚頭 vs 攢竹：</span>魚頭在眉骨上，攢竹位於眶下緣凹溝，故改善視力應取攢竹、瞳子髎、承泣、睛明、絲竹空（眶上緣）。</li>
-     <li><span class="term">魚腰</span>在眉稜骨上，直刺深度僅1–2分，故多改採魚腰透攢竹、魚腰透絲竹空；魚頭、魚腰、魚尾位於眼輪匝肌上，可治顏面神經麻痺與肌肉問題。</li>
-     <li><span class="term">眼輪匝肌（美容針法）</span>：第一針自攢竹指向對側睛明方向，角度沿著皮膚走。</li>
-     <li><span class="term">耳尖（EX-HN6）</span>：折耳向前之耳廓上方尖端；<span class="hl">很少針，主要用於放血</span>，適用急性高熱、高血壓或眼睛急性角結膜炎。</li>
+     <li><span class="term">常用選穴（遠近配穴）</span><br>
+     局部：<a class="pt-tag linked" href="ar.html#pt-bl_jingming" title="在AR學習頁查看 睛明（BL1）">睛明</a><a class="pt-tag linked" href="ar.html#pt-st_chengqi" title="在AR學習頁查看 承泣（ST1）">承泣</a><a class="pt-tag linked" href="ar.html#pt-st_sibai" title="在AR學習頁查看 四白（ST2）">四白</a><a class="pt-tag linked" href="ar.html#pt-bl_zanzhu" title="在AR學習頁查看 攢竹（BL2）">攢竹</a><a class="pt-tag linked" href="ar.html#pt-ex_yuyao" title="在AR學習頁查看 魚腰（EX-HN4）">魚腰</a><a class="pt-tag linked" href="ar.html#pt-sj_sizhukong" title="在AR學習頁查看 絲竹空（SJ23）">絲竹空</a><a class="pt-tag linked" href="ar.html#pt-gb_tongziliao" title="在AR學習頁查看 瞳子髎（GB1）">瞳子髎</a><a class="pt-tag linked" href="ar.html#pt-ex_taiyang" title="在AR學習頁查看 太陽穴（EX-HN5）">太陽穴</a><br>
+     遠端：合谷、太衝（開四關、疏肝明目）、光明（膽經絡穴，明目要穴）、三陰交、太溪（滋補肝腎）、足三里（益氣生津）；背俞可取肝俞、腎俞。</li>
+     <li><span class="term">眼周操作原則：</span><span class="hl">淺刺、不提插、不捻轉</span>；睛明須輕推眼球固定後沿眶內側壁緩慢進針，承泣沿眶下緣緩慢直刺，兩穴皆<span class="hl">出針後立即按壓一至兩分鐘</span>。</li>
+     <li><span class="term">眼周替代方案：</span>畏針或凝血功能不佳者，可改以攢竹、魚腰、絲竹空、太陽等<span class="hl">眶緣外穴位</span>為主，同樣可改善局部循環而風險低得多。</li>
+     <li><span class="term">瞼板腺處理：</span>針灸前後配合<span class="hl">40℃左右熱敷10分鐘＋沿瞼緣由根部往睫毛方向按摩</span>，對蒸發過強型療效關鍵。</li>
+     <li><span class="term">其他療法：</span>耳穴貼壓（眼、肝、腎、內分泌）、頭皮針視區、頸肩鬆解（久視者多合併頸肩緊繃影響眼部循環）。</li>
    </ul>
   </div>
       </details>
@@ -1100,11 +1157,11 @@
         <summary><span class="sec-title">中藥及其他中醫治療</span><span class="sec-arrow">▾</span></summary>
         <div class="sec-body">
    <ul class="c-list">
-     <li><span class="term">風熱外襲：</span>疏風清熱——銀翹散、桑菊飲。</li>
-     <li><span class="term">肝火上炎：</span>清肝瀉火——龍膽瀉肝湯。</li>
-     <li><span class="term">肝腎陰虛：</span>滋養肝腎——杞菊地黃丸。</li>
-     <li><span class="term">氣血不足：</span>益氣養血——八珍湯、歸脾湯。</li>
-     <li><span class="term">其他療法：</span>耳尖或太陽穴點刺放血（急性目赤腫痛）、耳穴貼壓（眼、肝、目1、目2）、眼周溫熱敷。</li>
+     <li><span class="term">肺陰不足：</span>養陰潤肺——養陰清肺湯、沙參麥冬湯加減。</li>
+     <li><span class="term">肝腎陰虛：</span>滋補肝腎、養血明目——<span class="hl">杞菊地黃丸</span>、明目地黃丸、一貫煎加減。</li>
+     <li><span class="term">脾胃濕熱：</span>清熱化濕——甘露飲、三仁湯加減，兼瞼緣紅赤者可佐清胃散。</li>
+     <li><span class="term">氣滯血瘀：</span>疏肝行氣、活血通絡——逍遙散合桃紅四物湯加減。</li>
+     <li><span class="term">單味與藥膳：</span>枸杞、菊花、決明子、麥門冬代茶飲；陰虛內熱者忌久服溫燥之品。</li>
    </ul>
   </div>
       </details>
@@ -1112,10 +1169,11 @@
         <summary><span class="sec-title">西醫治療</span><span class="sec-arrow">▾</span></summary>
         <div class="sec-body">
    <ul class="c-list">
-     <li><span class="term">結膜炎：</span>細菌性用抗生素眼藥水；病毒性以支持療法為主、注意接觸傳染；過敏性用抗組織胺或肥大細胞穩定劑眼藥水。</li>
-     <li><span class="term">麥粒腫：</span>熱敷、局部抗生素藥膏；化膿嚴重者切開引流。</li>
-     <li><span class="term">視疲勞／乾眼：</span>人工淚液、屈光矯正、用眼習慣調整。</li>
-     <li><span class="term">青光眼：</span>降眼壓藥物、雷射或手術，屬眼科專科處理。</li>
+     <li><span class="term">人工淚液：</span>第一線治療；需頻繁點用（每日超過4至6次）者<span class="hl">應改用不含防腐劑劑型</span>，夜間可用凝膠或藥膏。</li>
+     <li><span class="term">抗發炎治療：</span>局部環孢素（cyclosporine）、Lifitegrast，或短期低濃度類固醇；<span class="hl">類固醇須監測眼壓，不可長期自行使用</span>。</li>
+     <li><span class="term">瞼板腺治療：</span>熱敷與眼瞼清潔為基礎；中重度可用脈衝光（IPL）或熱脈動治療，慢性瞼緣炎可口服低劑量四環黴素類。</li>
+     <li><span class="term">淚點栓塞：</span>適用於水液缺乏型且抗發炎治療反應不足者。</li>
+     <li><span class="term">營養與環境：</span>Omega-3 補充、室內濕度維持、避免出風口直吹。</li>
    </ul>
   </div>
       </details>
@@ -1123,15 +1181,158 @@
         <summary><span class="sec-title">衛教</span><span class="sec-arrow">▾</span></summary>
         <div class="sec-body">
    <ul class="c-list">
-     <li><span class="term">用眼衛生</span>：近距離用眼每20–30分鐘遠望休息，保持適當閱讀距離與充足照明。</li>
-   
-     <li>急性結膜炎具傳染性——勤洗手、勿揉眼、毛巾與寢具分開使用。</li>
-   
-     <li>麥粒腫勿自行擠壓，以免感染擴散。</li>
-   
-     <li><span class="hl">眼周針刺後可能出現瘀青</span>，事前應充分告知；出針後立即按壓、勿揉。</li>
-   
-     <li>配戴隱形眼鏡者於眼部發炎期間應暫停配戴。</li>
+     <li><span class="hl">20-20-20 原則</span>：每用眼20分鐘，看20英尺（約6公尺）外的景物20秒，並刻意完整眨眼。</li>
+     <li>螢幕位置<span class="hl">略低於視線</span>可減少眼裂暴露面積；避免在昏暗環境長時間注視螢幕。</li>
+     <li>避免冷氣、電扇、車內出風口直吹眼睛；乾燥季節可使用加濕器。</li>
+     <li>隱形眼鏡族群縮短配戴時數、避免過夜配戴；症狀急性期建議暫停配戴改用眼鏡。</li>
+     <li>每日熱敷與眼瞼清潔應<span class="hl">持續數週以上</span>才看得到效果，須事先說明以免中斷。</li>
+     <li>充足睡眠與飲水；中醫觀點認為熬夜傷肝血、久視傷血，皆會使眼乾加重。</li>
+   </ul>
+  </div>
+      </details>
+    </section>
+
+    <section class="disease-card" id="d-glaucoma">
+      <div class="disease-head">
+        <h2>青光眼（綠風內障・青風內障）</h2>
+        <div class="subtitle">眼壓升高或視神經血流灌注不足所致之進行性視神經病變；中醫急性者屬「綠風內障」、慢性者屬「青風內障」</div>
+        <button class="expand-all" type="button" data-target="d-glaucoma">全部展開</button>
+      </div>
+      <div class="warn-box top-warn">⚠ <span class="hl">急性隅角閉鎖型青光眼為眼科急症</span>——劇烈眼痛頭痛、噁心嘔吐、視力驟降、看燈光有彩虹圈者，<span class="hl">須立即轉診眼科，不可先行針灸觀察</span>，延誤數小時即可能造成永久視神經損傷。<br>
+      ⚠ 青光眼的<span class="hl">視神經損害不可逆</span>，針灸屬輔助療法，<span class="hl">絕不可取代降眼壓藥物或建議患者停藥</span>。<br>
+      ⚠ 眼壓未受控者，眼周穴位<span class="hl">避免深刺、避免大幅提插捻轉、避免眼周放血</span>；出針後確實按壓，勿加壓揉按眼球。</div>
+      <details class="sec">
+        <summary><span class="sec-title">臨床表現</span><span class="sec-arrow">▾</span></summary>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">慢性隅角開放型（最常見）：</span><span class="hl">早期幾乎無症狀</span>，眼壓緩慢升高，<span class="hl">周邊視野由外向內逐漸缺損</span>，患者常至中晚期出現管狀視野才察覺，故有「視力小偷」之稱。</li>
+     <li><span class="term">急性隅角閉鎖型：</span>劇烈眼痛與同側頭痛、<span class="hl">噁心嘔吐</span>（易誤為腸胃炎或偏頭痛）、視力急遽下降、<span class="hl">看燈光周圍有彩虹圈（虹視）</span>。</li>
+     <li><span class="term">急性發作之客觀徵象：</span>結膜充血、<span class="hl">角膜霧化水腫</span>、前房變淺、<span class="hl">瞳孔中度散大且對光反應遲鈍</span>、指觸眼球堅硬如石。</li>
+     <li><span class="term">慢性閉鎖型：</span>間歇性眼脹頭痛、傍晚或暗處看燈有光暈，休息後自行緩解，易被忽略。</li>
+     <li><span class="term">正常眼壓性青光眼：</span>眼壓在正常範圍仍持續視野缺損，與視神經血流灌注不足、低血壓、血管痙攣相關，此型中醫調理介入空間較大。</li>
+   </ul>
+  </div>
+      </details>
+      <details class="sec">
+        <summary><span class="sec-title">病因、流行病學與預後</span><span class="sec-arrow">▾</span></summary>
+        <div class="sec-body">
+   <p class="sub-lead">西醫病因：</p>
+   <ul class="c-list">
+     <li><span class="term">共同機轉：</span>房水排出受阻致眼壓升高，壓迫視神經盤篩板造成<span class="hl">視網膜神經節細胞漸進性凋亡</span>；另有血流灌注不足之非眼壓因素。</li>
+     <li><span class="term">開放隅角型危險因子：</span>年齡增長、家族史、<span class="hl">高度近視</span>、糖尿病、角膜偏薄、長期使用類固醇（含鼻噴劑與眼藥膏）。</li>
+     <li><span class="term">閉鎖隅角型危險因子：</span><span class="hl">遠視、前房淺、年長女性、亞洲人種</span>；暗處久待、趴睡、使用抗膽鹼類藥物或散瞳劑可誘發急性發作。</li>
+     <li><span class="term">續發性：</span>葡萄膜炎、外傷、新生血管性（糖尿病視網膜病變、視網膜靜脈阻塞）、水晶體因素、類固醇反應。</li>
+   </ul>
+   <p class="sub-lead">中醫病機：</p>
+   <ul class="c-list">
+     <li>急性發作屬<span class="hl">綠風內障</span>：肝鬱化火、風火痰上擾清竅，氣血並走於上而神水瘀滯。</li>
+     <li>慢性者屬<span class="hl">青風內障</span>：肝鬱氣滯、痰濕內阻，久則肝腎陰虛、目絡失養。</li>
+     <li>情志不遂為重要誘因——古人已觀察到「暴怒」與綠風內障發作相關，與現代所知情緒壓力影響眼壓相符。</li>
+   </ul>
+   <ul class="c-list">
+     <li><span class="term">流行病學：</span>為全球不可逆失明的首要原因之一；40歲以上盛行率隨年齡明顯上升，<span class="hl">亞洲人閉鎖隅角型比例高於西方</span>。</li>
+     <li><span class="term">預後：</span><span class="hl">已喪失的視野無法恢復</span>，治療目標為控制眼壓、延緩惡化；早期診斷與長期規律用藥是保住視力的關鍵。</li>
+   </ul>
+  </div>
+      </details>
+      <details class="sec">
+        <summary><span class="sec-title">檢驗與檢查</span><span class="sec-arrow">▾</span></summary>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">眼壓測量：</span>Goldmann 壓平式為標準，正常約 10–21 mmHg；須併同<span class="hl">角膜厚度</span>判讀，角膜偏薄者實際眼壓會被低估。</li>
+     <li><span class="term">視神經盤評估：</span>觀察<span class="hl">杯盤比（C/D ratio）</span>是否增大、盤沿變薄或有缺口、視盤旁出血。</li>
+     <li><span class="term">視野檢查：</span>自動視野計為追蹤惡化程度的核心工具，典型可見旁中心暗點、鼻側階梯、弓形暗點。</li>
+     <li><span class="term">OCT：</span>量測視網膜神經纖維層（RNFL）與神經節細胞複合體厚度，可早於視野變化偵測損傷。</li>
+     <li><span class="term">隅角鏡檢查：</span>區分開放隅角與閉鎖隅角，決定治療方向（藥物／雷射虹膜穿孔術）。</li>
+     <li><span class="term">中醫四診：</span>急性發作多見舌紅苔黃膩、脈弦數；慢性者多見弦細或細數脈，並須詢問情緒、睡眠與頭痛病史。</li>
+   </ul>
+  </div>
+      </details>
+      <details class="sec">
+        <summary><span class="sec-title">分型分期</span><span class="sec-arrow">▾</span></summary>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">依隅角與病因分：</span>
+       <ul class="c-list">
+         <li><span class="term">原發性開放隅角型：</span>隅角正常但小樑網排出阻力增加，病程隱匿。</li>
+         <li><span class="term">原發性閉鎖隅角型：</span>再分為急性發作、亞急性（間歇性）與慢性型。</li>
+         <li><span class="term">正常眼壓性：</span>眼壓正常仍持續進展，強調血流與神經保護。</li>
+         <li><span class="term">續發性：</span>由其他眼病或全身疾病、藥物引起。</li>
+       </ul>
+     </li>
+     <li><span class="term">依視野損害分期：</span>早期（視野尚無明顯缺損或僅旁中心暗點）／中期（弓形暗點、鼻側階梯）／晚期（管狀視野、中心視力受損）。</li>
+     <li><span class="term">中醫辨證分型：</span>
+       <ul class="c-list">
+         <li><span class="term">風火攻目：</span>急性發作，頭目劇痛、噁心嘔吐、目赤如綠，舌紅苔黃、脈弦數。</li>
+         <li><span class="term">痰火鬱結：</span>頭暈目脹、胸悶泛惡、苔黃膩、脈滑數。</li>
+         <li><span class="term">肝鬱氣滯：</span>情志誘發、眼脹頭痛、脅肋不舒、脈弦。</li>
+         <li><span class="term">肝腎陰虛：</span>病久視物昏矇、腰膝痠軟、頭暈耳鳴，脈細數。</li>
+       </ul>
+     </li>
+   </ul>
+  </div>
+      </details>
+      <details class="sec">
+        <summary><span class="sec-title">鑑別診斷</span><span class="sec-arrow">▾</span></summary>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">偏頭痛／叢發性頭痛：</span>同樣可有單側頭痛與噁心，但<span class="hl">無角膜霧化、無瞳孔中度固定散大、眼球張力正常</span>。</li>
+     <li><span class="term">急性結膜炎：</span>充血以穹窿部為主、分泌物多，<span class="hl">視力與眼壓正常、無虹視</span>。</li>
+     <li><span class="term">急性虹彩炎：</span>畏光流淚、睫狀充血、<span class="hl">瞳孔縮小</span>（與青光眼之中度散大相反），前房可見浮游細胞。</li>
+     <li><span class="term">腸胃炎：</span>急性青光眼常以噁心嘔吐表現而誤診，<span class="hl">凡嘔吐合併單側眼痛與視力模糊者，務必測眼壓</span>。</li>
+     <li><span class="term">生理性大視杯：</span>杯盤比大但視野與 RNFL 正常、長期追蹤無進展。</li>
+   </ul>
+  </div>
+      </details>
+      <details class="sec">
+        <summary><span class="sec-title">常用選穴與操作技巧</span><span class="sec-arrow">▾</span></summary>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">常用選穴（遠近配穴）</span><br>
+     局部：<a class="pt-tag linked" href="ar.html#pt-bl_jingming" title="在AR學習頁查看 睛明（BL1）">睛明</a><a class="pt-tag linked" href="ar.html#pt-bl_zanzhu" title="在AR學習頁查看 攢竹（BL2）">攢竹</a><a class="pt-tag linked" href="ar.html#pt-ex_yuyao" title="在AR學習頁查看 魚腰（EX-HN4）">魚腰</a><a class="pt-tag linked" href="ar.html#pt-sj_sizhukong" title="在AR學習頁查看 絲竹空（SJ23）">絲竹空</a><a class="pt-tag linked" href="ar.html#pt-gb_tongziliao" title="在AR學習頁查看 瞳子髎（GB1）">瞳子髎</a><a class="pt-tag linked" href="ar.html#pt-ex_taiyang" title="在AR學習頁查看 太陽穴（EX-HN5）">太陽穴</a><br>
+     遠端：風池、合谷、太衝、行間（清瀉肝火）、光明、三陰交、太溪（滋腎養肝）；痰濕明顯者加豐隆、內關。</li>
+     <li><span class="term">安全原則：</span>眼壓未控制者<span class="hl">眼周穴位一律淺刺、不提插捻轉，並避免球後穴</span>；治療重心宜放在<span class="hl">遠端與頸項部</span>（風池、頸肩鬆解）以改善頭頸循環。</li>
+     <li><span class="term">急性發作期：</span><span class="hl">立即轉診為第一要務</span>；針灸僅可作為候診期間緩解頭痛嘔吐的輔助（合谷、太衝、內關、風池），<span class="hl">不得因此延誤降眼壓治療</span>。</li>
+     <li><span class="term">慢性期定位：</span>目標為改善視神經血流與情緒張力，宜低頻電針或輕刺激手法，療程以數週為單位評估，並<span class="hl">同步追蹤眼壓與視野</span>作為客觀療效指標。</li>
+     <li><span class="term">禁忌提醒：</span>眼周<span class="hl">禁用放血、拔罐與強力按摩</span>；施術與衛教皆避免任何壓迫眼球的動作。</li>
+   </ul>
+  </div>
+      </details>
+      <details class="sec">
+        <summary><span class="sec-title">中藥及其他中醫治療</span><span class="sec-arrow">▾</span></summary>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">風火攻目（急性）：</span>清熱瀉火、平肝熄風——綠風羚羊飲、羚羊角湯加減；便祕腑實者可佐當歸龍薈丸。<span class="hl">此型須與西醫降眼壓治療併行，不可單獨依賴中藥。</span></li>
+     <li><span class="term">痰火鬱結：</span>清熱化痰、降逆和胃——溫膽湯合黃連解毒湯加減。</li>
+     <li><span class="term">肝鬱氣滯：</span>疏肝解鬱——逍遙散、柴胡疏肝散加減；情緒為重要誘因，此型臨床最常見於慢性患者。</li>
+     <li><span class="term">肝腎陰虛：</span>滋補肝腎、明目——杞菊地黃丸、明目地黃丸；兼肝陽上亢者合天麻鉤藤飲。</li>
+     <li><span class="term">其他療法：</span>耳穴貼壓（眼、肝、目1、目2、神門）、頭皮針視區、頸肩手法治療；情緒管理與規律作息同屬治療之一環。</li>
+   </ul>
+  </div>
+      </details>
+      <details class="sec">
+        <summary><span class="sec-title">西醫治療</span><span class="sec-arrow">▾</span></summary>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="term">局部降眼壓藥物：</span>前列腺素類（第一線，每日一次）、乙型阻斷劑、碳酸酐酶抑制劑、α2 促效劑；<span class="hl">須長期按時點用，自行停藥是視野惡化的常見原因</span>。</li>
+     <li><span class="term">雷射治療：</span>開放隅角型可行選擇性雷射小樑成形術（SLT）；<span class="hl">閉鎖隅角型以雷射虹膜穿孔術（LPI）打通房水通路</span>，並常建議對側眼預防性施作。</li>
+     <li><span class="term">手術：</span>藥物與雷射控制不佳者行小樑切除術、引流管植入或微創青光眼手術（MIGS）。</li>
+     <li><span class="term">急性發作處置：</span>全身與局部降眼壓藥物（含口服或靜脈高滲透壓製劑、碳酸酐酶抑制劑）＋縮瞳劑，眼壓下降後儘速安排雷射虹膜穿孔。</li>
+     <li><span class="term">追蹤：</span>依嚴重度每3至12個月追蹤眼壓、視野與 OCT；治療目標為設定個別化的「目標眼壓」。</li>
+   </ul>
+  </div>
+      </details>
+      <details class="sec">
+        <summary><span class="sec-title">衛教</span><span class="sec-arrow">▾</span></summary>
+        <div class="sec-body">
+   <ul class="c-list">
+     <li><span class="hl">點藥不可中斷</span>：藥物是保住視野的關鍵，症狀不明顯不代表病情穩定；點藥後閉眼並按壓內眥1分鐘可減少全身吸收。</li>
+     <li>40歲以上、有家族史或高度近視者<span class="hl">每年應接受眼壓與視神經檢查</span>。</li>
+     <li>閉鎖隅角高風險者：避免長時間待在暗處（如電影院滑手機）、避免趴睡與長時間低頭，<span class="hl">使用抗膽鹼類藥物或散瞳劑前應告知有青光眼病史</span>。</li>
+     <li>避免一次大量飲水（建議少量多次）、避免憋氣用力、倒立與重度重量訓練，這些都可能短時間推高眼壓。</li>
+     <li>情緒與睡眠管理：<span class="hl">情緒激動可誘發急性發作</span>，中醫觀點亦認為暴怒傷肝、氣火上逆。</li>
+     <li>使用類固醇（含鼻噴劑、皮膚藥膏、關節注射）期間須告知醫師青光眼病史並監測眼壓。</li>
+     <li>出現眼痛合併頭痛嘔吐、視力驟降或虹視時，<span class="hl">立即就醫，不要等隔天門診</span>。</li>
    </ul>
   </div>
       </details>
@@ -1280,7 +1481,6 @@
         <button class="expand-all" type="button" data-target="d-cosmetic">全部展開</button>
       </div>
       <div class="warn-box top-warn">⚠ <span class="hl">腮腺（耳下腺）一定要避開</span>；咬肌針刺時務必注意方向並貼皮面淺層操作。<br>
-      ⚠ SCM 五點中<span class="hl">倒數第二點對應肺尖，為禁針區</span>；<span class="hl">鎖骨上方之針深度不可超過5mm</span>，垂直進針、針完即拔，以免造成氣胸。<br>
       ⚠ 提上眼瞼肌操作時<span class="hl">針尖絕不可朝向眼球</span>，須囑病人閉眼並以手抵住眼球確認位置。<br>
       ⚠ 口周肌肉（笑肌、顴大肌、顴小肌、口輪匝肌）針刺皆不可過深。</div>
       <details class="sec">
@@ -1289,8 +1489,8 @@
    <ul class="c-list">
      <li><span class="term">常見主訴：</span>膚色暗沉、黃褐斑、皺紋（抬頭紋、眉間紋、法令紋、木偶紋）、臉部鬆弛下垂、左右不對稱、下顎線條不明顯。</li>
      <li><span class="term">伴隨體徵：</span>咬肌肥厚、顳肌萎縮（多見於偏頭痛者）、頸闊肌鬆弛、肩頸前傾。</li>
+     <li><span class="hl">胸廓較大者、肩膀前傾者會連帶影響臉部皺紋分布</span>；咬肌與下頷角延伸出的皺紋走向亦因人而異。</li>
    </ul>
-   <p><span class="hl">胸廓較大者、肩膀前傾者會連帶影響臉部皺紋分布</span>；咬肌與下頷角延伸出的皺紋走向亦因人而異。</p>
   </div>
       </details>
       <details class="sec">
@@ -1529,7 +1729,7 @@
 
   </main>
 
-  <footer>顏面部穴位AR學習平台 v2.79 · 2026年8月18日更新</footer>
+  <footer>顏面部穴位AR學習平台 v2.80 · 2026年8月18日更新</footer>
 </div>
 
 <script src="../assets/acupoints-geo.js"></script>
