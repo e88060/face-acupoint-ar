@@ -285,7 +285,7 @@
   <button id="uploadCloseBtn" type="button">關閉</button>
 </div>
 
-<footer>顏面部穴位AR學習平台 v2.77 · 2026年8月17日更新</footer>
+<footer>顏面部穴位AR學習平台 v2.78 · 2026年8月17日更新</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core@4.20.0/dist/tf-core.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter@4.20.0/dist/tf-converter.min.js"></script>
@@ -916,8 +916,15 @@ function arqToCanvas(pos, m) {
   return { x: arqOverlay.width - rawX, y: rawY }; // 鏡像（前鏡頭）
 }
 function arqToCanvasPts(pts, m) { return pts.map(p => arqToCanvas(p, m)); }
+/* v2.78修正：原以 templeR/templeL（顳寬）當作傳入 calc() 的 scale，
+   但 ar.html 的 computePoints()／computeNerveOverlay() 一律以
+   eyeOuterR/eyeOuterL（外眥寬）為 scale 基準，兩者實測比值約1.5倍，
+   造成陽白／太陽穴／承漿等9個依賴sc的穴位、以及全部MUSCLES／VESSELS／
+   trigeminalPaths／facialNervePaths的AR跑考判定位置與ar.html顯示位置不一致。
+   改為與 ar.html 相同基準，僅評分正規化分母（見 handleArqTap 的
+   faceWidthPx）仍用顳寬，不受影響 */
 function arqFaceScale(kp) {
-  return dist(kp[IDX.templeR], kp[IDX.templeL]);
+  return dist(kp[IDX.eyeOuterR], kp[IDX.eyeOuterL]) || 1;
 }
 
 /* ---------------- 題型2（指認題）題庫：穴位／肌肉／神經／血管 ---------------- */

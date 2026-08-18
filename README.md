@@ -1,4 +1,4 @@
-# 顏面部穴位AR學習平台 v2.75
+# 顏面部穴位AR學習平台 v2.78
 
 ## 這是什麼
 多頁式網站，含首頁與三個子頁面，結合AR臉部辨識與中醫顏面部穴位知識，
@@ -346,3 +346,22 @@
    左右兩側**輸出完全一致**
 6. **版本號統一**：index.html、pages/clinical.html、pages/quiz.html、
    pages/ar.html 頁尾與註解、README 全部統一為 v2.75 · 2026年8月15日更新
+
+## v2.78 更新摘要
+> 本版修正 AR跑考與 ar.html 定位不一致的問題。
+
+1. **`arqFaceScale()` scale 基準修正**：pages/quiz.html 的 AR跑考原以
+   `dist(templeR, templeL)`（顳寬）作為傳入各穴位／肌肉／血管／神經
+   `calc()` 的 `scale`，但 ar.html 的 `computePoints()`／
+   `computeNerveOverlay()` 一律以 `dist(eyeOuterR, eyeOuterL)`（外眥寬）
+   為基準。實測兩者比值約 1.5 倍，凡 calc 內用到 `sc` 係數做偏移的項目，
+   AR跑考判定位置都比 ar.html 實際顯示位置多偏移約 50%
+   ・受影響：25 個穴位中 9 個（陽白、太陽穴、承漿、上關、齦交、球後、
+     頰車、瞳子髎、兌端）、`MUSCLES`（20/20）、`VESSELS`（7/7）、
+     `trigeminalPaths`／`facialNervePaths`（指認題 highlight 範圍）全數牽連
+   ・以陽白／太陽穴／承漿三穴實測，relDist 誤差已超過「正確」門檻 0.045，
+     等於用錯誤基準時這幾穴無論點多準都判不到「正確」
+   ・改為與 ar.html 相同的 `dist(eyeOuterR, eyeOuterL)`；`handleArqTap()`
+     評分正規化分母 `faceWidthPx`（顳寬）不受影響，仍維持原設計
+2. **版本號統一**：index.html、pages/clinical.html、pages/quiz.html、
+   pages/ar.html 頁尾與註解、README 全部統一為 v2.78 · 2026年8月17日更新
