@@ -577,7 +577,7 @@
         <li>以上解剖與操作說明僅供學習參考，實際臨床操作請依專業判斷。</li>
       </ul>
     </div>
-    <div id="versionFooter">v2.78 · 2026年8月17日更新</div>
+    <div id="versionFooter">v2.79 · 2026年8月18日更新</div>
   </div>
 </div>
 
@@ -932,10 +932,18 @@ const ACUPOINTS = [
     indications:'口眼歪斜、眼瞼瞤動、齒痛、面痛',
     anatomy:'皮下為咬肌起始部，布有面神經及眶下神經分支',
     technique:'直刺0.3–1寸，或斜刺',
-    calc:(kp,s)=>{
+    /* v2.79修正：原式 y 取外眥→鼻翼之0.55、x 直接等於外眥，落點偏內上（約在
+       眼眶下緣外側），比實際顴骨下緣高。顴髎應在「目外眥直下、顴骨下緣凹陷處」，
+       故 y 下移至0.78（貼近顴弓／顴骨體下緣高度），x 再向外側偏0.05*sc
+       （外眥寬約90mm ⇒ 約4–5mm），使其落在顴骨隆起外下方之凹陷。
+       外側方向以外眥→顳點的x向量判定，不預設左右正負號。 */
+    calc:(kp,s,sc)=>{
       const e = s==='R'?kp[IDX.eyeOuterR]:kp[IDX.eyeOuterL];
       const ala = s==='R'?kp[IDX.noseAlaR]:kp[IDX.noseAlaL];
-      return { x: e.x, y: mid(e, ala, 0.55).y };
+      const tem = s==='R'?kp[IDX.templeR]:kp[IDX.templeL];
+      const dir = Math.sign(tem.x - e.x) || (s==='R' ? -1 : 1);   // 向臉部外側
+      const w = sc || Math.abs(tem.x - e.x) * 4;
+      return { x: e.x + dir*w*0.05, y: mid(e, ala, 0.78).y };
     }},
 
   { id:'bl_jingming', name:'睛明', code:'BL1', meridian:'BL', side:'LR',

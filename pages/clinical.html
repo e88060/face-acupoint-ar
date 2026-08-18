@@ -104,10 +104,12 @@
   details.sec[open] > summary .sec-arrow { transform: rotate(180deg); }
   details.sec > summary:hover .sec-title { color: #D97757; }
 
-  .sec-body { padding: 0 2px 14px; font-size: 13.5px; color: #444; line-height: 2.0; }
+  /* v2.79：內文與各清單一律黑色、不加粗；僅小標題用粗體、重點用橘色標示 */
+  .sec-body { padding: 0 2px 14px; font-size: 13.5px; color: #000; line-height: 2.0; }
   .sec-body p { margin: 0 0 9px; }
   .sec-body p:last-child { margin-bottom: 0; }
-  .sec-body b { color: #222; }
+  .sec-body li { color: #000; font-weight: 400; }
+  .sec-body b { color: #000; font-weight: 700; }
 
   /* ---------------- v2.77：內容改以條列整理 ---------------- */
   /* 項目符號／編號清單 */
@@ -123,12 +125,12 @@
   /* 條列前的小標題（取代原本整段粗體） */
   .sub-lead {
     margin: 12px 0 6px; font-size: 13px; color: #b85a30;
-    font-weight: 600; letter-spacing: .3px;
+    font-weight: 700; letter-spacing: .3px;
   }
   .sub-lead:first-child { margin-top: 0; }
 
-  /* 條目開頭的名詞標籤：以顏色區分，不再用粗體 */
-  .term { color: #222; font-weight: 600; }
+  /* 條目開頭的名詞標籤（小標題性質）：黑色粗體 */
+  .term { color: #000; font-weight: 700; }
 
   /* 異常狀況卡片 */
   details.sec.complication {
@@ -138,7 +140,8 @@
   details.sec.complication .sec-title { color: #b5523a; }
 
   /* ---------------- 重點標示 ---------------- */
-  .hl { color: #c0392b; font-weight: 700; }
+  /* v2.79：由紅色粗體改為橘色、不加粗——重點以顏色區分，不再靠字重 */
+  .hl { color: #D97757; font-weight: 400; }
 
   .pt-tag {
     display: inline-block; background: #f2f2f0; color: #555; font-size: 12.5px;
@@ -154,7 +157,7 @@
     background: #fdf2ea; border-left: 3px solid #D97757; border-radius: 0;
     padding: 10px 12px; font-size: 12.5px; color: #a65b2e; line-height: 1.9; margin: 10px 0;
   }
-  .warn-box .hl { color: #8f3d18; }
+  .warn-box .hl { color: #8f3d18; font-weight: 700; }   /* 警示框內仍保留粗體 */
   .top-warn { margin: 12px 0 4px; }
 
   .section-title {
@@ -200,7 +203,7 @@
   </div>
 
   <div id="disclaimer">
-    內容為衛教與教學參考整理，非取代臨床專業判斷；實際選穴、深淺與手法須依患者個別狀況、執業規範與師承經驗調整。本頁臨床內容彙整自課程共筆與臨床資料，來源詳見文末「參考資料」。<br>
+    內容為衛教與教學參考整理，非取代臨床專業判斷；實際選穴、深淺與手法須依患者個別狀況、執業規範與師承經驗調整。本頁臨床內容彙整自課程共筆與臨床資料（參考資料整理中，稍後補上）。<br>
     <span class="tip">點擊各單元標題可展開／收合；<b class="pt-tag linked" style="cursor:default;">橘色穴位標籤</b>可連結至AR學習頁對應穴位。</span>
   </div>
 
@@ -239,7 +242,7 @@
       <div class="nav-links">
         <a href="#sec-complications">異常狀況</a>
         <a href="#sec-danger">危險穴位一覽</a>
-        <a href="#sec-refs">參考資料</a>
+        <!-- <a href="#sec-refs">參考資料</a> -->
       </div>
     </div>
   </nav>
@@ -1506,6 +1509,8 @@
       </div>
     </section>
 
+    <!-- v2.79：參考資料暫時隱藏（待整理完成後，移除本段前後的註解標記即可還原） -->
+    <!--
     <div class="section-title" id="sec-refs">📚 參考資料</div>
     <section class="disease-card plain">
       <div class="sec-body">
@@ -1520,10 +1525,11 @@
       8. <a href="https://www.theentresident.com/ent-notes-lectures/facial-nerve-landmarks" target="_blank" rel="noopener">The ENT Resident — "Facial Nerve Landmarks"</a>（供耳屏軟骨切跡、鼓乳縫、二腹肌後腹三大解剖地標之數據參考）。</p>
   </div>
     </section>
+    -->
 
   </main>
 
-  <footer>顏面部穴位AR學習平台 v2.78 · 2026年8月17日更新</footer>
+  <footer>顏面部穴位AR學習平台 v2.79 · 2026年8月18日更新</footer>
 </div>
 
 <script src="../assets/acupoints-geo.js"></script>

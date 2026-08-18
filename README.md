@@ -1,4 +1,4 @@
-# 顏面部穴位AR學習平台 v2.78
+# 顏面部穴位AR學習平台 v2.79
 
 ## 這是什麼
 多頁式網站，含首頁與三個子頁面，結合AR臉部辨識與中醫顏面部穴位知識，
@@ -91,6 +91,13 @@
   可依實際教學需求持續擴充病症與案例
 - clinical.html「顏面高風險穴位一覽」表目前僅取自穴位解剖描述關鍵字，
   尚未串連 ar.html 新增的血管資料，如需標註穴位鄰近血管可再擴充
+- clinical.html 文末「參考資料」區塊自 v2.79 起以 HTML 註解暫時隱藏
+  （含 #sec-refs 區塊與導覽連結），待資料整理完成後移除註解標記即可還原
+- quiz.html 題庫選題測試已併入 v2.79 新題庫（NERVE_BRANCH_FACTS 5題／
+  VESSEL_FACTS 9題／DISEASE_TREATMENT 9題／NEEDLING_SAFETY 2題，合計25題，
+  合併為 EXTRA_POOL 隨機抽2題）；總題數維持20題，原「疾病—分期分型」2題
+  暫時讓位（DISEASE_STAGING 題庫仍保留，調整 QUIZ_DISEASE_STG／
+  QUIZ_EXTRA_COUNT 即可恢復）
 
 ## 程式結構重點（繼續修改時參考）
 - `assets/acupoints-geo.js`：`IDX`（關鍵點索引）、幾何helper（`mid`/`off`/

@@ -183,6 +183,7 @@
   .q-tag.acu { background: #D97757; }
   .q-tag.ana { background: #3d7ab0; }
   .q-tag.dis { background: #6a9a5b; }
+  .q-tag.op  { background: #8a6a4f; }   /* v2.79：操作・針法安全 */
 </style>
 </head>
 <body>
@@ -222,7 +223,7 @@
           <li class="arq-tip">請上下左右移動臉部讓立體定位更容易</li>
           <li class="arq-tip">點選時可拉近距離讓定位更精確</li>
         </ul>
-        <button id="arqStartBtn">開始跑考（20題）</button>
+        <button id="arqStartBtn">開始跑考</button>
         <div style="margin-top:14px;"><button class="conn-test" type="button">測試成績上傳連線</button></div>
       </div>
       <div id="arqQuestion" style="display:none;">
@@ -251,9 +252,10 @@
         <input type="text" id="quizStudentName" placeholder="請輸入姓名">
       </div>
       <p style="font-size:11.5px;color:#999;margin:0 0 16px;line-height:1.9;">測驗共20題，隨機抽取：<br>
-      ・穴位（經絡歸經／取穴位置／主治功效）<br>
-      ・解剖結構（神經運動與感覺支配、肌肉起止點與功能）<br>
-      ・常見疾病（臨床症狀、分期分型）</p>
+      ・穴位（經絡歸經／取穴位置／主治功效）10題<br>
+      ・解剖結構（神經運動與感覺支配、肌肉起止點與功能）5題<br>
+      ・常見疾病（臨床症狀）3題<br>
+      ・進階題（神經分支／血管與危險區／疾病治療與預後／針法安全）2題</p>
       <button id="startQuizBtn">開始測驗</button>
       <div style="margin-top:14px;text-align:center;"><button class="conn-test" type="button">測試成績上傳連線</button></div>
     </div>
@@ -285,7 +287,7 @@
   <button id="uploadCloseBtn" type="button">關閉</button>
 </div>
 
-<footer>顏面部穴位AR學習平台 v2.78 · 2026年8月17日更新</footer>
+<footer>顏面部穴位AR學習平台 v2.79 · 2026年8月18日更新</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core@4.20.0/dist/tf-core.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter@4.20.0/dist/tf-converter.min.js"></script>
@@ -665,6 +667,134 @@ const DISEASE_STAGING = [
 ];
 
 /* ==================================================================
+   v2.79 新增題庫：神經分支／血管與危險區／疾病治療與預後／針法安全
+   內容經審查定稿，來源同 clinical.html 與 ar.html 穴位 anatomy／technique 欄位
+================================================================== */
+
+/* ---- 解剖・神經分支 ---- */
+const NERVE_BRANCH_FACTS = [
+  { q:'眶上神經穿出顱骨的位置為何？',
+    a:'眶上孔（或眶上切跡）', wrong:['圓孔','卵圓孔','莖乳孔'],
+    ex:'三叉神經三分支之出顱孔——眶上孔（V1）、眶下孔（V2）、頦孔（V3）約略落在同一垂直線上，可對照AR學習頁「重要解剖結構—神經」觀察。' },
+  { q:'眶下神經（V2）穿出眶下孔後，主要支配下列哪一組區域？',
+    a:'下眼瞼、鼻翼外側、面頰與上唇皮膚',
+    wrong:['前額、上眼瞼與鼻背上部','下唇、頦部與耳前顳部','舌前2/3之味覺'],
+    ex:'眶下孔與四白穴位置重疊，出孔後即散為瞼支、鼻支、上唇支三群。' },
+  { q:'頦神經是下列哪一條神經的末梢延續？',
+    a:'下齒槽神經（經下頷孔入下頷管，自頦孔穿出）',
+    wrong:['頰神經（V3）','耳顳神經','顏面神經下頷緣支'],
+    ex:'下齒槽神經為下齒槽神經阻斷術（IANB）的對象；頦神經支配頦孔周圍之下唇與頦部皮膚。' },
+  { q:'關於「頰神經」，下列敘述何者正確？',
+    a:'有兩條同名神經：三叉神經V3的頰神經為感覺支，顏面神經頰支為運動支',
+    wrong:['兩者皆為運動神經，僅走行深淺不同',
+           '兩者皆為感覺神經，V3者支配黏膜、顏面神經者支配皮膚',
+           '兩者為同一條神經的不同節段'],
+    ex:'V3頰神經行於顳肌下方、自咬肌前緣淺出後穿頰肌，支配頰部皮膚與黏膜，分布不越過口角；顏面神經頰支則沿腮腺管方向前行，支配頰肌、口輪匝肌、顴大小肌等。' },
+  { q:'淚腺神經皮支的支配範圍為何？',
+    a:'外半上眼皮與外眥外上方之小三角區',
+    wrong:['整個上眼瞼與前額','內半上眼皮、內眥、淚囊與鼻根側面','下眼瞼與外眥外下方'],
+    ex:'「內半上眼皮、內眥、淚囊與鼻根側面」為滑車下神經之支配區；兩者同屬V1但出眶位置與範圍不同。' }
+];
+
+/* ---- 解剖・血管與危險區 ---- */
+const VESSEL_FACTS = [
+  { q:'鼻唇溝／鼻部填充造成「逆行性眼動脈栓塞、單眼失明」的關鍵吻合路徑為何？',
+    a:'角動脈與鼻背動脈於內眥處的吻合',
+    wrong:['顳淺動脈額支與對側眶上動脈的吻合','橫顏面動脈與顏面動脈的吻合','上唇動脈與下唇動脈的吻合'],
+    ex:'角動脈為顏面動脈終末段，自鼻翼外側溝上行至內眥；鼻背動脈則為眼動脈終末支。' },
+  { q:'顏面動脈最可靠的體表定位點為何？',
+    a:'咬肌前緣處越過下頷骨下緣（antegonial notch），該處可直接觸得搏動',
+    wrong:['顴弓上方約2–3公分處','耳屏前方、髁突後方','內眥韌帶上方'],
+    ex:'其後沿鼻唇溝迂曲上行，於口角外側分出上、下唇動脈，走行緊鄰法令紋。' },
+  { q:'顳淺動脈約在何處分為額支與頂支？',
+    a:'顴弓上方約2–3公分處',
+    wrong:['顴弓下方約1公分處','眶外緣後方之顳窩','下頷角上方約2公分處'],
+    ex:'額支再斜向前上方越過顳部走向額結節，與對側及眶上動脈吻合——太陽穴區放血或深刺易傷及者即此支。' },
+  { q:'橫顏面動脈的走行，下列何者正確？',
+    a:'自顴弓下方約1公分處水平向前跨過咬肌表面，行於顴弓與腮腺管之間',
+    wrong:['自耳屏前方垂直上行至額結節','沿下頷骨下緣向前橫過至頦部','自內眥沿鼻背外側下行至鼻翼'],
+    ex:'為顳淺動脈於腮腺內之分支，是顳頜關節注射與頰部操作的參考血管。' },
+  { q:'太陽穴淺刺放血最主要的出血風險來自下列何者？',
+    a:'顳淺動脈額支', wrong:['眶上動脈','角動脈','上頷動脈'],
+    ex:'太陽穴針刺依序通過皮膚、皮下組織與顳肌；凝血功能異常或服用抗凝血劑者不宜放血。' },
+  { q:'眼周穴位（睛明、承泣等）出針後發生皮下血腫，正確的處理順序為何？',
+    a:'立即以棉球加壓止血、避免揉按；初期冷敷，48小時後改熱敷促進吸收',
+    wrong:['立即揉按患處使瘀血散開，並持續熱敷','立即冰敷並持續冰敷一週','不需處理，等待自行吸收即可'],
+    ex:'眼周血管分布密集、組織疏鬆，出血後易迅速腫脹瘀青；血腫多可於1–2週自行消退。' },
+  { q:'眶上動脈與下列何者伴行、自同一孔穿出？',
+    a:'眶上神經，經眶上孔（切跡）穿出',
+    wrong:['滑車上神經，經額切跡穿出','眶下神經，經眶下孔穿出','耳顳神經，經卵圓孔穿出'],
+    ex:'眶上動脈走行位置略外於滑車上動脈，兩者於額部形成豐富吻合網。' },
+  { q:'咬肌區針灸時，最須主動避開的腺體構造為何？',
+    a:'腮腺（耳下腺）與腮腺管開口', wrong:['下頷下腺','舌下腺','淚腺'],
+    ex:'腮腺管（Stensen氏管）體表投影約在鼻翼與口角連線中點；該區另有顏面動脈、橫顏面動脈與顏面神經頰支通過。' },
+  { q:'下關穴進針過深，最可能傷及下列何者而造成大範圍血腫？',
+    a:'深部翼靜脈叢與上頷動脈分支',
+    wrong:['顳淺動脈頂支','眼動脈','頸內動脈海綿竇段'],
+    ex:'下關深面為翼外肌、下頷角深面為翼內肌；操作前務必以觸診確認下頷角與顴骨邊界。' }
+];
+
+/* ---- 疾病・治療與預後 ---- */
+const DISEASE_TREATMENT = [
+  { q:'顏面神經麻痺急性期（發病1–2週內）的針刺原則為何？',
+    a:'淺刺、輕刺激、手法輕柔',
+    wrong:['深刺、強刺激以加速神經再生','大量透刺配合強電針','局部放血以瀉風熱'],
+    ex:'急性期強刺激會加重局部發炎水腫；恢復期才可透刺加強刺激量。' },
+  { q:'顏面神經麻痺恢復期常用的透刺組合，下列何者正確？',
+    a:'地倉透頰車、陽白透魚腰',
+    wrong:['睛明透承泣、四白透巨髎','迎香透下關、人中透承漿','攢竹透印堂、太陽透風池'],
+    ex:'魚腰在眉稜骨上、直刺僅能入1–2分，故多採透刺（魚腰透攢竹或魚腰透絲竹空）。' },
+  { q:'顏面神經麻痺的西醫治療中，證據等級最高者為何？',
+    a:'症狀發生一週內使用類固醇以減少神經發炎與腫脹',
+    wrong:['早期給予抗病毒藥物','早期施打肉毒桿菌素','高壓氧治療'],
+    ex:'抗病毒藥物用於懷疑帶狀皰疹病毒感染（Ramsay Hunt）時併用；肉毒桿菌則用於後遺症期頑固性連帶運動。' },
+  { q:'下列何者為顏面神經麻痺「恢復較慢」的預後不良因子？',
+    a:'年齡較大、顏面完全麻痺、有糖尿病或高血壓病史',
+    wrong:['發病於夏季','女性、初次發作','病灶位於左側'],
+    ex:'大多數患者在治療後三個月內逐漸恢復；黃金治療期為發病前2週。' },
+  { q:'顏面神經麻痺恢復過程中出現「咀嚼時不自覺眨眼、進食時流眼淚」，此現象為何？頑固者如何處理？',
+    a:'連帶運動（synkinesis）；頑固者可考慮肉毒桿菌注射',
+    wrong:['三叉神經痛；頑固者以Carbamazepine治療','半面痙攣；頑固者行顯微血管減壓術','Ramsay Hunt症候群；頑固者以抗病毒藥治療'],
+    ex:'連帶運動為恢復過程中神經「接錯線」所致，通常隨治療逐漸改善。' },
+  { q:'顏面痙攣（半面痙攣）的根本性外科治療為何？其主要術後風險為何？',
+    a:'顯微血管減壓術（Jannetta）；因鄰近第8對腦神經，術後可能耳聾、重聽',
+    wrong:['經皮射頻熱凝術；術後可能角膜感覺喪失','加馬刀放射手術；術後可能顏面麻木','顳顎關節腔沖洗；術後可能咬合不正'],
+    ex:'內科藥物（Carbamazepine、Baclofen、Clonazepam、Gabapentin等）對顏面痙攣效果不佳。' },
+  { q:'三叉神經痛的第一線西藥為何？使用時須特別留意何事？',
+    a:'Carbamazepine；特定基因缺失者可能發生嚴重過敏反應，出現皮疹須立即停藥就醫',
+    wrong:['Amitriptyline；須留意心律不整','Gabapentin；須留意腎功能惡化','Prednisolone；須留意血糖上升'],
+    ex:'第二線藥物包含 Baclofen、Lamotrigine、Oxcarbazepine、Phenytoin、Gabapentin、Valproate 等。' },
+  { q:'三叉神經痛「發作期」的針灸操作原則為何？',
+    a:'避免直接針刺扳機點，宜先取遠端穴位緩解後再輕刺局部',
+    wrong:['直接重刺扳機點以達「以痛制痛」','於扳機點施行大量放血','發作期禁止任何針灸治療'],
+    ex:'遠端可配合合谷、內庭、太衝疏經止痛；緩解期再用淺刺、平補平瀉手法。' },
+  { q:'顳頜關節障礙取下關穴時，正確的操作方式為何？',
+    a:'囑患者張口取穴、閉口進針',
+    wrong:['閉口取穴、張口進針','全程張口留針以維持關節間隙','側臥並囑患者反覆開闔口以行針'],
+    ex:'留針時體位變動（如取穴後張閉口）是滯針的常見原因之一。' }
+];
+
+/* ---- 操作・針法安全 ---- */
+const NEEDLING_SAFETY = [
+  { q:'睛明穴（BL1）的安全針法為何？',
+    a:'輕推眼球固定，沿眶內側壁緩慢直刺，不宜提插捻轉',
+    wrong:['直刺後大幅提插捻轉以得氣','向眼球方向斜刺以增強療效','以三稜針點刺放血'],
+    ex:'針尖方向略朝外側10–15°較不易出血；服用抗凝血劑或凝血功能異常者，眼周與顳部穴位宜避免深刺。' },
+  { q:'口周表情肌（笑肌、顴大肌、顴小肌、口輪匝肌）的針刺原則為何？',
+    a:'不可過深，以貼皮下平刺為原則',
+    wrong:['須直刺達骨面方能得氣','宜深刺1.5吋並施行提插補瀉','僅可用灸法不可針刺'],
+    ex:'該區淺層即有顏面神經頰支、顏面動脈與角動脈走行。' }
+];
+
+/* 新題庫合併池：出題時自四類共同抽取，各類皆有機會出現 */
+const EXTRA_POOL = [
+  ...NERVE_BRANCH_FACTS.map(x => ({ ...x, cat:'ana', tag:'解剖・神經分支' })),
+  ...VESSEL_FACTS.map(x      => ({ ...x, cat:'ana', tag:'解剖・血管與危險區' })),
+  ...DISEASE_TREATMENT.map(x => ({ ...x, cat:'dis', tag:'疾病・治療與預後' })),
+  ...NEEDLING_SAFETY.map(x   => ({ ...x, cat:'op',  tag:'操作・針法安全' }))
+];
+
+/* ==================================================================
    題庫選題測試
 ================================================================== */
 const quizStudentName = document.getElementById('quizStudentName');
@@ -684,7 +814,12 @@ const QUIZ_ACU_COUNT = 10;      // 穴位題
 const QUIZ_NERVE_COUNT = 2;     // 解剖—神經（運動／感覺支配）
 const QUIZ_MUSCLE_COUNT = 3;    // 解剖—肌肉（起止點／功能）
 const QUIZ_DISEASE_SYM = 3;     // 常見疾病—症狀
-const QUIZ_DISEASE_STG = 2;     // 常見疾病—分期分型
+/* v2.79：總題數維持20題。原「常見疾病—分期分型」2題讓位給新題庫
+   （神經分支／血管與危險區／疾病治療與預後／針法安全）。
+   DISEASE_STAGING 題庫仍保留於程式中，若要恢復，把下方兩個常數
+   改成 QUIZ_DISEASE_STG = 2、QUIZ_EXTRA_COUNT = 0 即可。 */
+const QUIZ_DISEASE_STG = 0;     // 常見疾病—分期分型
+const QUIZ_EXTRA_COUNT = 2;     // 新題庫（四類合併池隨機抽題）
 let quizQuestions = [];
 let quizIndex = 0;
 let quizScore = 0;
@@ -777,6 +912,12 @@ function buildMuscleQuestions(n) {
 function buildDiseaseQ(item, tag) {
   return makeQ('dis', tag, item.q, item.a, item.wrong, item.ex);
 }
+/* ---------------- v2.79 新題庫（四類合併抽題） ---------------- */
+function buildExtraQuestions(n) {
+  return sample(EXTRA_POOL, Math.min(n, EXTRA_POOL.length))
+    .map(item => makeQ(item.cat, item.tag, item.q, item.a, item.wrong, item.ex));
+}
+
 function buildDiseaseQuestions(nSym, nStg) {
   return [
     ...sample(DISEASE_SYMPTOM, nSym).map(x => buildDiseaseQ(x, '疾病・臨床症狀')),
@@ -795,7 +936,8 @@ startQuizBtn.addEventListener('click', () => {
   quizQuestions = [
     ...shuffle(acuQs),
     ...shuffle([...buildNerveQuestions(QUIZ_NERVE_COUNT), ...buildMuscleQuestions(QUIZ_MUSCLE_COUNT)]),
-    ...shuffle(buildDiseaseQuestions(QUIZ_DISEASE_SYM, QUIZ_DISEASE_STG))
+    ...shuffle([...buildDiseaseQuestions(QUIZ_DISEASE_SYM, QUIZ_DISEASE_STG),
+                ...buildExtraQuestions(QUIZ_EXTRA_COUNT)])
   ];
   quizIndex = 0; quizScore = 0;
   quizStartTime = Date.now();
@@ -930,6 +1072,21 @@ function arqFaceScale(kp) {
 /* ---------------- 題型2（指認題）題庫：穴位／肌肉／神經／血管 ---------------- */
 /* group：出題與干擾選項的分組依據——
    'acupoint' 穴位／'muscle' 肌肉／'vn' 血管與神經，各組選項只在同組內取用 */
+/* 三叉神經末梢皮支——id 對應 acupoints-geo.js 之 trigeminalPaths().distal */
+const NERVE_BRANCH_ITEMS = [
+  { id: 'v1_supraorbital',     name: '眶上神經（V1）' },
+  { id: 'v1_supratrochlear',   name: '滑車上神經（V1）' },
+  { id: 'v1_infratrochlear',   name: '滑車下神經（V1）' },
+  { id: 'v1_lacrimal',         name: '淚腺神經皮支（V1）' },
+  { id: 'v1_extnasal',         name: '鼻外神經（V1）' },
+  { id: 'v2_zygtemporal',      name: '顴顳支（V2）' },
+  { id: 'v2_zygfacial',        name: '顴面支（V2）' },
+  { id: 'v2_infraorbital',     name: '眶下神經（V2）' },
+  { id: 'v3_auriculotemporal', name: '耳顳神經（V3）' },
+  { id: 'v3_buccal',           name: '頰神經（V3，感覺）' },
+  { id: 'v3_mental',           name: '頦神經（V3）' }
+];
+
 function buildIdentifyPool() {
   const pool = [];
   ACUPOINTS.filter(p => typeof p.calc === 'function').forEach(p => {
@@ -946,6 +1103,9 @@ function buildIdentifyPool() {
     { id: 'v2', name: '三叉神經上頷神經(V2)' },
     { id: 'v3', name: '三叉神經下頷神經(V3)' }
   ].forEach(b => pool.push({ group: 'vn', type: 'nerve', subtype: 'trigeminal', branchId: b.id, name: b.name, side: 'LR' }));
+  /* v2.79新增：三叉神經各末梢皮支（眶上／滑車上／眶下／頦神經等）獨立成
+     'branch' 組出題，與 'vn' 組（三叉神經三大主幹＋顏面神經五分支）分開，
+     使干擾選項為同層級的分支名稱，避免拿「V2主幹」當「眶上神經」的干擾項 */
   [
     { id: 'temporal_a', name: '顏面神經顳支' },
     { id: 'zygomatic', name: '顏面神經顴支' },
@@ -953,6 +1113,9 @@ function buildIdentifyPool() {
     { id: 'mandibular', name: '顏面神經下頷緣支' },
     { id: 'cervical', name: '顏面神經頸支' }
   ].forEach(b => pool.push({ group: 'vn', type: 'nerve', subtype: 'facial', branchId: b.id, name: b.name, side: 'LR' }));
+  NERVE_BRANCH_ITEMS.forEach(b => pool.push({
+    group: 'branch', type: 'nerve', subtype: 'triDistal', branchId: b.id, name: b.name, side: 'LR'
+  }));
   return pool;
 }
 const IDENTIFY_POOL = buildIdentifyPool();
@@ -971,6 +1134,10 @@ function identifyItemPts(it, kp, side, scale) {
   if (it.type === 'nerve') {
     if (it.subtype === 'trigeminal') {
       const br = trigeminalPaths(kp, side, scale).branches.find(b => b.id === it.branchId);
+      return br ? br.pts : [];
+    }
+    if (it.subtype === 'triDistal') {
+      const br = trigeminalPaths(kp, side, scale).distal.find(b => b.id === it.branchId);
       return br ? br.pts : [];
     }
     const br = facialNervePaths(kp, side, scale).branches.find(b => b.id === it.branchId);
@@ -1051,7 +1218,7 @@ async function arqDetectLoop() {
 }
 
 const ARQ_TAP_COUNT = 5;                       // 點位題
-const ARQ_IDENTIFY_PER_GROUP = { acupoint: 5, muscle: 5, vn: 5 };   // 指認題各組題數
+const ARQ_IDENTIFY_PER_GROUP = { acupoint: 5, muscle: 5, vn: 5, branch: 3 };   // 指認題各組題數（v2.79新增神經分支3題）
 const ARQ_TOTAL_COUNT = ARQ_TAP_COUNT +
   Object.values(ARQ_IDENTIFY_PER_GROUP).reduce((a, b) => a + b, 0);
 
@@ -1080,6 +1247,8 @@ function buildArqQueue() {
 
   return shuffle([...tapList, ...identifyList]);
 }
+
+arqStartBtn.textContent = `開始跑考（${ARQ_TOTAL_COUNT}題）`;
 
 arqStartBtn.addEventListener('click', async () => {
   if (!arqStudentName.value.trim()) {
@@ -1131,11 +1300,13 @@ function nextArqQuestion() {
     const distractPool = IDENTIFY_POOL.filter(x => x.group === q.item.group && x.name !== q.item.name);
     const wrongNames = [...new Set(shuffle(distractPool).map(x => x.name))].slice(0, 3);
     const opts = shuffle([q.item.name, ...wrongNames]);
-    arqIdentifyPrompt.textContent = q.item.group === 'acupoint'
-      ? '請觀察上方相機畫面中標示的位置，選出正確的穴位名稱'
-      : q.item.group === 'muscle'
-        ? '請觀察上方相機畫面中標示的範圍，選出正確的肌肉名稱'
-        : '請觀察上方相機畫面中標示的路徑，選出正確的血管／神經名稱';
+    const IDENTIFY_PROMPT = {
+      acupoint: '請觀察上方相機畫面中標示的位置，選出正確的穴位名稱',
+      muscle:   '請觀察上方相機畫面中標示的範圍，選出正確的肌肉名稱',
+      vn:       '請觀察上方相機畫面中標示的路徑，選出正確的血管／神經名稱',
+      branch:   '請觀察上方相機畫面中標示的路徑，選出正確的三叉神經末梢分支名稱'
+    };
+    arqIdentifyPrompt.textContent = IDENTIFY_PROMPT[q.item.group] || IDENTIFY_PROMPT.vn;
     arqIdentifyOptions.innerHTML = '';
     opts.forEach(name => {
       const btn = document.createElement('button');
